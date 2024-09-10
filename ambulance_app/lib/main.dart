@@ -8,10 +8,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Login Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
-      home: LoginPage(),
+      
+      home:Scaffold(
+        appBar: AppBar(
+          title: const Text('Zovi Hitnu'),
+        ),
+        body: LoginPage(),
+      )
     );
   }
 }
