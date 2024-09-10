@@ -1,3 +1,4 @@
+import 'package:ambulance_app/screens/dummy.dart';
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 
@@ -11,9 +12,10 @@ class MyApp extends StatelessWidget {
       
       home:Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.amber,
           title: const Text('Zovi Hitnu'),
         ),
-        body: LoginPage(),
+        body: UserButton(),
       )
     );
   }
