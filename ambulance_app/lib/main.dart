@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.amber,
           title: const Text('Zovi Hitnu'),
         ),
-        body: UserButton(),
+        body: LoginPage(),
       )
     );
   }
