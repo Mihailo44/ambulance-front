@@ -1,4 +1,4 @@
-import 'package:ambulance_app/screens/dummy.dart';
+import 'package:ambulance_app/screens/registration/dispatcher_registration.dart';
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.amber,
           title: const Text('Zovi Hitnu'),
         ),
-        body: LoginPage(),
+        body: DispatcherRegistration(),
       )
     );
   }

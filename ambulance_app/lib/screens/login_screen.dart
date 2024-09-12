@@ -1,8 +1,10 @@
+import 'dart:developer';
+
+import 'package:ambulance_app/screens/registration/dispatcher_registration.dart';
 import 'package:ambulance_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -17,6 +19,13 @@ class _LoginPageState extends State<LoginPage> {
 
   final AuthService _authService = AuthService();
   final FlutterSecureStorage _secureStorage = new FlutterSecureStorage();
+
+  void _mockLogin(){
+    log("ulogovao se");
+    setState(() {
+        _isLoading = false;
+      });
+  }
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -43,6 +52,10 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _isLoading = false;
         });
+
+        Navigator.push(context,
+          MaterialPageRoute(builder: (context)=>  DispatcherRegistration())
+        );
       
     }
   }
@@ -58,14 +71,14 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: InputDecoration(labelText: 'Username'),
                 keyboardType: TextInputType.emailAddress,
                 onSaved: (value) {
                   _username = value!;
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
+                    return 'Please enter your username';
                   }
                   return null;
                 },
