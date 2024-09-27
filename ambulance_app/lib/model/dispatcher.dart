@@ -1,5 +1,5 @@
-import 'package:ambulance_app/models/operating_base.dart';
-import 'package:ambulance_app/models/user.dart';
+import 'package:ambulance_app/model/operating_base.dart';
+import 'package:ambulance_app/model/user.dart';
 
 class Dispatcher {
   int? id;

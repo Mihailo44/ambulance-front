@@ -1,7 +1,7 @@
 import 'package:ambulance_app/config.dart';
+import 'package:ambulance_app/main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 
 class AuthService {
 
@@ -22,9 +22,10 @@ class AuthService {
       if(response.statusCode == 200){
         final responseBody  = json.decode(response.body);
 
-        String accessToken = responseBody['access_token'];
         String refreshToken = responseBody['refresh_token'];
-
+        accessToken = responseBody['access_token'];
+        await secureStorage.write(key: 'refresh_token', value: refreshToken);
+      
         return {
           'access_token': accessToken,
           'refresh_token':refreshToken,

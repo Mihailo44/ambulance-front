@@ -1,5 +1,5 @@
-import 'package:ambulance_app/models/address.dart';
-import 'package:ambulance_app/models/user.dart';
+import 'package:ambulance_app/model/address.dart';
+import 'package:ambulance_app/model/user.dart';
 
 class Patient {
   int? id;

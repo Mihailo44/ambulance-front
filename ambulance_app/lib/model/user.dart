@@ -24,7 +24,7 @@ class User {
     required this.password,
     required this.dateOfBirth,
     required this.role,
-    this.token,
+    //this.token,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -36,7 +36,7 @@ class User {
       password: json['password'],
       dateOfBirth: DateTime.parse(json['date_of_birth']),
       role: UserRole.values[json['role']],
-      token: json['token'],
+      //token: json['token'],
     );
   }
 
@@ -49,7 +49,7 @@ class User {
       'password': password,
       'date_of_birth': dateOfBirth.toIso8601String(),
       'role': role.index,
-      'token': token,
+      //'token': token,
     };
   }
 }

@@ -1,4 +1,4 @@
-import 'package:ambulance_app/models/address.dart';
+import 'package:ambulance_app/model/address.dart';
 
 class OperatingBase {
   int? id;

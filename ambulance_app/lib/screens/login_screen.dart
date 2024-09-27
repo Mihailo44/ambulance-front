@@ -1,9 +1,8 @@
 import 'dart:developer';
 
-import 'package:ambulance_app/screens/registration/dispatcher_registration.dart';
+import 'package:ambulance_app/screens/registration/user_registration.dart';
 import 'package:ambulance_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
@@ -18,14 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
 
   final AuthService _authService = AuthService();
-  final FlutterSecureStorage _secureStorage = new FlutterSecureStorage();
-
-  void _mockLogin(){
-    log("ulogovao se");
-    setState(() {
-        _isLoading = false;
-      });
-  }
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -40,12 +31,10 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Login successfull"))
         );
-        await _secureStorage.write(key: 'access_token', value: response['access_token']);
-        await _secureStorage.write(key: 'refresh_token', value: response['refresh_token']);
 
       }else{
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Login unsuccessfull please try again"))
+          SnackBar(content: Text("Login failed please try again"))
         );
       }
 
@@ -54,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
         });
 
         Navigator.push(context,
-          MaterialPageRoute(builder: (context)=>  DispatcherRegistration())
+          MaterialPageRoute(builder: (context)=>  UserRegistration())
         );
       
     }
