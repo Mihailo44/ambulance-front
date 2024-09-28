@@ -5,7 +5,7 @@ class MedicalEvaluator {
   int? id;
   int userId;
   User user;
-  int operatingBaseId;
+  int? operatingBaseId;
   OperatingBase operatingBase;
 
   MedicalEvaluator({

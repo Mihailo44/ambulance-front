@@ -22,10 +22,6 @@ class _AllOperatingBasesState extends State<AllOperatingBases>{
     mockService.fillList(bases);
   }
 
-  void _logika(){
-    print("sto mi nisi dodo");
-  }
-
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -35,7 +31,35 @@ class _AllOperatingBasesState extends State<AllOperatingBases>{
           widthFactor: 0.8,
           child: SearchableList<OperatingBase>(
           initialList: bases, 
-          itemBuilder: (OperatingBase operatingBase) => RowItem(operatingBase: operatingBase,onAddPressed: _logika,),
+          itemBuilder: (OperatingBase operatingBase) => RowItem(
+              operatingBase: operatingBase,
+              onAddPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                    return AlertDialog(
+                        title: const Text("Confirmation"),
+                        content: const Text("Are you sure you want to proceed?"),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Cancel"),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog on Confirm
+                              Navigator.of(context).pop(operatingBase);
+                            },
+                            child: const Text("Confirm"),
+                          ),
+                        ],
+                      );
+                  },
+                );
+              },
+          ),
           errorWidget: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [

@@ -4,14 +4,11 @@ import 'package:ambulance_app/screens/registration/medical_evaluator_registratio
 import 'package:ambulance_app/screens/registration/user_registration.dart';
 import 'package:flutter/material.dart';
 
-class MyNavigationDrawer extends StatefulWidget{
-  const MyNavigationDrawer({super.key});
 
-  @override
-  _MyNavigationDrawerState createState() => _MyNavigationDrawerState();
-}
+class NavDrawer extends StatelessWidget{
 
-class _MyNavigationDrawerState extends State<MyNavigationDrawer>{
+  final Function(Widget) onSelectScreen;
+  const NavDrawer({super.key, required this.onSelectScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +26,8 @@ class _MyNavigationDrawerState extends State<MyNavigationDrawer>{
           ListTile(
             title: const Text("Medical Evaluator Registration"),
             onTap: (){
-              Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const MedicalEvaluatorRegistration()));
+              onSelectScreen(const MedicalEvaluatorRegistration());
+              Navigator.pop(context);
             },
           ),
           ListTile(title: Text("proba")),

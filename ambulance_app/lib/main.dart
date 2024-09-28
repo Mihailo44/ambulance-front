@@ -8,23 +8,15 @@ import 'screens/login_screen.dart';
 
 void main() => runApp(MyApp());
 
-final FlutterSecureStorage secureStorage = new FlutterSecureStorage();
+final FlutterSecureStorage secureStorage = FlutterSecureStorage();
 String accessToken="";
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Login Demo',
-      
-      home:Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.amber,
-          title: const Text('Zovi Hitnu'),
-        ),
-        body: HomeScreen(),
-        drawer:  MyNavigationDrawer(),
-      )
+      title: "Login Demo",
+      home: HomeScreen(),
     );
   }
 }
@@ -35,14 +27,26 @@ class HomeScreen extends StatefulWidget{
 }
 
 class _HomeScreenState extends State<HomeScreen>{
+
   Widget _currentScreen = HomePage();
+
+  void _onSelectScreen(Widget screen){
+    setState(() {
+      _currentScreen = screen;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Center(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.amber,
+        title: const Text("Zovi Hitnu"),
+      ),
+      body: Center(
         child: _currentScreen,
       ),
+      drawer: NavDrawer(onSelectScreen: _onSelectScreen),
     );
   }
 }
