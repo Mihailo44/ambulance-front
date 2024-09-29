@@ -1,52 +1,43 @@
 import 'package:ambulance_app/navigation/drawer.dart';
+import 'package:ambulance_app/navigation/screen_navigation.dart';
 import 'package:ambulance_app/screens/home/home.dart';
-import 'package:ambulance_app/screens/registration/user_registration.dart';
-import 'package:ambulance_app/screens/tables/all_operating_bases.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'screens/login_screen.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(
+    MyApp(),
+  );
+}
 
 final FlutterSecureStorage secureStorage = FlutterSecureStorage();
-String accessToken="";
+String accessToken = "";
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: "Login Demo",
-      home: HomeScreen(),
+      routerConfig: kIsWeb ? router : null,
     );
   }
 }
 
-class HomeScreen extends StatefulWidget{
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen>{
-
-  Widget _currentScreen = HomePage();
-
-  void _onSelectScreen(Widget screen){
-    setState(() {
-      _currentScreen = screen;
-    });
-  }
-
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final Widget currentScreen = HomePage();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.amber,
         title: const Text("Zovi Hitnu"),
       ),
       body: Center(
-        child: _currentScreen,
+        child: currentScreen,
       ),
-      drawer: NavDrawer(onSelectScreen: _onSelectScreen),
+      drawer: const NavDrawer(),
     );
   }
 }

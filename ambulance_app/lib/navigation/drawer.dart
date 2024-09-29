@@ -1,14 +1,13 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
+import 'package:ambulance_app/navigation/screen_navigation.dart';
+import 'package:ambulance_app/screens/home/home.dart';
 import 'package:ambulance_app/screens/registration/medical_evaluator_registration.dart';
-import 'package:ambulance_app/screens/registration/user_registration.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-
-class NavDrawer extends StatelessWidget{
-
-  final Function(Widget) onSelectScreen;
-  const NavDrawer({super.key, required this.onSelectScreen});
+class NavDrawer extends StatelessWidget {
+  const NavDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,7 @@ class NavDrawer extends StatelessWidget{
       child: ListView(
         padding: const EdgeInsets.all(8.0),
         children: [
-           const SizedBox(
+          const SizedBox(
             height: 70.0,
             child: DrawerHeader(
               decoration: BoxDecoration(color: Colors.lightBlue),
@@ -25,9 +24,9 @@ class NavDrawer extends StatelessWidget{
           ),
           ListTile(
             title: const Text("Medical Evaluator Registration"),
-            onTap: (){
-              onSelectScreen(const MedicalEvaluatorRegistration());
-              Navigator.pop(context);
+            onTap: () {
+              context.go("/evaluator_registration");
+              //Navigator.pop(context);
             },
           ),
           ListTile(title: Text("proba")),
