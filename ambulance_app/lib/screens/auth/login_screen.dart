@@ -25,27 +25,22 @@ class _LoginPageState extends State<LoginPage> {
       });
       _formKey.currentState!.save();
 
-      final response = await _authService.login(_username, _password);      
+      final response = await _authService.login(_username, _password);
 
-      if(!response.isEmpty){
+      if (!response.isEmpty) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Login successfull")));
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Login successfull"))
-        );
-
-      }else{
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Login failed please try again"))
-        );
+            SnackBar(content: Text("Login failed please try again")));
       }
 
-        setState(() {
-          _isLoading = false;
-        });
+      setState(() {
+        _isLoading = false;
+      });
 
-        Navigator.push(context,
-          MaterialPageRoute(builder: (context)=>  UserRegistration())
-        );
-      
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => UserRegistration()));
     }
   }
 

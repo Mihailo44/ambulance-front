@@ -1,10 +1,10 @@
 import 'package:ambulance_app/model/medical_evaluator.dart';
 import 'package:ambulance_app/model/operating_base.dart';
 import 'package:ambulance_app/model/user.dart';
-import 'package:ambulance_app/navigation/screen_navigation.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class MedicalEvaluatorRegistration extends StatefulWidget {
   MedicalEvaluatorRegistration({Key? key}) : super(key: key);
@@ -64,20 +64,15 @@ class MedicalEvaluatorRegistrationState
                     height: 15.0,
                   ),
                   ElevatedButton(
-                      // onPressed: () async {
-                      //   final OperatingBase selectedBase = await Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //           builder: (context) => AllOperatingBases()));
-
-                      //   //if (selectedBase != null){
-                      //   setState(() {
-                      //     _selectedOperatingBase = selectedBase;
-                      //   });
-                      //   //}
-                      // },
-                      onPressed: () {
-                        //setScreen("AllOperatingBases", ref);
+                      onPressed: () async {
+                        final OperatingBase selectedBase = await context
+                                .push('/evaluator_registration/all_bases')
+                            as OperatingBase;
+                        if (selectedBase != null) {
+                          setState(() {
+                            _selectedOperatingBase = selectedBase;
+                          });
+                        }
                       },
                       child: const Text("Pick an operating base")),
                   const SizedBox(height: 15.0),
