@@ -31,7 +31,6 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             title: const Text("All Bases"),
             onTap: () {
-              context.go("/all_bases");
               Navigator.pop(context);
             },
           ),

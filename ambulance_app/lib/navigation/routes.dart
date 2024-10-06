@@ -1,4 +1,6 @@
-import 'package:ambulance_app/navigation/proba.dart';
+import 'package:ambulance_app/main.dart';
+import 'package:ambulance_app/main_layout.dart';
+import 'package:ambulance_app/screens/auth/login_screen.dart';
 import 'package:ambulance_app/screens/home/home.dart';
 import 'package:ambulance_app/screens/registration/medical_evaluator_registration.dart';
 import 'package:ambulance_app/screens/tables/all_operating_bases.dart';
@@ -11,6 +13,13 @@ final _sectionNavigatorKey = GlobalKey<NavigatorState>();
 final router = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/',
+  redirect: (BuildContext context, state) {
+    if (accessToken.isEmpty) {
+      return '/login';
+    } else {
+      return null;
+    }
+  },
   routes: <RouteBase>[
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
@@ -25,6 +34,10 @@ final router = GoRouter(
           // Add this branch routes
           // each routes with its sub routes if available e.g feed/uuid/details
           routes: <RouteBase>[
+            GoRoute(
+              path: "/login",
+              builder: (context, state) => LoginPage(),
+            ),
             GoRoute(
               path: '/',
               builder: (context, state) => HomePage(),

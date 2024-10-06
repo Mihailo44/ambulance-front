@@ -83,14 +83,15 @@ class MedicalEvaluatorRegistrationState
                           lastname: _lastnameController.value.text,
                           username: "username",
                           password: _passwordController.value.text,
-                          dateOfBirth: DateTime(2021, 9, 7, 17,
-                              30), //DateTime.parse(_dateOfBirthController.value.text),
+                          dateOfBirth:
+                              DateTime.parse(_dateOfBirthController.value.text),
                           role: UserRole.MEDICAL_EVALUATOR);
                       MedicalEvaluator evaluator = MedicalEvaluator(
                           userId: -1,
                           user: user,
                           operatingBaseId: _selectedOperatingBase!.id,
                           operatingBase: _selectedOperatingBase!);
+
                       showSnackBar(
                           context, _selectedOperatingBase!.address.city);
                     },
