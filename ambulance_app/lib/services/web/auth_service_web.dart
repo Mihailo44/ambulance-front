@@ -1,23 +1,30 @@
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:ambulance_app/services/abstracts/auth_service_abstract.dart';
 import 'package:ambulance_app/config.dart';
 import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/model/basic_user_info.dart';
 import 'package:ambulance_app/model/user.dart';
-import 'package:flutter/material.dart';
 import 'package:http/browser_client.dart';
 import 'dart:convert';
 
-class AuthService {
+class AuthService extends AuthServiceAbstract {
 
+  @override
   Future<void> login(String username, String password) async {
     final url = Uri.parse('$apiUrl/auth');
     var client = BrowserClient()..withCredentials = true;
     try {
+
+      if (accessToken!=''){
+        return;
+      }
+
       final response = await client.post(
         url,
-        headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          },
         body: json.encode({
           'username': username,
           'password': password,
@@ -40,6 +47,7 @@ class AuthService {
     }
   }
 
+  @override
   Future<void> refreshTokens() async{
     final url = Uri.parse('$apiUrl/refresh-tokens');
     var client = BrowserClient()..withCredentials=true;
@@ -60,6 +68,7 @@ class AuthService {
     }
   }
 
+  @override
   void logout() async {
     final url = Uri.parse('$apiUrl/logout');
     var client = BrowserClient()..withCredentials=true;

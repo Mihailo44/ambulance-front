@@ -20,7 +20,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: "Ambulance App",
-      routerConfig: kIsWeb ? router : null,
+      //routerConfig: kIsWeb ? router : null,
+      routerConfig: router,
       debugShowCheckedModeBanner: false,
     );
   }

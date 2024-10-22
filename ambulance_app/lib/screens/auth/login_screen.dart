@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:ambulance_app/main.dart';
-//import 'package:ambulance_app/services/auth_service.dart';
+import 'package:ambulance_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,7 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   String _password = '';
   bool _isLoading = false;
 
-  //final AuthService _authService = AuthService();
+  final _authService = AuthService();
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
       });
       _formKey.currentState!.save();
 
-      //final response = await _authService.login(_username, _password);
+      final response = await _authService.login(_username, _password);
 
       if (accessToken.isNotEmpty) {
         ScaffoldMessenger.of(context)
