@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:ambulance_app/screens/registration/user_registration.dart';
-import 'package:ambulance_app/services/auth_service.dart';
+import 'package:ambulance_app/main.dart';
+//import 'package:ambulance_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,7 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   String _password = '';
   bool _isLoading = false;
 
-  final AuthService _authService = AuthService();
+  //final AuthService _authService = AuthService();
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -25,9 +25,9 @@ class _LoginPageState extends State<LoginPage> {
       });
       _formKey.currentState!.save();
 
-      final response = await _authService.login(_username, _password);
+      //final response = await _authService.login(_username, _password);
 
-      if (!response.isEmpty) {
+      if (accessToken.isNotEmpty) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Login successfull")));
       } else {
@@ -37,17 +37,16 @@ class _LoginPageState extends State<LoginPage> {
 
       setState(() {
         _isLoading = false;
+        context.go("/");
       });
-
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => UserRegistration()));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
+    return FractionallySizedBox(
+      widthFactor: 0.5,
+      child: Padding(
         padding: EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
@@ -80,13 +79,18 @@ class _LoginPageState extends State<LoginPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
-              _isLoading
-                  ? CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: _login,
-                      child: Text('Login'),
-                    ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _login,
+                child: Text('Login'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: (){
+                  log("register");
+                }, 
+                child: const Text("Register")
+              )
             ],
           ),
         ),

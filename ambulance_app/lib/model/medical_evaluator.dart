@@ -5,7 +5,7 @@ class MedicalEvaluator {
   int? id;
   int userId;
   User user;
-  int? operatingBaseId;
+  String? operatingBaseId;
   OperatingBase operatingBase;
 
   MedicalEvaluator({
@@ -29,10 +29,9 @@ class MedicalEvaluator {
   Map<String,dynamic> toJson(){
     return {
       'id':id,
-      'userId':userId,
+      'user_id':userId,
       'user':user.toJson(),
-      'operatingBaseId': operatingBaseId,
-      'operatingBase': operatingBase.toJson()
+      'operating_base_id': operatingBaseId,
     };
   }
 }

@@ -1,11 +1,16 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
+import 'package:ambulance_app/services/auth_service.dart';
+import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class NavDrawer extends StatelessWidget {
+
+  final AuthService _authService = AuthService();
   final StatefulNavigationShell navigationShell;
-  const NavDrawer(this.navigationShell, {Key? key}) : super(key: key);
+
+ NavDrawer(this.navigationShell, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +34,10 @@ class NavDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text("All Bases"),
+            title: const Text("Logout"),
             onTap: () {
+              //_authService.logout();
+              showSnackBar(context, "You've been logged out");
               Navigator.pop(context);
             },
           ),

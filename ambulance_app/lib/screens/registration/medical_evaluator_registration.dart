@@ -1,6 +1,7 @@
 import 'package:ambulance_app/model/medical_evaluator.dart';
 import 'package:ambulance_app/model/operating_base.dart';
 import 'package:ambulance_app/model/user.dart';
+import 'package:ambulance_app/services/admin_service.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class MedicalEvaluatorRegistrationState
   final _passwordController = TextEditingController();
   final _dateOfBirthController = TextEditingController();
   OperatingBase? _selectedOperatingBase;
+  final _adminService = AdminService();
 
   @override
   void dispose() {
@@ -29,6 +31,33 @@ class MedicalEvaluatorRegistrationState
     _lastnameController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _registerEvaluator() async{
+      User user = User(
+          id: -1,
+          firstname: _firstnameController.value.text,
+          lastname: _lastnameController.value.text,
+          username: "username",
+          password: _passwordController.value.text,
+          dateOfBirth:
+              DateTime.parse(_dateOfBirthController.value.text),
+          role: UserRole.MEDICAL_EVALUATOR);
+
+      MedicalEvaluator evaluator = MedicalEvaluator(
+          userId: -1,
+          user: user,
+          operatingBaseId: _selectedOperatingBase!.id,
+          operatingBase: _selectedOperatingBase!);
+
+        final response = _adminService.registerEvaluator(evaluator);
+
+        if(await response){
+          showSnackBar(context, "Evaluator created");
+          context.go("/");
+        }else{
+          showSnackBar(context, "Failed to create");
+        }
   }
 
   @override
@@ -78,22 +107,7 @@ class MedicalEvaluatorRegistrationState
                   const SizedBox(height: 15.0),
                   ElevatedButton(
                     onPressed: () {
-                      User user = User(
-                          firstname: _firstnameController.value.text,
-                          lastname: _lastnameController.value.text,
-                          username: "username",
-                          password: _passwordController.value.text,
-                          dateOfBirth:
-                              DateTime.parse(_dateOfBirthController.value.text),
-                          role: UserRole.MEDICAL_EVALUATOR);
-                      MedicalEvaluator evaluator = MedicalEvaluator(
-                          userId: -1,
-                          user: user,
-                          operatingBaseId: _selectedOperatingBase!.id,
-                          operatingBase: _selectedOperatingBase!);
-
-                      showSnackBar(
-                          context, _selectedOperatingBase!.address.city);
+                      _registerEvaluator();
                     },
                     child: const Text("Register"),
                   ),

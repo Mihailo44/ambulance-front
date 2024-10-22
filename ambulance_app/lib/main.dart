@@ -1,7 +1,8 @@
+import 'package:ambulance_app/model/basic_user_info.dart';
+import 'package:ambulance_app/model/user.dart';
 import 'package:ambulance_app/navigation/routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
   runApp(
@@ -9,8 +10,10 @@ void main() {
   );
 }
 
-final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+String accessTokenExpiry = "";
 String accessToken = "";
+BasicUserInfo? basicUser;
+User? loggedUser;
 
 class MyApp extends StatelessWidget {
   @override
@@ -18,6 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: "Ambulance App",
       routerConfig: kIsWeb ? router : null,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
