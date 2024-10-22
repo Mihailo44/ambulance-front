@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:ambulance_app/main.dart';
+import 'package:ambulance_app/screens/registration/patient_registration.dart';
 import 'package:ambulance_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -87,7 +88,10 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: (){
-                  log("register");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PatientRegistration()),
+                  );
                 }, 
                 child: const Text("Register")
               )

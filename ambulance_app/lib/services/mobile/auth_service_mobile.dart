@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:ambulance_app/services/abstracts/auth_service_abstract.dart';
 import 'package:ambulance_app/config.dart';
@@ -21,7 +20,7 @@ class AuthService extends AuthServiceAbstract {
         url,
         headers: {
           'Content-Type': 'application/json',
-          HttpHeaders.userAgentHeader: 'Mobile',
+          'User-Agent': 'Mobile',
           },
         body: json.encode({
           'username': username,
@@ -30,7 +29,6 @@ class AuthService extends AuthServiceAbstract {
       );
 
       if (response.statusCode == 200) {
-        log("USAO OVDEEEE");
         final responseBody = json.decode(response.body);
 
         accessToken = responseBody['access_token'] ?? '';
