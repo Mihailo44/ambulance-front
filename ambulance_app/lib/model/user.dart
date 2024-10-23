@@ -10,7 +10,7 @@ class User {
   int? id;
   String firstname;
   String lastname;
-  String username;
+  String? username;
   String password;
   DateTime dateOfBirth;
   UserRole role;
@@ -20,7 +20,7 @@ class User {
     this.id,
     required this.firstname,
     required this.lastname,
-    required this.username,
+    this.username,
     required this.password,
     required this.dateOfBirth,
     required this.role,

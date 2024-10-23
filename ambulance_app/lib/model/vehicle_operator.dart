@@ -21,8 +21,8 @@ class VehicleOperator {
       id: json['id'],
       userId: json['userId'],
       user: User.fromJson(json['user']),
-      operatingBaseId: json['operatingBaseId'],
-      operatingBase: OperatingBase.fromJson(json['operatingBase']),
+      operatingBaseId: json['operating_base_id'],
+      operatingBase: OperatingBase.fromJson(json['operating_base']),
     );
   }
 

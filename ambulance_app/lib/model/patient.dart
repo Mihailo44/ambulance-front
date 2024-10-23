@@ -1,50 +1,50 @@
-import 'package:ambulance_app/model/address.dart';
+import 'package:ambulance_app/model/allergy.dart';
+import 'package:ambulance_app/model/disease.dart';
 import 'package:ambulance_app/model/user.dart';
 
 class Patient {
-  int? id;
-  int userId;
   User user;
   String contactNumber;
   String closePersonContact;
   String bloodType;
-  int addressId;
-  Address address;
+  String gender;
+  String yearOfBirth;
+  List<Allergy>? alergies;
+  List<Disease>? diseases;
+  String? pastOperations;
 
   Patient({
-    this.id,
-    required this.userId,
     required this.user,
     required this.contactNumber,
     required this.closePersonContact,
     required this.bloodType,
-    required this.addressId,
-    required this.address
+    required this.gender,
+    required this.yearOfBirth,
+    this.alergies,
+    this.diseases,
+    this.pastOperations,
   });
 
+
+  //TODO Namestiti da se popune alergije i bolesti
   factory Patient.fromJson(Map<String,dynamic> json){
     return Patient(
-      id: json['id'],
-      userId: json['userId'],
       user: User.fromJson(json['user']),
-      contactNumber: json['contactNumber'],
-      closePersonContact: json['closePersonContact'],
-      bloodType: json['bloodType'],
-      addressId: json['addressId'],
-      address: Address.fromJson(json['address']),
+      contactNumber: json['contact_number'],
+      closePersonContact: json['close_person_contact'],
+      bloodType: json['blood_type'],
+      gender: json['gender'],
+      yearOfBirth: json['year_of_birth'],
+      pastOperations: json['past_operations']
     );
   }
 
   Map<String,dynamic> toJson(){
     return {
-      'id':id,
-      'userId':userId,
       'user':user.toJson(),
-      'contactNumber': contactNumber,
-      'closePersonContact': closePersonContact,
-      'bloodType' : bloodType,
-      'addressId' : addressId,
-      'address' : address.toJson(),
+      'contact_number': contactNumber,
+      'close_person_contact': closePersonContact,
+      'blood_type' : bloodType,
     };
   }
 }

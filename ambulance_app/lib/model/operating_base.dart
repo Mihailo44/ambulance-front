@@ -14,7 +14,7 @@ class OperatingBase {
   factory OperatingBase.fromJson(Map<String,dynamic> json){
     return OperatingBase(
       id: json['id'],
-      addressId: json['addressId'],
+      addressId: json['address_id'],
       address: Address.fromJson(json['address']),
     );
   }

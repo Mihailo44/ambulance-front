@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/screens/registration/patient_registration.dart';
 import 'package:ambulance_app/services/auth_service.dart';
@@ -7,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
+
+  const LoginPage({super.key});
+
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {

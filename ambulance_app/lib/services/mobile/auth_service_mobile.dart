@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:ambulance_app/services/abstracts/auth_service_abstract.dart';
 import 'package:ambulance_app/config.dart';
 import 'package:ambulance_app/main.dart';
