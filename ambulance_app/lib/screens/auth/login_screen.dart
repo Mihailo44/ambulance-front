@@ -1,11 +1,13 @@
 import 'package:ambulance_app/main.dart';
+import 'package:ambulance_app/model/question.dart';
+import 'package:ambulance_app/screens/questions/questions_screen.dart';
+import 'package:ambulance_app/screens/questions/trauma_type_screen.dart';
 import 'package:ambulance_app/screens/registration/patient_registration.dart';
 import 'package:ambulance_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
-
   const LoginPage({super.key});
 
   @override
@@ -27,14 +29,20 @@ class _LoginPageState extends State<LoginPage> {
       });
       _formKey.currentState!.save();
 
-      final response = await _authService.login(_username, _password);
+      var _ = await _authService.login(_username, _password);
 
       if (accessToken.isNotEmpty) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Login successfull")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Login successfull"),
+          ),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Login failed please try again")));
+         const SnackBar(
+            content: Text("Login failed please try again"),
+          ),
+        );
       }
 
       setState(() {
@@ -47,17 +55,25 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      widthFactor: 0.5,
+      widthFactor: 0.65,
       child: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'Username'),
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                  labelStyle: TextStyle(
+                    fontSize: 22,
+                  ),
+                ),
                 keyboardType: TextInputType.emailAddress,
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
                 onSaved: (value) {
                   _username = value!;
                 },
@@ -69,7 +85,12 @@ class _LoginPageState extends State<LoginPage> {
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  labelStyle: TextStyle(
+                    fontSize: 22,
+                  ),
+                ),
                 obscureText: true,
                 onSaved: (value) {
                   _password = value!;
@@ -88,14 +109,24 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PatientRegistration()),
-                  );
-                }, 
-                child: const Text("Register")
-              )
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PatientRegistration()),
+                    );
+                  },
+                  child: const Text("Register")),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TraumaTypeScreen()),
+                    );
+                  },
+                  child: const Text("Trauma"))
             ],
           ),
         ),

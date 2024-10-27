@@ -1,4 +1,4 @@
-import 'package:ambulance_app/model/patient.dart';
+import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/services/abstracts/patient_service_abstract.dart';
 
 class PatientService extends PatientServiceAbstract{

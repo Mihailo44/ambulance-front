@@ -1,6 +1,6 @@
 import 'package:ambulance_app/model/allergy.dart';
 import 'package:ambulance_app/model/disease.dart';
-import 'package:ambulance_app/model/user.dart';
+import 'package:ambulance_app/model/users/user.dart';
 
 class Patient {
   User user;

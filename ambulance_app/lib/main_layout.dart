@@ -12,7 +12,20 @@ class ScaffoldWithDrawer extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.amber,
-        title: const Text("Zovi Hitnu"),
+        title: const Text(
+          "Zovi Hitnu",
+          style: TextStyle(
+            fontSize: 23.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+
+        actions: [
+         IconButton(
+            onPressed: (){}, 
+            icon: const Icon(Icons.menu),),
+        ],
+
       ),
       body: navigationShell, // Displays the current tab's content
       drawer: NavDrawer(navigationShell),

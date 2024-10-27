@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:ambulance_app/services/abstracts/auth_service_abstract.dart';
 import 'package:ambulance_app/config.dart';
 import 'package:ambulance_app/main.dart';
-import 'package:ambulance_app/model/basic_user_info.dart';
+import 'package:ambulance_app/model/users/basic_user_info.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 

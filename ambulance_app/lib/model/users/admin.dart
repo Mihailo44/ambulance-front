@@ -1,4 +1,4 @@
-import 'package:ambulance_app/model/user.dart';
+import 'package:ambulance_app/model/users/user.dart';
 
 class Admin {
   int? id;

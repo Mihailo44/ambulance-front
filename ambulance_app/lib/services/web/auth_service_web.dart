@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:ambulance_app/services/abstracts/auth_service_abstract.dart';
 import 'package:ambulance_app/config.dart';
 import 'package:ambulance_app/main.dart';
-import 'package:ambulance_app/model/basic_user_info.dart';
-import 'package:ambulance_app/model/user.dart';
+import 'package:ambulance_app/model/users/basic_user_info.dart';
+import 'package:ambulance_app/model/users/user.dart';
 import 'package:http/browser_client.dart';
 import 'dart:convert';
 

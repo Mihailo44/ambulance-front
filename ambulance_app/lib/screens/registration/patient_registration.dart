@@ -1,5 +1,5 @@
-import 'package:ambulance_app/model/patient.dart';
-import 'package:ambulance_app/model/user.dart';
+import 'package:ambulance_app/model/users/patient.dart';
+import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:ambulance_app/services/patient_service.dart';
 import 'package:ambulance_app/util/snackbar.dart';

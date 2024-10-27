@@ -1,6 +1,6 @@
-import 'package:ambulance_app/model/medical_evaluator.dart';
+import 'package:ambulance_app/model/users/medical_evaluator.dart';
 import 'package:ambulance_app/model/operating_base.dart';
-import 'package:ambulance_app/model/user.dart';
+import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/services/admin_service.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:ambulance_app/util/snackbar.dart';

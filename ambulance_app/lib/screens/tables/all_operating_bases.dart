@@ -61,7 +61,7 @@ class _AllOperatingBasesState extends State<AllOperatingBases> {
             ),
             errorWidget: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Icon(
                   Icons.error,
                   color: Colors.red,

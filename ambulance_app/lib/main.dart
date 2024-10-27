@@ -1,7 +1,6 @@
-import 'package:ambulance_app/model/basic_user_info.dart';
-import 'package:ambulance_app/model/user.dart';
+import 'package:ambulance_app/model/users/basic_user_info.dart';
+import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/navigation/routes.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -19,10 +18,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: "Ambulance App",
+      title: "Zovi Hitnu",
       //routerConfig: kIsWeb ? router : null,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(useMaterial3: true),
     );
   }
 }

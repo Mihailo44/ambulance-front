@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:ambulance_app/config.dart';
-import 'package:ambulance_app/model/medical_evaluator.dart';
+import 'package:ambulance_app/model/users/medical_evaluator.dart';
 import 'package:http/browser_client.dart';
 
 class AdminService {
