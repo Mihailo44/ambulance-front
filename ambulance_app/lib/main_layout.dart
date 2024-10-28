@@ -11,7 +11,7 @@ class ScaffoldWithDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber,
+        
         title: const Text(
           "Zovi Hitnu",
           style: TextStyle(

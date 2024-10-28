@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 void showSnackBar(BuildContext context, String message) {
   WidgetsBinding.instance.addPostFrameCallback((_){
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: const Color.fromARGB(255, 66, 103, 210),

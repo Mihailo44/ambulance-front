@@ -17,7 +17,7 @@ class MedicalEvaluatorRegistration extends StatefulWidget {
 
 class MedicalEvaluatorRegistrationState
     extends State<MedicalEvaluatorRegistration> {
-  final _formKey = GlobalKey<FormState>();
+  final _evaluatorFormKey = GlobalKey<FormState>();
   final _firstnameController = TextEditingController();
   final _lastnameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -30,6 +30,7 @@ class MedicalEvaluatorRegistrationState
     _firstnameController.dispose();
     _lastnameController.dispose();
     _passwordController.dispose();
+    _dateOfBirthController.dispose();
     super.dispose();
   }
 
@@ -67,7 +68,7 @@ class MedicalEvaluatorRegistrationState
         widthFactor: 0.7,
         child: Center(
           child: Form(
-              key: _formKey,
+              key: _evaluatorFormKey,
               child: Column(
                 children: [
                   const SizedBox(height: 15.0),

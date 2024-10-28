@@ -16,9 +16,7 @@ class TraumaTypeCard extends StatelessWidget {
       ),
       child: ElevatedButton(
         onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          backgroundColor: const Color.fromARGB(255, 235, 235, 212),
+        style: ElevatedButton.styleFrom(         
           padding: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -28,14 +26,14 @@ class TraumaTypeCard extends StatelessWidget {
           padding: const EdgeInsets.all(6.0),
           child: AutoSizeText(
                 label,
-                maxLines: 2,
+                maxLines: label.toUpperCase() == "ELECTROCUTION" || label.toUpperCase() == "UNCONSCIOUSNESS" ? 1 : 2,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   overflow: TextOverflow.ellipsis,
                   fontSize: 23,
+                  
                   fontWeight: FontWeight.w500,
                   color: Color.fromARGB(255, 2, 41, 108),
-                  
                 ),
               ),
         ),

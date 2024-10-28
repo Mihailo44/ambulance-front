@@ -1,9 +1,8 @@
 import 'package:ambulance_app/main.dart';
-import 'package:ambulance_app/model/question.dart';
-import 'package:ambulance_app/screens/questions/questions_screen.dart';
 import 'package:ambulance_app/screens/questions/trauma_type_screen.dart';
 import 'package:ambulance_app/screens/registration/patient_registration.dart';
 import 'package:ambulance_app/services/auth_service.dart';
+import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,11 +15,17 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  String _username = '';
-  String _password = '';
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _authService = AuthService();
   bool _isLoading = false;
 
-  final _authService = AuthService();
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -29,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
       });
       _formKey.currentState!.save();
 
-      var _ = await _authService.login(_username, _password);
+      var _ = await _authService.login(_usernameController.text, _passwordController.text);
 
       if (accessToken.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -47,8 +52,9 @@ class _LoginPageState extends State<LoginPage> {
 
       setState(() {
         _isLoading = false;
-        context.go("/");
       });
+
+      context.go("/");
     }
   }
 
@@ -63,49 +69,13 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Username',
-                  labelStyle: TextStyle(
-                    fontSize: 22,
-                  ),
-                ),
-                keyboardType: TextInputType.emailAddress,
-                style: const TextStyle(
-                  fontSize: 20,
-                ),
-                onSaved: (value) {
-                  _username = value!;
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your username';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  labelStyle: TextStyle(
-                    fontSize: 22,
-                  ),
-                ),
-                obscureText: true,
-                onSaved: (value) {
-                  _password = value!;
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
-              ),
+              buildTextFormField(controller: _usernameController, labelText: "Username",),
+              const SizedBox(height: 10,),
+             buildTextFormField(controller: _passwordController, labelText: "Password",),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _login,
-                child: Text('Login'),
+                child: const Text('Login'),
               ),
               const SizedBox(height: 20),
               ElevatedButton(

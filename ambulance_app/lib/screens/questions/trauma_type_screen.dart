@@ -14,7 +14,11 @@ class TraumaTypeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
      void _openTraumaQuestionsOverlay(){
-    showModalBottomSheet(context: context, builder: (ctx) => QuestionsScreen());
+    showModalBottomSheet(
+      isScrollControlled: true,
+      shape: const Border(top: BorderSide.none),
+      context: context, 
+      builder: (ctx) => QuestionsScreen(),);
     }
 
     return Column(children: [
@@ -39,7 +43,7 @@ class TraumaTypeScreen extends StatelessWidget {
           ),
           itemCount: traumaTypes.length,
           itemBuilder: (context, index) {
-            return TraumaTypeCard(label: traumaTypes[index],onTap: _openTraumaQuestionsOverlay,);
+            return TraumaTypeCard(label: traumaTypes[index],onTap: _openTraumaQuestionsOverlay);
           },
         ),
       ),

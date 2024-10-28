@@ -4,6 +4,7 @@ import 'package:ambulance_app/generic_widgets/buttons/button.dart';
 import 'package:ambulance_app/mock_data/questions_mock.dart';
 import 'package:ambulance_app/model/question.dart';
 import 'package:ambulance_app/model/response.dart' as my;
+import 'package:ambulance_app/screens/questions/multiple_victims_alert.dart';
 import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
 
@@ -31,30 +32,39 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     _questions.addAll(QuestionsMock.questions);
   }
 
-  void answerQuestion(String answer) {
+  void _answerQuestion(String answer) {
     setState(() {
       if (questionIndex < _questions.length - 1) {
         questionIndex++;
-        var response = my.Response(question: _questions[questionIndex].body,response: answer);
-        for ( int i = 0; i < _responses.length; i++){
-          if(_responses[i].question == _questions[questionIndex].body){
-            if(_responses[i].response != answer){
+        var response = my.Response(
+            question: _questions[questionIndex].body, response: answer);
+        for (int i = 0; i < _responses.length; i++) {
+          if (_responses[i].question == _questions[questionIndex].body) {
+            if (_responses[i].response != answer) {
               _responses[i].response = answer;
             }
-          }else{
+          } else {
             _responses.add(response);
             break;
           }
         }
       } else {
-
         //TODO sva pitanja odgovorena salji zahtev i obrisi listu odgovora
 
-        for(int i = 0; i < _responses.length; i++){
+        for (int i = 0; i < _responses.length; i++) {
           print(_responses[i].response);
         }
       }
     });
+  }
+
+  void _openAdditionalVictimsModal() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => const MultipleVictimsAlert(),
+      ),
+    );
   }
 
   @override
@@ -66,22 +76,20 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            currentQuestion.body,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 27.0,
-              color: Colors.black,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              currentQuestion.body,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
-          const SizedBox(
-            height: 15.0,
-          ),
+          const SizedBox(height: 15.0),
           ...currentQuestion.availableAnswers.map((answer) {
             return AnswerButton(
               answerText: answer,
-              onTap: (){
-                answerQuestion(answer);
+              onTap: () {
+                _answerQuestion(answer);
               },
             );
           }),
@@ -89,10 +97,10 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.all(11.0),
+                padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 210, 227, 252),
+                    //backgroundColor: const Color.fromARGB(255, 210, 227, 252),
                     minimumSize:
                         Size(MediaQuery.of(context).size.width * 0.25, 60),
                   ),
@@ -108,17 +116,15 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                   child: const Text(
                     "Back",
                     style: TextStyle(
-                      fontSize: 18.0,
                       color: Color.fromARGB(255, 23, 78, 166),
                     ),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 206, 234, 214),
                     minimumSize:
                         Size(MediaQuery.of(context).size.width * 0.35, 60),
                   ),
@@ -127,14 +133,13 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                       if (questionIndex < _questions.length - 1) {
                         questionIndex++;
                       } else {
-                        //TODO SALJI ZAHTEV
+                        _openAdditionalVictimsModal();
                       }
                     });
                   },
                   child: const Text(
                     "I don't know",
                     style: TextStyle(
-                      fontSize: 18.0,
                       color: Color.fromARGB(255, 23, 78, 166),
                     ),
                   ),
