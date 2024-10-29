@@ -1,4 +1,5 @@
 import 'package:ambulance_app/generic_widgets/custom_list_tile.dart';
+import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/mock_data/operating_bases_mock.dart';
 import 'package:ambulance_app/model/operating_base.dart';
 import 'package:flutter/material.dart';
@@ -115,6 +116,7 @@ class RowItem extends StatelessWidget {
               subtitle: operatingBase.address.number,
               iconData: Icons.add,
               onPressed: onAddPressed,
+              whoCalled: Screen.allBases,
             ),
           ),
         ],

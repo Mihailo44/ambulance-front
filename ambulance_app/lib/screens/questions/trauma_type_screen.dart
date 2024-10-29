@@ -18,7 +18,7 @@ class TraumaTypeScreen extends StatelessWidget {
       isScrollControlled: true,
       shape: const Border(top: BorderSide.none),
       context: context, 
-      builder: (ctx) => QuestionsScreen(),);
+      builder: (ctx) => const QuestionsScreen(),);
     }
 
     return Column(children: [

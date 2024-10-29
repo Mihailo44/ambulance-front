@@ -1,5 +1,6 @@
 import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/screens/questions/trauma_type_screen.dart';
+import 'package:ambulance_app/screens/questions/victims_list.dart';
 import 'package:ambulance_app/screens/registration/patient_registration.dart';
 import 'package:ambulance_app/services/auth_service.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
@@ -22,9 +23,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
+    super.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
-    super.dispose();
   }
 
   Future<void> _login() async {
@@ -34,7 +35,8 @@ class _LoginPageState extends State<LoginPage> {
       });
       _formKey.currentState!.save();
 
-      var _ = await _authService.login(_usernameController.text, _passwordController.text);
+      var _ = await _authService.login(
+          _usernameController.text, _passwordController.text);
 
       if (accessToken.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -42,9 +44,10 @@ class _LoginPageState extends State<LoginPage> {
             content: Text("Login successfull"),
           ),
         );
+       // context.go("/");
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-         const SnackBar(
+          const SnackBar(
             content: Text("Login failed please try again"),
           ),
         );
@@ -53,8 +56,6 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _isLoading = false;
       });
-
-      context.go("/");
     }
   }
 
@@ -69,9 +70,17 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              buildTextFormField(controller: _usernameController, labelText: "Username",),
-              const SizedBox(height: 10,),
-             buildTextFormField(controller: _passwordController, labelText: "Password",),
+              buildTextFormField(
+                controller: _usernameController,
+                labelText: "Username",
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              buildTextFormField(
+                controller: _passwordController,
+                labelText: "Password",
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _login,
@@ -79,24 +88,25 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PatientRegistration()),
-                    );
-                  },
-                  child: const Text("Register")),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PatientRegistration()),
+                  );
+                },
+                child: const Text("Register"),
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => TraumaTypeScreen()),
-                    );
-                  },
-                  child: const Text("Trauma"))
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const VictimList()),
+                  );
+                },
+                child: const Text("Victims"),
+              ),
             ],
           ),
         ),

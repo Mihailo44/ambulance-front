@@ -4,6 +4,7 @@ import 'package:ambulance_app/navigation/routes.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  
   runApp(
     MyApp(),
   );
@@ -13,6 +14,10 @@ String accessTokenExpiry = "";
 String accessToken = "";
 BasicUserInfo? basicUser;
 User? loggedUser;
+enum Screen{
+  victimsScreen,
+  allBases,
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -52,7 +57,7 @@ class MyApp extends StatelessWidget {
               foregroundColor: Colors.blueAccent,
               padding: const EdgeInsets.all(12.0),
               minimumSize: const Size(150, 50),
-              overlayColor: Colors.amber,
+              overlayColor: const Color.fromARGB(255, 117, 168, 254),
               animationDuration: const Duration(milliseconds: 100),
               textStyle: const TextStyle(
                 fontWeight: FontWeight.w700,
