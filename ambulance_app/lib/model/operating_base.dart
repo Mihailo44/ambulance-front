@@ -1,7 +1,7 @@
 import 'package:ambulance_app/model/address.dart';
 
 class OperatingBase {
-  int? id;
+  String? id;
   int addressId;
   Address address;
 
@@ -14,7 +14,7 @@ class OperatingBase {
   factory OperatingBase.fromJson(Map<String,dynamic> json){
     return OperatingBase(
       id: json['id'],
-      addressId: json['addressId'],
+      addressId: json['address_id'],
       address: Address.fromJson(json['address']),
     );
   }

@@ -1,52 +1,74 @@
-import 'package:ambulance_app/navigation/drawer.dart';
-import 'package:ambulance_app/screens/home/home.dart';
-import 'package:ambulance_app/screens/registration/user_registration.dart';
-import 'package:ambulance_app/screens/tables/all_operating_bases.dart';
+import 'package:ambulance_app/model/users/basic_user_info.dart';
+import 'package:ambulance_app/model/users/user.dart';
+import 'package:ambulance_app/navigation/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'screens/login_screen.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  
+  runApp(
+   const MyApp(),
+  );
+}
 
-final FlutterSecureStorage secureStorage = FlutterSecureStorage();
-String accessToken="";
+String accessTokenExpiry = "";
+String accessToken = "";
+BasicUserInfo? basicUser;
+User? loggedUser;
+enum Screen{
+  victimsScreen,
+  allBases,
+}
 
 class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Login Demo",
-      home: HomeScreen(),
-    );
-  }
-}
 
-class HomeScreen extends StatefulWidget{
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen>{
-
-  Widget _currentScreen = HomePage();
-
-  void _onSelectScreen(Widget screen){
-    setState(() {
-      _currentScreen = screen;
-    });
-  }
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.amber,
-        title: const Text("Zovi Hitnu"),
+    return MaterialApp.router(
+      title: "Zovi Hitnu",
+      //routerConfig: kIsWeb ? router : null,
+      routerConfig: router,
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData().copyWith(
+        appBarTheme: const AppBarTheme().copyWith(
+          backgroundColor: Colors.amber,
+          toolbarHeight: 60,
+        ),
+        bottomAppBarTheme: const BottomAppBarTheme(
+          color: Colors.amber,
+          elevation: 20,
+        ),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 249, 249, 243),
+        textTheme: ThemeData().textTheme.copyWith(
+          bodyLarge: const TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+            letterSpacing: 0.6,
+          ),
+          bodyMedium: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+            color: Colors.black,
+          )
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              elevation: 3,
+              foregroundColor: Colors.blueAccent,
+              padding: const EdgeInsets.all(12.0),
+              minimumSize: const Size(150, 50),
+              overlayColor: const Color.fromARGB(255, 117, 168, 254),
+              animationDuration: const Duration(milliseconds: 100),
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 17,
+              ),
+            ),
+        ),
       ),
-      body: Center(
-        child: _currentScreen,
-      ),
-      drawer: NavDrawer(onSelectScreen: _onSelectScreen),
     );
   }
 }

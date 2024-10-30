@@ -1,4 +1,4 @@
-import 'package:ambulance_app/model/user.dart';
+import 'package:ambulance_app/model/users/user.dart';
 
 class Admin {
   int? id;
@@ -14,7 +14,7 @@ class Admin {
   factory Admin.fromJson(Map<String,dynamic> json){
     return Admin(
       id: json['id'],
-      userId: json['userId'],
+      userId: json['user_id'],
       user: User.fromJson(json['user']),
     );
   }
@@ -22,7 +22,7 @@ class Admin {
   Map<String,dynamic> toJson(){
     return{
       'id':id,
-      'userId':userId,
+      'user_id':userId,
       'user': user.toJson(),
     };
   }

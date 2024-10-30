@@ -1,11 +1,11 @@
 import 'package:ambulance_app/model/operating_base.dart';
-import 'package:ambulance_app/model/user.dart';
+import 'package:ambulance_app/model/users/user.dart';
 
 class MedicalEvaluator {
   int? id;
   int userId;
   User user;
-  int? operatingBaseId;
+  String? operatingBaseId;
   OperatingBase operatingBase;
 
   MedicalEvaluator({
@@ -19,20 +19,19 @@ class MedicalEvaluator {
   factory MedicalEvaluator.fromJson(Map<String,dynamic> json){
     return MedicalEvaluator(
       id : json['id'],
-      userId: json['userId'],
+      userId: json['user_id'],
       user: User.fromJson(json['user']),
-      operatingBaseId: json['operatingBaseId'],
-      operatingBase: OperatingBase.fromJson(json['operatingBase']),
+      operatingBaseId: json['operating_base_id'],
+      operatingBase: OperatingBase.fromJson(json['operating_base']),
     );
   }
 
   Map<String,dynamic> toJson(){
     return {
       'id':id,
-      'userId':userId,
+      'user_id':userId,
       'user':user.toJson(),
-      'operatingBaseId': operatingBaseId,
-      'operatingBase': operatingBase.toJson()
+      'operating_base_id': operatingBaseId,
     };
   }
 }

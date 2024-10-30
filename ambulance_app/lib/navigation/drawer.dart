@@ -1,14 +1,16 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
-import 'package:ambulance_app/screens/registration/medical_evaluator_registration.dart';
-import 'package:ambulance_app/screens/registration/user_registration.dart';
+import 'package:ambulance_app/services/auth_service.dart';
+import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+class NavDrawer extends StatelessWidget {
 
-class NavDrawer extends StatelessWidget{
+  final AuthService _authService = AuthService();
+  final StatefulNavigationShell navigationShell;
 
-  final Function(Widget) onSelectScreen;
-  const NavDrawer({super.key, required this.onSelectScreen});
+ NavDrawer(this.navigationShell, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class NavDrawer extends StatelessWidget{
       child: ListView(
         padding: const EdgeInsets.all(8.0),
         children: [
-           const SizedBox(
+          const SizedBox(
             height: 70.0,
             child: DrawerHeader(
               decoration: BoxDecoration(color: Colors.lightBlue),
@@ -25,12 +27,20 @@ class NavDrawer extends StatelessWidget{
           ),
           ListTile(
             title: const Text("Medical Evaluator Registration"),
-            onTap: (){
-              onSelectScreen(const MedicalEvaluatorRegistration());
+            onTap: () {
+              navigationShell.goBranch(0);
+              context.go("/evaluator_registration");
               Navigator.pop(context);
             },
           ),
-          ListTile(title: Text("proba")),
+          ListTile(
+            title: const Text("Logout"),
+            onTap: () {
+              //_authService.logout();
+              showSnackBar(context, "You've been logged out");
+              Navigator.pop(context);
+            },
+          ),
         ],
       ),
     );

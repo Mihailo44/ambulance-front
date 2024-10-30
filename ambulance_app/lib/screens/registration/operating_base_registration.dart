@@ -17,7 +17,6 @@ class _OperatingBaseRegistrationState extends State<OperatingBaseRegistration>{
                 decoration: InputDecoration(labelText: ""),
               ),
               TextFormField(
-
               ),
             ],
           ),
