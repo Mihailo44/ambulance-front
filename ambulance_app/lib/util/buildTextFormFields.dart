@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
-Widget buildTextFormField(
-    {required TextEditingController controller, required String labelText}) {
-  return TextFormField(
-    controller: controller,
-    decoration: InputDecoration(
-      labelText: labelText,
-      labelStyle: const TextStyle(
-        fontSize: 20,
-      )
+Widget buildTextFormField({required TextEditingController controller, required String labelText}) {
+  return Padding(
+    padding: const EdgeInsets.all(8),
+    child: TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: const TextStyle(
+          fontSize: 20,
+        )
+      ),
+      style: const TextStyle(
+        fontSize: 22,
+      ),
+      validator: (value) => _validateField(controller.text.trim(), labelText),
     ),
-    style: const TextStyle(
-      fontSize: 22,
-    ),
-    validator: (value) => _validateField(controller.text.trim(), labelText),
   );
 }
 

@@ -39,12 +39,7 @@ class _LoginPageState extends State<LoginPage> {
           _usernameController.text, _passwordController.text);
 
       if (accessToken.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Login successfull"),
-          ),
-        );
-       // context.go("/");
+        context.go("/");
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

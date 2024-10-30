@@ -1,4 +1,5 @@
 import 'package:ambulance_app/navigation/drawer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -28,11 +29,10 @@ class ScaffoldWithDrawer extends StatelessWidget {
 
       ),
       body: navigationShell, // Displays the current tab's content
-      drawer: NavDrawer(navigationShell),
+      drawer: kIsWeb ? NavDrawer(navigationShell) : null,
       //   bottomNavigationBar: BottomNavigationBar(
       //     currentIndex: navigationShell.currentIndex,
       //     onTap: (index) {
-      //       // Switch tabs when the user taps on a BottomNavigationBar item
       //       navigationShell.goBranch(index);
       //     },
       //     items: const [

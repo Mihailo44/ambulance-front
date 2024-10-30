@@ -7,7 +7,7 @@ import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
 
 class PatientRegistration extends StatefulWidget {
-  PatientRegistration({Key? key}) : super(key: key);
+  const PatientRegistration({super.key});
 
   @override
   State<PatientRegistration> createState() => PatientRegistrationState();
@@ -98,6 +98,7 @@ class PatientRegistrationState extends State<PatientRegistration> {
 
     return newPatient;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -266,6 +267,10 @@ class PatientRegistrationState extends State<PatientRegistration> {
                               ),
                               onPressed: () async {
                                 
+                                if(!_formKey.currentState!.validate()){
+                                  return;
+                                }
+
                                 if(!checkPasswordsMatching()){
                                   showSnackBar(context, "Passwords must match!");
                                   return;
