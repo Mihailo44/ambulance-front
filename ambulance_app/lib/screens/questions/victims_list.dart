@@ -76,17 +76,20 @@ class _VictimListState extends State<VictimList> {
                     foregroundColor: Colors.white,
                   ),
                   onPressed: () {
-                    showModalBottomSheet(
-                      useSafeArea: true,
-                      backgroundColor: const Color.fromARGB(255, 249, 249, 243),
-                      shape: const BeveledRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.zero)),
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (ctx) => AddPatientScreen(
-                        onAddPatient: _addPatient,
-                      ),
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (ctx) => AddPatientScreen(onAddPatient: _addPatient))
                     );
+                    // showModalBottomSheet(
+                    //   useSafeArea: true,
+                    //   backgroundColor: const Color.fromARGB(255, 249, 249, 243),
+                    //   shape: const BeveledRectangleBorder(
+                    //   borderRadius: BorderRadius.all(Radius.zero)),
+                    //   isScrollControlled: true,
+                    //   context: context,
+                    //   builder: (ctx) => AddPatientScreen(
+                    //     onAddPatient: _addPatient,
+                    //   ),
+                    // );
                   },
                   icon: const Icon(Icons.add),
                   label: const Text(
@@ -102,7 +105,7 @@ class _VictimListState extends State<VictimList> {
                 ),
               ),
               Expanded(
-                child: Scrollbar(
+                child: patients.isEmpty ? const Text("No patients") : Scrollbar(
                   thickness: 7,
                   child: ListView.builder(
                     itemCount: patients.length,

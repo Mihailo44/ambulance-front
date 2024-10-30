@@ -1,4 +1,5 @@
 import 'package:ambulance_app/main.dart';
+import 'package:ambulance_app/screens/questions/add_patient_screen.dart';
 import 'package:ambulance_app/screens/questions/trauma_type_screen.dart';
 import 'package:ambulance_app/screens/questions/victims_list.dart';
 import 'package:ambulance_app/screens/registration/patient_registration.dart';
@@ -87,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PatientRegistration()),
+                        builder: (context) => const PatientRegistration()),
                   );
                 },
                 child: const Text("Register"),

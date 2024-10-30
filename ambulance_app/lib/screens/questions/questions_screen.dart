@@ -4,7 +4,6 @@ import 'package:ambulance_app/generic_widgets/buttons/button.dart';
 import 'package:ambulance_app/mock_data/questions_mock.dart';
 import 'package:ambulance_app/model/question.dart';
 import 'package:ambulance_app/model/response.dart' as my;
-import 'package:ambulance_app/screens/questions/multiple_victims_alert.dart';
 import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
 
@@ -58,14 +57,6 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     });
   }
 
-  void _openAdditionalVictimsModal() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => const MultipleVictimsAlert(),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +124,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                       if (questionIndex < _questions.length - 1) {
                         questionIndex++;
                       } else {
-                        _openAdditionalVictimsModal();
+                        
                       }
                     });
                   },

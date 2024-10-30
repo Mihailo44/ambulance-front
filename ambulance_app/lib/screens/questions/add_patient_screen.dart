@@ -15,11 +15,11 @@ class _StateAddPatientScreen extends State<AddPatientScreen> {
   final _patientUsernameController = TextEditingController();
   final _firstnameController = TextEditingController();
   final _lastnameController = TextEditingController();
-  final _yearOfBirth = TextEditingController();
+  final _yearOfBirthController = TextEditingController();
   final List<String> _genders = ["Male", "Female"];
   String? _selectedGender = "";
 
-  final _kurac = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -27,7 +27,7 @@ class _StateAddPatientScreen extends State<AddPatientScreen> {
     _patientUsernameController.dispose();
     _firstnameController.dispose();
     _lastnameController.dispose();
-    _yearOfBirth.dispose();
+    _yearOfBirthController.dispose();
   }
 
   void _add() {
@@ -41,23 +41,23 @@ class _StateAddPatientScreen extends State<AddPatientScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: FractionallySizedBox(
+        widthFactor: 0.9,
         child: Column(
           children: [
             const SizedBox(
               height: 30,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(25, 20, 25, 5),
+              padding: const EdgeInsets.fromLTRB(25, 12, 25, 5),
               child: Text(
-                "Please add a patient",
+                "Add a patient with his ID",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 15, 20, 20),
+              padding: const EdgeInsets.fromLTRB(5, 15, 5, 20),
               child: Row(
                 children: [
                   Expanded(
@@ -80,67 +80,97 @@ class _StateAddPatientScreen extends State<AddPatientScreen> {
             ),
             const Divider(
               color: Colors.amber,
-              height: 10,
+              height: 8,
               thickness: 2,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(25, 20, 25, 5),
+              padding: const EdgeInsets.fromLTRB(25, 12, 25, 5),
               child: Text(
-                "If you can't find patients ID, write all information you know below please",
+                "Or write all information you know below please",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
-            Expanded(
-              child: Container(
-                width: 300,
-                
-                child: Form(
-                  key: _kurac,
-                  child: Column(
+            //! ISPOD JE SJEBANO
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          buildTextFormField(
-                              controller: _firstnameController,
-                              labelText: "Firstname"),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          buildTextFormField(
-                              controller: _lastnameController,
-                              labelText: "Lastname"),
-                        ],
+                      Expanded(
+                        child: buildTextFormField(
+                            controller: _firstnameController,
+                            labelText: "Firstname"),
                       ),
-                      buildTextFormField(
-                          controller: _yearOfBirth, labelText: "Year Of Birth"),
-                      DropdownButtonFormField<String>(
-                                hint: const Text("Gender",
-                                style: TextStyle(
-                                      fontSize: 20,
-                                    ),),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedGender = value;
-                                  });
-                                },
-                                items: [
-                                  for (final g in _genders)
-                                    DropdownMenuItem(
-                                        value: g,
-                                        child: Text(
-                                          g,
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                          ),
-                                        ))
-                                ],
-                              ),
-                      
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      Expanded(
+                        child: buildTextFormField(
+                            controller: _lastnameController,
+                            labelText: "Lastname"),
+                      ),
                     ],
                   ),
-                ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildTextFormField(
+                            controller: _yearOfBirthController,
+                            labelText: "Age/Birthdate"),
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      Expanded(
+                        child: DropdownButtonFormField<String>(
+                          hint: const Text(
+                            "Gender",
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedGender = value;
+                            });
+                          },
+                          items: [
+                            for (final g in _genders)
+                              DropdownMenuItem(
+                                  value: g,
+                                  child: Text(
+                                    g,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ))
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Patient description', //* neke bitne stvari stavi hintove, krvna grupa, invaliditet itd
+                      border: OutlineInputBorder(),
+                      alignLabelWithHint:
+                          true, // Aligns the label to the top for multiline
+                    ),
+                    maxLines: 5, // Allows the field to be 5 lines high
+                    minLines: 3, // Minimum height of the field
+                    keyboardType: TextInputType.multiline,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a description';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
               ),
             ),
+            ElevatedButton(onPressed: () {}, child: const Text("Add Patient")),
           ],
         ),
       ),
