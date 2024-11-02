@@ -58,9 +58,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      widthFactor: 0.65,
+      widthFactor: 0.7,
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(18.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -85,23 +85,21 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PatientRegistration()),
-                  );
+                  context.push("/patient-registration");
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) => const PatientRegistration()),
+                  // );
                 },
                 child: const Text("Register"),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const VictimList()),
-                  );
+                  context.push("/home");
                 },
-                child: const Text("Victims"),
+                child: const Text("Home"),
               ),
             ],
           ),

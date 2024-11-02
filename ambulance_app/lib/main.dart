@@ -14,6 +14,7 @@ String accessTokenExpiry = "";
 String accessToken = "";
 BasicUserInfo? basicUser;
 User? loggedUser;
+
 enum Screen{
   victimsScreen,
   allBases,

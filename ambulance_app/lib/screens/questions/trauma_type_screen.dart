@@ -24,7 +24,7 @@ class TraumaTypeScreen extends StatelessWidget {
     return Column(children: [
       const SizedBox(height:  20.0,),
       const Text(
-        "Please select the trauma type",
+        "Please select the trauma cause",
         textAlign: TextAlign.center,
         style: TextStyle(
             fontSize: 28.0,
@@ -37,8 +37,8 @@ class TraumaTypeScreen extends StatelessWidget {
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            crossAxisSpacing: 15.0,
-            mainAxisSpacing: 15.0,
+            crossAxisSpacing: 12.0,
+            mainAxisSpacing: 12.0,
             childAspectRatio: 1.6 / 1,
           ),
           itemCount: traumaTypes.length,

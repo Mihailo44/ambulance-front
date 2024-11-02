@@ -5,8 +5,8 @@ static List<Question> questions = [
   const Question(
     id: 1,
     traumaType: TraumaType.	ALCOHOL_INEBRIATION,
-    body: "What symptoms are you experiencing?",
-    availableAnswers: ["Fever", "Cough", "Headache", "Nausea", "Other"]
+    body: "Is the patient conscious?",
+    availableAnswers: ["Yes", "No"]
   ),
   const Question(
     id: 2,
