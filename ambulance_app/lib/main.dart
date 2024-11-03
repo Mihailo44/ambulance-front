@@ -2,9 +2,16 @@ import 'package:ambulance_app/model/users/basic_user_info.dart';
 import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/navigation/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 void main() {
   
+  WidgetsFlutterBinding.ensureInitialized();
+
+  String ACCESS_TOKEN = "pk.eyJ1IjoibWlraTQ0IiwiYSI6ImNtMzF5Ym02YzB4MzgyaXM0emI1MDU5ZzgifQ._9G9OUHeitpJ3PNfC2h05A";
+  print(ACCESS_TOKEN);
+  MapboxOptions.setAccessToken(ACCESS_TOKEN);
+
   runApp(
    const MyApp(),
   );
@@ -47,11 +54,19 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.w500,
             color: Colors.black,
             letterSpacing: 0.6,
+            //overflow: TextOverflow.ellipsis,
           ),
           bodyMedium: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w400,
             color: Colors.black,
+            overflow: TextOverflow.ellipsis,
+          ),
+          bodySmall: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+            color: Colors.black,
+            overflow: TextOverflow.ellipsis,
           )
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -60,7 +75,7 @@ class MyApp extends StatelessWidget {
               elevation: 3,
               foregroundColor: Colors.blueAccent,
               padding: const EdgeInsets.all(12.0),
-              minimumSize: const Size(150, 50),
+              //minimumSize: const Size(150, 50),
               overlayColor: const Color.fromARGB(255, 117, 168, 254),
               animationDuration: const Duration(milliseconds: 100),
               textStyle: const TextStyle(

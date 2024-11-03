@@ -1,12 +1,8 @@
 import 'package:ambulance_app/main.dart';
-import 'package:ambulance_app/screens/questions/add_patient_screen.dart';
-import 'package:ambulance_app/screens/questions/trauma_type_screen.dart';
-import 'package:ambulance_app/screens/questions/victims_list.dart';
-import 'package:ambulance_app/screens/registration/patient_registration.dart';
+import 'package:ambulance_app/navigation/routes.dart';
 import 'package:ambulance_app/services/auth_service.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -40,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
           _usernameController.text, _passwordController.text);
 
       if (accessToken.isNotEmpty) {
-        context.go("/");
+        router.go("/");
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -85,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  context.push("/patient-registration");
+                  router.go("/patient-registration");
                   // Navigator.push(
                   //   context,
                   //   MaterialPageRoute(
@@ -97,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  context.push("/home");
+                  router.go("/home");
                 },
                 child: const Text("Home"),
               ),

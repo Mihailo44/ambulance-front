@@ -1,3 +1,4 @@
+
 enum TraumaType{
 	CAR_ACCIDENT,
 	CHEST_PAIN,
@@ -16,15 +17,21 @@ enum TraumaType{
   OTHER
 }
 
+TraumaType parseTraumaType(String traumaType){
+  return TraumaType.values.firstWhere((e){ 
+
+    return e.name.toString().replaceAll(RegExp("_"), " ").toUpperCase() == traumaType;
+  },
+  orElse: () => TraumaType.OTHER);
+}
+
 class Question {
   final int id;
-  final TraumaType traumaType;
   final String body;
   final List<String> availableAnswers;
 
   const Question({
     required this.id,
-    required this.traumaType,
     required this.body,
     required this.availableAnswers
   });

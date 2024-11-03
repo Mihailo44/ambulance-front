@@ -1,6 +1,6 @@
 import 'package:ambulance_app/generic_widgets/trauma_type_card.dart';
 import 'package:ambulance_app/model/question.dart';
-import 'package:ambulance_app/screens/questions/questions_screen.dart';
+import 'package:ambulance_app/navigation/routes.dart';
 import 'package:flutter/material.dart';
 
 class TraumaTypeScreen extends StatelessWidget {
@@ -10,29 +10,31 @@ class TraumaTypeScreen extends StatelessWidget {
     return e.name.replaceAll(RegExp("_"), " ").toUpperCase();
   }).toList();
 
+  void _openQuestionsOverlay(String traumaType) {
+      router.go(
+        "/ambulance-request/questions",
+        extra: traumaType,
+      );
+    }
+
   @override
   Widget build(BuildContext context) {
 
-     void _openTraumaQuestionsOverlay(){
-    showModalBottomSheet(
-      isScrollControlled: true,
-      shape: const Border(top: BorderSide.none),
-      context: context, 
-      builder: (ctx) => const QuestionsScreen(),);
-    }
-
     return Column(children: [
-      const SizedBox(height:  20.0,),
+      const SizedBox(
+        height: 20.0,
+      ),
       const Text(
         "Please select the trauma cause",
         textAlign: TextAlign.center,
         style: TextStyle(
             fontSize: 28.0,
             fontWeight: FontWeight.w600,
-            color: Color.fromARGB(255, 2, 41, 108)
-        ),
+            color: Color.fromARGB(255, 2, 41, 108)),
       ),
-      const SizedBox(height:  20.0,),
+      const SizedBox(
+        height: 20.0,
+      ),
       Expanded(
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -43,7 +45,11 @@ class TraumaTypeScreen extends StatelessWidget {
           ),
           itemCount: traumaTypes.length,
           itemBuilder: (context, index) {
-            return TraumaTypeCard(label: traumaTypes[index],onTap: _openTraumaQuestionsOverlay);
+            return TraumaTypeCard(
+                label: traumaTypes[index],
+                onTap: () {
+                  _openQuestionsOverlay(traumaTypes[index]);
+                });
           },
         ),
       ),
