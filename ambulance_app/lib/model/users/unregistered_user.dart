@@ -4,7 +4,7 @@ class UnregisteredUser {
   String? bloodType;
   String? gender;
   String? age;
-  String? medicalInfo;
+  String? additionalInfo;
 
   UnregisteredUser({
     this.firstname,
@@ -12,6 +12,6 @@ class UnregisteredUser {
     this.bloodType,
     this.gender,
     this.age,
-    this.medicalInfo
+    this.additionalInfo
   });
 }

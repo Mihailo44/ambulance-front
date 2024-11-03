@@ -1,6 +1,8 @@
+import 'package:ambulance_app/model/users/user.dart';
+
 class BasicUserInfo {
   String username;
-  String role;
+  UserRole role;
   String? accessToken;
   String? location;
 
@@ -14,7 +16,7 @@ BasicUserInfo({
 factory BasicUserInfo.fromJson(Map<String,dynamic> json){
   return BasicUserInfo(
     username: json["username"], 
-    role: json["role"]);
+    role: UserRole.values[json['role']],
+  );
 }
-
 }

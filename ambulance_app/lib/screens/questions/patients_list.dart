@@ -76,9 +76,9 @@ class _VictimListState extends State<VictimList> {
                     foregroundColor: Colors.white,
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (ctx) => AddPatientScreen(onAddPatient: _addPatient))
-                    );
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (ctx) =>
+                            AddPatientScreen(onAddPatient: _addPatient)));
                     // showModalBottomSheet(
                     //   useSafeArea: true,
                     //   backgroundColor: const Color.fromARGB(255, 249, 249, 243),
@@ -105,31 +105,35 @@ class _VictimListState extends State<VictimList> {
                 ),
               ),
               Expanded(
-                child: patients.isEmpty ? const Text("No patients") : Scrollbar(
-                  thickness: 7,
-                  child: ListView.builder(
-                    itemCount: patients.length,
-                    itemBuilder: (ctx, idx) {
-                      return Dismissible(
-                        key: Key(patients[idx]),
-                        child: CustomListTile(
-                          title: patients[idx],
-                          onPressed: () {
-                            setState(() {
-                              patients.remove(patients[idx]);
-                            });
+                child: patients.isEmpty
+                    ? const Padding(
+                        padding:EdgeInsets.fromLTRB(0, 50, 0, 0),
+                        child: Text("No patients"))
+                    : Scrollbar(
+                        thickness: 7,
+                        child: ListView.builder(
+                          itemCount: patients.length,
+                          itemBuilder: (ctx, idx) {
+                            return Dismissible(
+                              key: Key(patients[idx]),
+                              child: CustomListTile(
+                                title: patients[idx],
+                                onPressed: () {
+                                  setState(() {
+                                    patients.remove(patients[idx]);
+                                  });
+                                },
+                                whoCalled: Screen.victimsScreen,
+                              ),
+                              onDismissed: (direction) {
+                                setState(() {
+                                  patients.remove(patients[idx]);
+                                });
+                              },
+                            );
                           },
-                          whoCalled: Screen.victimsScreen,
                         ),
-                        onDismissed: (direction) {
-                          setState(() {
-                            patients.remove(patients[idx]);
-                          });
-                        },
-                      );
-                    },
-                  ),
-                ),
+                      ),
               ),
               //TODO MOZDA NEKO POLJE ZA NEKU NAPOMENU ko boluje od cega
               Padding(
@@ -167,7 +171,7 @@ class _VictimListState extends State<VictimList> {
                         padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.fromLTRB(30,10,30,10),
+                            padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
                             minimumSize: const Size(160, 75),
                             backgroundColor:
                                 const Color.fromARGB(255, 255, 99, 88),
@@ -254,7 +258,6 @@ class _VictimListState extends State<VictimList> {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ),
-                      
                       Expanded(
                         child: Scrollbar(
                           thickness: 7,

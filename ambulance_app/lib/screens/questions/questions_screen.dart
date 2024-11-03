@@ -1,14 +1,20 @@
 import 'dart:developer';
 
 import 'package:ambulance_app/generic_widgets/buttons/button.dart';
+import 'package:ambulance_app/generic_widgets/buttons/questions_button.dart';
+import 'package:ambulance_app/main_layout.dart';
 import 'package:ambulance_app/mock_data/questions_mock.dart';
 import 'package:ambulance_app/model/question.dart';
+import 'package:ambulance_app/model/quiz.dart';
 import 'package:ambulance_app/model/response.dart' as my;
 import 'package:ambulance_app/util/snackbar.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class QuestionsScreen extends StatefulWidget {
-  const QuestionsScreen({super.key});
+  const QuestionsScreen({required this.traumaCause, super.key});
+
+  final TraumaType traumaCause;
 
   @override
   State<QuestionsScreen> createState() => _QuestionsScreenState();
@@ -17,6 +23,7 @@ class QuestionsScreen extends StatefulWidget {
 class _QuestionsScreenState extends State<QuestionsScreen> {
   final List<Question> _questions = [];
   final List<my.Response> _responses = [];
+  final _customAnswerController = TextEditingController();
   int questionIndex = 0;
 
   List<String> getShufled() {
@@ -28,7 +35,33 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   @override
   void initState() {
     super.initState();
-    _questions.addAll(QuestionsMock.questions);
+    Quiz q = QuizMock.quizes.firstWhere((e) => e.traumaType == widget.traumaCause);
+    _questions.addAll(q.questions);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _customAnswerController.dispose();
+  }
+
+  void _previousQuestion() {
+    if (questionIndex > 0) {
+      setState(() {
+        questionIndex--;
+      });
+    } else {
+      showSnackBar(context, "This is the first question");
+    }
+  }
+
+  void _nextQuestion() {
+    if (questionIndex < _questions.length - 1) {
+      setState(() {
+        questionIndex++;
+      });
+    } else {}
   }
 
   void _answerQuestion(String answer) {
@@ -37,6 +70,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         questionIndex++;
         var response = my.Response(
             question: _questions[questionIndex].body, response: answer);
+
         for (int i = 0; i < _responses.length; i++) {
           if (_responses[i].question == _questions[questionIndex].body) {
             if (_responses[i].response != answer) {
@@ -57,88 +91,69 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     final Question currentQuestion = _questions[questionIndex];
-
-    return SizedBox(
-      width: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              currentQuestion.body,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge,
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height - 56 - 56,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 35,),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.15,
+              child: AutoSizeText(
+                currentQuestion.body,
+                textAlign: TextAlign.center,
+                softWrap: true,
+                //overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
-          ),
-          const SizedBox(height: 15.0),
-          ...currentQuestion.availableAnswers.map((answer) {
-            return AnswerButton(
-              answerText: answer,
-              onTap: () {
-                _answerQuestion(answer);
-              },
-            );
-          }),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    //backgroundColor: const Color.fromARGB(255, 210, 227, 252),
-                    minimumSize:
-                        Size(MediaQuery.of(context).size.width * 0.25, 60),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      if (questionIndex > 0) {
-                        questionIndex--;
-                      } else {
-                        showSnackBar(context, "This is the first question");
-                      }
-                    });
-                  },
-                  child: const Text(
-                    "Back",
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 23, 78, 166),
-                    ),
-                  ),
+            const SizedBox(height: 15.0),
+            ...currentQuestion.availableAnswers.map((answer) {
+              return AnswerButton(
+                answerText: answer,
+                onTap: () {
+                  _answerQuestion(answer);
+                },
+              );
+            }),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(60,15,60,20),
+              child: TextField(
+                style: Theme.of(context).textTheme.bodyMedium,
+                autocorrect: true,
+                controller: _customAnswerController,
+                decoration: InputDecoration(
+                  hintText: "Custom answer",
+                  contentPadding: const EdgeInsets.all(2),
+                  hintStyle: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize:
-                        Size(MediaQuery.of(context).size.width * 0.35, 60),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      if (questionIndex < _questions.length - 1) {
-                        questionIndex++;
-                      } else {
-                        
-                      }
-                    });
-                  },
-                  child: const Text(
-                    "I don't know",
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 23, 78, 166),
-                    ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+                  child: QuestionsButton(
+                    label: "Back",
+                    fun: _previousQuestion,
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+                    child: QuestionsButton(
+                      label: "I don't know",
+                      fun: _nextQuestion,
+                  )),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

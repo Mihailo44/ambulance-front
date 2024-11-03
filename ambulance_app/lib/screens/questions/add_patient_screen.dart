@@ -1,3 +1,4 @@
+import 'package:ambulance_app/model/users/unregistered_user.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class _StateAddPatientScreen extends State<AddPatientScreen> {
   final _firstnameController = TextEditingController();
   final _lastnameController = TextEditingController();
   final _yearOfBirthController = TextEditingController();
+  final _additionalInformationController = TextEditingController();
   final List<String> _genders = ["Male", "Female"];
   String? _selectedGender = "";
 
@@ -28,6 +30,7 @@ class _StateAddPatientScreen extends State<AddPatientScreen> {
     _firstnameController.dispose();
     _lastnameController.dispose();
     _yearOfBirthController.dispose();
+    _additionalInformationController.dispose();
   }
 
   void _add() {
@@ -37,6 +40,18 @@ class _StateAddPatientScreen extends State<AddPatientScreen> {
     } else {
       showSnackBar(context, "Please enter patients ID first");
     }
+  }
+
+  void _addUnregistered(){
+    var patient = UnregisteredUser(
+      firstname: _firstnameController.text.isNotEmpty ? _firstnameController.text : "unspecified",
+      lastname: _lastnameController.text.isNotEmpty ? _lastnameController.text : "unspecified",
+      age: _yearOfBirthController.text.isNotEmpty ? _yearOfBirthController.text : "unspecified",
+      gender: _selectedGender,
+      additionalInfo: _additionalInformationController.text.isNotEmpty ? _additionalInformationController.text : "unspecified",
+    );
+    
+    Navigator.pop(context,patient);
   }
 
   @override
@@ -117,60 +132,78 @@ class _StateAddPatientScreen extends State<AddPatientScreen> {
                       Expanded(
                         child: buildTextFormField(
                             controller: _yearOfBirthController,
-                            labelText: "Age/Birthdate"),
+                            labelText: "Age/Year of birth"),
                       ),
                       const SizedBox(
                         width: 15,
                       ),
                       Expanded(
-                        child: DropdownButtonFormField<String>(
-                          hint: const Text(
-                            "Gender",
-                            style: TextStyle(
-                              fontSize: 20,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(18,24,18,0),
+                          child: DropdownButtonFormField<String>(
+                            hint: const Text(
+                              "Gender",
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
                             ),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedGender = value;
+                              });
+                            },
+                            items: [
+                              for (final g in _genders)
+                                DropdownMenuItem(
+                                    value: g,
+                                    child: Text(
+                                      g,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ))
+                            ],
                           ),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedGender = value;
-                            });
-                          },
-                          items: [
-                            for (final g in _genders)
-                              DropdownMenuItem(
-                                  value: g,
-                                  child: Text(
-                                    g,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                    ),
-                                  ))
-                          ],
                         ),
                       ),
                     ],
                   ),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Patient description', //* neke bitne stvari stavi hintove, krvna grupa, invaliditet itd
-                      border: OutlineInputBorder(),
-                      alignLabelWithHint:
-                          true, // Aligns the label to the top for multiline
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: TextFormField(
+                      controller: _additionalInformationController,
+                      decoration: const InputDecoration(
+                        labelText:
+                            'Patient info, disabilities ...', //* neke bitne stvari stavi hintove, krvna grupa, invaliditet itd
+                        labelStyle: TextStyle(
+                          fontSize: 20,
+                        ),     
+                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+                        alignLabelWithHint:
+                            true, // Aligns the label to the top for multiline
+                      ),
+
+                      maxLines: 5, 
+                      minLines: 2,
+                      keyboardType: TextInputType.multiline,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a description';
+                        }
+                        return null;
+                      },
                     ),
-                    maxLines: 5, // Allows the field to be 5 lines high
-                    minLines: 3, // Minimum height of the field
-                    keyboardType: TextInputType.multiline,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a description';
-                      }
-                      return null;
-                    },
                   ),
                 ],
               ),
             ),
-            ElevatedButton(onPressed: () {}, child: const Text("Add Patient")),
+            ElevatedButton.icon(
+              label: const Text("Add patient"),
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                _addUnregistered();
+              },
+            ),
           ],
         ),
       ),
