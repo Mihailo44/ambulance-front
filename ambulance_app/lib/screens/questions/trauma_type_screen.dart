@@ -11,7 +11,7 @@ class TraumaTypeScreen extends StatelessWidget {
   }).toList();
 
   void _openQuestionsOverlay(String traumaType) {
-      router.go(
+      router.push(
         "/ambulance-request/questions",
         extra: traumaType,
       );
@@ -24,13 +24,14 @@ class TraumaTypeScreen extends StatelessWidget {
       const SizedBox(
         height: 20.0,
       ),
-      const Text(
+       Text(
         "Please select the trauma cause",
         textAlign: TextAlign.center,
-        style: TextStyle(
-            fontSize: 28.0,
-            fontWeight: FontWeight.w600,
-            color: Color.fromARGB(255, 2, 41, 108)),
+        style: Theme.of(context).textTheme.headlineMedium,
+        // style: TextStyle(
+        //     fontSize: 28.0,
+        //     fontWeight: FontWeight.w600,
+        //     color: Color.fromARGB(255, 2, 41, 108)),
       ),
       const SizedBox(
         height: 20.0,

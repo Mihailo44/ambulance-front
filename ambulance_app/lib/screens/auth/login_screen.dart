@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  router.go("/home");
+                  router.replace("/home");
                 },
                 child: const Text("Home"),
               ),

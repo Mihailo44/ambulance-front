@@ -16,6 +16,8 @@ import 'package:go_router/go_router.dart';
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _sectionNavigatorKey = GlobalKey<NavigatorState>();
 
+
+
 final router = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/login',
@@ -128,3 +130,14 @@ List<StatefulShellBranch> _getPatientRoutes() {
 
   return routes;
 }
+
+// void navigateWithSave(String route, Object extra) async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   await prefs.setString('lastRoute', route);
+//   router.push(route, extra: extra);
+// }
+
+// Future<String> getLastRoute() async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   return prefs.getString('lastRoute') ?? '/login';
+// }

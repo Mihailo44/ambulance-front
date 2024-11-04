@@ -3,6 +3,8 @@ import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'dart:ui' as ui;
+
 
 void main() {
   
@@ -13,7 +15,7 @@ void main() {
   MapboxOptions.setAccessToken(ACCESS_TOKEN);
 
   runApp(
-   const MyApp(),
+    const MyApp(),
   );
 }
 
@@ -30,6 +32,8 @@ enum Screen{
 class MyApp extends StatelessWidget {
 
   const MyApp({super.key});
+
+  static const ui.Size? minButtonSize = ui.Size(120,45);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +54,8 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color.fromARGB(255, 249, 249, 243),
         textTheme: ThemeData().textTheme.copyWith(
           bodyLarge: const TextStyle(
-            fontSize: 25,
+            fontSize: 26,
+            height: 1.3,
             fontWeight: FontWeight.w500,
             color: Colors.black,
             letterSpacing: 0.6,
@@ -75,7 +80,7 @@ class MyApp extends StatelessWidget {
               elevation: 3,
               foregroundColor: Colors.blueAccent,
               padding: const EdgeInsets.all(12.0),
-              //minimumSize: const Size(150, 50),
+              minimumSize: minButtonSize,
               overlayColor: const Color.fromARGB(255, 117, 168, 254),
               animationDuration: const Duration(milliseconds: 100),
               textStyle: const TextStyle(

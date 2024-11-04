@@ -85,7 +85,7 @@ class MapScreenState extends State<MapScreen> {
       onMapCreated: _onMapCreated,
       cameraOptions: camera,
       onTapListener: (listener){
-        print("a");
+     
       },
     );
   }
