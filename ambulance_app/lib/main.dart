@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
           color: Colors.amber,
           elevation: 20,
         ),
-        scaffoldBackgroundColor: const Color.fromARGB(255, 249, 249, 243),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 253, 253, 247),
         textTheme: ThemeData().textTheme.copyWith(
           bodyLarge: const TextStyle(
             fontSize: 26,

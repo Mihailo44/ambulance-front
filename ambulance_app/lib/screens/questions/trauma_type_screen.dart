@@ -20,40 +20,55 @@ class TraumaTypeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return Column(children: [
-      const SizedBox(
-        height: 20.0,
-      ),
-       Text(
-        "Please select the trauma cause",
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.headlineMedium,
-        // style: TextStyle(
-        //     fontSize: 28.0,
-        //     fontWeight: FontWeight.w600,
-        //     color: Color.fromARGB(255, 2, 41, 108)),
-      ),
-      const SizedBox(
-        height: 20.0,
-      ),
-      Expanded(
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12.0,
-            mainAxisSpacing: 12.0,
-            childAspectRatio: 1.6 / 1,
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          iconSize: 32,
+          color: Colors.amber,
+          icon: const Icon(
+            Icons.arrow_back
           ),
-          itemCount: traumaTypes.length,
-          itemBuilder: (context, index) {
-            return TraumaTypeCard(
-                label: traumaTypes[index],
-                onTap: () {
-                  _openQuestionsOverlay(traumaTypes[index]);
-                });
-          },
+          onPressed: () {
+            if(router.canPop()){
+              router.pop();
+             }
+          }
         ),
+        backgroundColor: const Color.fromARGB(255, 253, 253, 247),
       ),
-    ]);
+      body: Column(children: [
+        const SizedBox(
+          height: 20.0,
+        ),
+         Text(
+          "Please select the trauma cause",
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        const SizedBox(
+          height: 20.0,
+        ),
+        Expanded(
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12.0,
+              mainAxisSpacing: 12.0,
+              childAspectRatio: 1.6 / 1,
+            ),
+            itemCount: traumaTypes.length,
+            itemBuilder: (context, index) {
+              return TraumaTypeCard(
+                  label: traumaTypes[index],
+                  onTap: () {
+                    _openQuestionsOverlay(traumaTypes[index]);
+                  });
+            },
+          ),
+        ),
+      ]),
+    );
   }
 }

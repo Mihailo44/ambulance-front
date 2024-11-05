@@ -13,7 +13,7 @@ class PatientHomePage extends StatefulWidget {
 class _PatientHomePageState extends State<PatientHomePage> {
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+  
     return Column(
         //mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -23,7 +23,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
             children: [
               const MapScreen(),
               Padding(
-                padding: EdgeInsets.fromLTRB(screenWidth / 17.5, 0, 20, 25),
+                padding:const EdgeInsets.fromLTRB(20, 0, 20, 25),
                 child: Row(
                   children: [
                     Padding(
@@ -35,7 +35,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
                             .style!
                             .copyWith(
                               backgroundColor: const WidgetStatePropertyAll(
-                                  Color.fromARGB(255, 0, 92, 230)),
+                                  Color.fromARGB(255, 248, 43, 70)),
                               minimumSize: const WidgetStatePropertyAll(
                                   ui.Size(150, 90)),
                               foregroundColor:
@@ -44,7 +44,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
                         onPressed: () {
                           router.push("/ambulance-request");
                         },
-                        label: const Text("New Request"),
+                        label: const Text("Send Request"),
                       ),
                     ),
                     Padding(
