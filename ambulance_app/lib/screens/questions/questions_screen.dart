@@ -42,7 +42,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    //TODO obrisi listu odgovora
     super.dispose();
     _customAnswerController.dispose();
   }
@@ -62,7 +62,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       setState(() {
         questionIndex++;
       });
-    } else {}
+    } else {
+      router.push("/patients");
+    }
   }
 
   void _answerQuestion(String answer) {
@@ -83,11 +85,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           }
         }
       } else {
-        //TODO sva pitanja odgovorena salji zahtev i obrisi listu odgovora
-
-        for (int i = 0; i < _responses.length; i++) {
-          print(_responses[i].response);
-        }
+        print(router.routeInformationProvider.value.uri.toString());
+        router.push("/patients");
       }
     });
   }
@@ -111,6 +110,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
              }
           }
         ),
+        title: Text("Question ${questionIndex + 1}/${_questions.length}"),
         backgroundColor: const Color.fromARGB(255, 253, 253, 247),
       ),
       body: SingleChildScrollView(

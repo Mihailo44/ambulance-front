@@ -12,7 +12,7 @@ class TraumaTypeScreen extends StatelessWidget {
 
   void _openQuestionsOverlay(String traumaType) {
       router.push(
-        "/ambulance-request/questions",
+        "/questions",
         extra: traumaType,
       );
     }

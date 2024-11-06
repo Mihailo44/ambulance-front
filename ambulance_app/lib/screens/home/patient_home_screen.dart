@@ -2,6 +2,7 @@ import 'package:ambulance_app/navigation/routes.dart';
 import 'package:ambulance_app/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
+import 'package:url_launcher/url_launcher_string.dart';
 
 class PatientHomePage extends StatefulWidget {
   const PatientHomePage({super.key});
@@ -11,68 +12,75 @@ class PatientHomePage extends StatefulWidget {
 }
 
 class _PatientHomePageState extends State<PatientHomePage> {
+
+  Future<void> _makePhoneCall(String url) async {
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-  
-    return Column(
-        //mainAxisAlignment: MainAxisAlignment.end,
+    return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+      Expanded(
+          child: Stack(
+        alignment: AlignmentDirectional.bottomStart,
         children: [
-          Expanded(
-              child: Stack(
-            alignment: AlignmentDirectional.bottomStart,
+          const MapScreen(),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const MapScreen(),
               Padding(
-                padding:const EdgeInsets.fromLTRB(20, 0, 20, 25),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: ElevatedButton.icon(
-                        icon: const Icon(Icons.add_to_home_screen_rounded),
-                        style: Theme.of(context)
-                            .elevatedButtonTheme
-                            .style!
-                            .copyWith(
-                              backgroundColor: const WidgetStatePropertyAll(
-                                  Color.fromARGB(255, 248, 43, 70)),
-                              minimumSize: const WidgetStatePropertyAll(
-                                  ui.Size(150, 90)),
-                              foregroundColor:
-                                  const WidgetStatePropertyAll(Colors.white),
-                            ),
-                        onPressed: () {
-                          router.push("/ambulance-request");
-                        },
-                        label: const Text("Send Request"),
+                padding: const EdgeInsets.fromLTRB(310, 0, 15, 16),
+                child: ElevatedButton(
+                  style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
+                      backgroundColor: const WidgetStatePropertyAll(
+                          Color.fromARGB(255, 39, 154, 225)),
+                      minimumSize:
+                          const WidgetStatePropertyAll(ui.Size(73, 73)),
+                      foregroundColor:
+                          const WidgetStatePropertyAll(Colors.white),
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      )),
+                  onPressed: () {
+                    router.push("/ambulance-request");
+                  },
+                  child: const Icon(
+                    Icons.add_to_home_screen_rounded,
+                    size: 34,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(310, 0, 15, 22),
+                child: ElevatedButton.icon(
+                  style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
+                        backgroundColor: const WidgetStatePropertyAll(
+                            Color.fromARGB(255, 14, 147, 14)),
+                        minimumSize:
+                            const WidgetStatePropertyAll(ui.Size(80, 80)),
+                        foregroundColor:
+                            const WidgetStatePropertyAll(Colors.white),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: ElevatedButton.icon(
-                        style: Theme.of(context)
-                            .elevatedButtonTheme
-                            .style!
-                            .copyWith(
-                              backgroundColor: const WidgetStatePropertyAll(
-                                  Color.fromARGB(255, 14, 147, 14)),
-                              minimumSize: const WidgetStatePropertyAll(
-                                  ui.Size(150, 90)),
-                              foregroundColor:
-                                  const WidgetStatePropertyAll(Colors.white),
-                            ),
-                        onPressed: () {
-                          //router.go("/ambulance-request");
-                        },
-                        icon: const Icon(Icons.call),
-                        label: const Text("Call 911"),
-                      ),
-                    ),
-                  ],
+                  onPressed: () {
+                    _makePhoneCall("tel://+381658750575");
+                  },
+                  label: const Icon(
+                    Icons.call,
+                    size: 34,
+                  ),
                 ),
               ),
             ],
-          )),
-        ]);
+          ),
+        ],
+      )),
+    ]);
   }
 }

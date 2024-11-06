@@ -2,17 +2,12 @@ import 'package:ambulance_app/model/users/basic_user_info.dart';
 import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/navigation/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'dart:ui' as ui;
 
 
 void main() {
   
   WidgetsFlutterBinding.ensureInitialized();
-
-  String ACCESS_TOKEN = "pk.eyJ1IjoibWlraTQ0IiwiYSI6ImNtMzF5Ym02YzB4MzgyaXM0emI1MDU5ZzgifQ._9G9OUHeitpJ3PNfC2h05A";
-  print(ACCESS_TOKEN);
-  MapboxOptions.setAccessToken(ACCESS_TOKEN);
 
   runApp(
     const MyApp(),

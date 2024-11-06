@@ -5,6 +5,7 @@ import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/screens/auth/login_screen.dart';
 import 'package:ambulance_app/screens/home/patient_home_screen.dart';
 import 'package:ambulance_app/screens/profile/patient_profile.dart';
+import 'package:ambulance_app/screens/questions/patients_list.dart';
 import 'package:ambulance_app/screens/questions/questions_screen.dart';
 import 'package:ambulance_app/screens/questions/trauma_type_screen.dart';
 import 'package:ambulance_app/screens/registration/medical_evaluator_registration.dart';
@@ -85,17 +86,21 @@ List<StatefulShellBranch> _getPatientRoutes() {
           builder: (context, state) => const PatientRegistration(),
         ),
         GoRoute(
+          path: "/questions",
+          builder: (ctx, state) {
+              final traumaType = parseTraumaType(state.extra as String);
+              return QuestionsScreen(traumaCause: traumaType);
+          }
+        ),
+        GoRoute(
           path: "/ambulance-request",
           builder: (ctx, state) => TraumaTypeScreen(),
-          routes: [
-            GoRoute(
-              path: "questions",
-              builder: (ctx, state) {
-                  final traumaType = parseTraumaType(state.extra as String);
-                  return QuestionsScreen(traumaCause: traumaType);
-              }
-            )
-          ],
+        ),
+        GoRoute(
+          path: "/patients",
+          builder: (ctx,state){
+            return const VictimList();
+          }
         ),
         // GoRoute(
         //   path: '/',
