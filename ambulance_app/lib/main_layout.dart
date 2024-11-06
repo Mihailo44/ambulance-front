@@ -9,24 +9,26 @@ class ScaffoldWithDrawer extends StatelessWidget {
 
   final StatefulNavigationShell navigationShell;
 
-  double appBarHeight = 0;
-  double bottomBarHeight = 56;
-
+  final double bottomBarHeight = 56;
 
   static const nonoRoutes = [
-      "/login",
-      "/patient-registration",
-      "/ambulance-request"
-    ];
+    "/login",
+    "/patient-registration",
+    "/ambulance-request",
+    "/questions",
+    "/patients"
+  ];
 
   bool _isNonoRoute(String route) {
+    print(route);
     return nonoRoutes.contains(route);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: _isNonoRoute(router.routeInformationProvider.value.uri.toString()) ? null :
+      AppBar(
         title: const Text(
           "Zovi Hitnu",
           style: TextStyle(
@@ -36,43 +38,51 @@ class ScaffoldWithDrawer extends StatelessWidget {
         ),
         actions: [
           PopupMenuButton<String>(
-            onSelected: (value) => print(value),
+            //onSelected: (value) => print(value),
             offset: const Offset(0, 50),
-            itemBuilder: (context){
+            itemBuilder: (context) {
               return [
                 PopupMenuItem(
-                  padding: const EdgeInsets.fromLTRB(20,0,30,2),
+                  padding: const EdgeInsets.fromLTRB(20, 0, 30, 2),
                   height: 45,
-                  labelTextStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.bodySmall),
+                  labelTextStyle: WidgetStatePropertyAll(
+                      Theme.of(context).textTheme.bodySmall),
                   value: "Settings",
-                  onTap: (){},
+                  onTap: () {},
                   child: const Text("Settings"),
-                  ),
-                  PopupMenuItem(
-                  padding: const EdgeInsets.fromLTRB(20,0,30,2),
+                ),
+                PopupMenuItem(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 30, 2),
                   height: 45,
-                  labelTextStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.bodySmall),
+                  labelTextStyle: WidgetStatePropertyAll(
+                      Theme.of(context).textTheme.bodySmall),
                   value: "Logout",
-                  onTap: (){},
+                  onTap: () {
+                    router.push("/login");
+                    router.dispose();
+                  },
                   child: const Text("Logout"),
-                  )
+                )
               ];
-          },)
+            },
+          )
         ],
       ),
-      body: Builder(builder: (context){
-        appBarHeight = AppBar().preferredSize.height;
+
+      body: Builder(builder: (context) {
         return navigationShell;
       }),
+
       drawer: kIsWeb ? NavDrawer(navigationShell) : null,
       bottomNavigationBar: ValueListenableBuilder(
           valueListenable: router.routeInformationProvider,
           builder: (ctx, routeName, _) {
-            var currentRoute = router.routeInformationProvider.value.uri.toString();
-            //print(currentRoute);
-            //print(_isNonoRoute(currentRoute));
+            var currentRoute =
+                router.routeInformationProvider.value.uri.toString();
+
             return kIsWeb || _isNonoRoute(currentRoute)
-                ? const SizedBox.shrink() : BottomNavigationBar(
+                ? const SizedBox.shrink()
+                : BottomNavigationBar(
                     backgroundColor: Colors.white,
                     selectedItemColor: Colors.amber,
                     currentIndex: navigationShell.currentIndex,

@@ -1,10 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.premission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.premission.ACCESS_FINE_LOCATION"/>
     <application
         android:label="Zovi Hitnu"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesNonSdkApi="true">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyDHBmVqi1u1jy_hNULvpQO0RZy1wVNlFS0"/>
+        <meta-data
+            android:name="com.google.android.gms.maps.logging.level"
+            android:value="WARN"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -42,6 +50,10 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="tel" />
         </intent>
     </queries>
 </manifest>

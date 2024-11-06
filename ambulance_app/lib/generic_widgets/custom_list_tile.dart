@@ -32,11 +32,11 @@ class CustomListTile<T> extends StatelessWidget {
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             tileColor: Colors.white,
-            leading: Text( //! OVDE JE BILO title PRE
+            leading: Text(
               title,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     fontSize: 27,
-                  ),
+                ),
             ),
             subtitle: Text(
               subtitle == null ? "" : subtitle!,

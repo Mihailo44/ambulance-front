@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:ambulance_app/services/map_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:location/location.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -13,27 +15,40 @@ class MapScreen extends StatefulWidget {
 
 class MapScreenState extends State<MapScreen> {
   Timer? _timer;
-  CameraOptions camera = CameraOptions(
-    center: Point(coordinates: Position(19.8356594 as num, 45.242523 as num)),
-    zoom: 14,
-    bearing: 0,
-    pitch: 0);
-  MapboxMap? mapboxMap;
-
+  final MapService mapService = MapService();
+  String? addy;
+  LatLng? _center;
+  final Completer<GoogleMapController> _controller = Completer();
+  final String _mapStyleString = '''
+  [
+  {
+    "featureType": "water",
+    "elementType": "geometry.fill",
+    "stylers": [
+    {
+        "color": "#7ae4ff"
+    }
+    ]
+  }
+  ]
+  ''';
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
-
-    _timer = Timer.periodic(const Duration(seconds: 20), (timer) {
+    _getLocation();
+    _timer = Timer.periodic(const Duration(seconds: 69000), (timer) {
       _getLocation();
     });
   }
 
+  // void initMapStyle() async{
+  //   _mapStyleString = await rootBundle.loadString('assets/map_style.json');
+  // }
+
   @override
   void dispose() {
     _timer?.cancel();
-    mapboxMap?.dispose();
     super.dispose();
   }
 
@@ -62,30 +77,33 @@ class MapScreenState extends State<MapScreen> {
     }
 
     locationData = await location.getLocation();
-    // print(locationData.longitude);
-    // print(locationData.latitude);
+    addy = await mapService.getAddress(lat: locationData.latitude!,lon: locationData.longitude!); 
+    setState(() {
+     _center = LatLng(locationData.latitude!,locationData.longitude!); 
+    });
 
-  setState(() {
-    camera = CameraOptions(
-    center: Point(coordinates: Position(locationData.longitude as num, locationData.latitude as num)),
-    zoom: 14,
-    bearing: 0,
-    pitch: 0);
-  });
-  }
-
-  _onMapCreated(MapboxMap mapboxMap) {
-    this.mapboxMap = mapboxMap;
+    //TODO novi objekat koji ima adresu i lon i lat
   }
 
   @override
   Widget build(BuildContext context) {
-    return MapWidget(
-      key: const ValueKey("mapWidget"),
-      onMapCreated: _onMapCreated,
-      cameraOptions: camera,
-      onTapListener: (listener){
-        print("a");
+    return GoogleMap(
+      onMapCreated: (GoogleMapController controller) {
+      _controller.complete(controller);
+      _controller.future.then((value) {
+        value.setMapStyle(_mapStyleString);
+      });
+    },
+      zoomControlsEnabled: false,
+      initialCameraPosition: CameraPosition(
+      target: _center ?? const LatLng(45.257828,19.8196241),
+      zoom: 17,
+      ),
+      markers: {
+        Marker(
+          markerId: const MarkerId("me"),
+          position: _center ?? const LatLng(45.257828,19.8196241),
+        ),
       },
     );
   }

@@ -7,6 +7,7 @@ import 'package:ambulance_app/mock_data/questions_mock.dart';
 import 'package:ambulance_app/model/question.dart';
 import 'package:ambulance_app/model/quiz.dart';
 import 'package:ambulance_app/model/response.dart' as my;
+import 'package:ambulance_app/navigation/routes.dart';
 import 'package:ambulance_app/util/snackbar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    //TODO obrisi listu odgovora
     super.dispose();
     _customAnswerController.dispose();
   }
@@ -61,7 +62,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       setState(() {
         questionIndex++;
       });
-    } else {}
+    } else {
+      router.push("/patients");
+    }
   }
 
   void _answerQuestion(String answer) {
@@ -82,11 +85,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           }
         }
       } else {
-        //TODO sva pitanja odgovorena salji zahtev i obrisi listu odgovora
-
-        for (int i = 0; i < _responses.length; i++) {
-          print(_responses[i].response);
-        }
+        print(router.routeInformationProvider.value.uri.toString());
+        router.push("/patients");
       }
     });
   }
@@ -94,65 +94,85 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   @override
   Widget build(BuildContext context) {
     final Question currentQuestion = _questions[questionIndex];
-    return SingleChildScrollView(
-      child: Container(
-        height: MediaQuery.of(context).size.height - 56 - 56,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 35,),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.15,
-              child: AutoSizeText(
-                currentQuestion.body,
-                textAlign: TextAlign.center,
-                softWrap: true,
-                //overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-            const SizedBox(height: 15.0),
-            ...currentQuestion.availableAnswers.map((answer) {
-              return AnswerButton(
-                answerText: answer,
-                onTap: () {
-                  _answerQuestion(answer);
-                },
-              );
-            }),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(60,15,60,20),
-              child: TextField(
-                style: Theme.of(context).textTheme.bodyMedium,
-                autocorrect: true,
-                controller: _customAnswerController,
-                decoration: InputDecoration(
-                  hintText: "Custom answer",
-                  contentPadding: const EdgeInsets.all(2),
-                  hintStyle: Theme.of(context).textTheme.bodyMedium,
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          iconSize: 32,
+          color: Colors.amber,
+          icon: const Icon(
+            Icons.arrow_back
+          ),
+          onPressed: () {
+            if(router.canPop()){
+              router.pop();
+             }
+          }
+        ),
+        title: Text("Question ${questionIndex + 1}/${_questions.length}"),
+        backgroundColor: const Color.fromARGB(255, 253, 253, 247),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height - 56 - 56,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 35,),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.15,
+                child: AutoSizeText(
+                  currentQuestion.body,
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  //overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-                  child: QuestionsButton(
-                    label: "Back",
-                    fun: _previousQuestion,
+              const SizedBox(height: 15.0),
+              ...currentQuestion.availableAnswers.map((answer) {
+                return AnswerButton(
+                  answerText: answer,
+                  onTap: () {
+                    _answerQuestion(answer);
+                  },
+                );
+              }),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(60,15,60,20),
+                child: TextField(
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  autocorrect: true,
+                  controller: _customAnswerController,
+                  decoration: InputDecoration(
+                    hintText: "Custom answer",
+                    contentPadding: const EdgeInsets.all(2),
+                    hintStyle: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
-                Padding(
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
                     padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
                     child: QuestionsButton(
-                      label: "I don't know",
-                      fun: _nextQuestion,
-                  )),
-              ],
-            ),
-          ],
+                      label: "Back",
+                      fun: _previousQuestion,
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+                      child: QuestionsButton(
+                        label: "I don't know",
+                        fun: _nextQuestion,
+                    )),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
