@@ -1,8 +1,8 @@
-import 'package:ambulance_app/navigation/routes.dart';
 import 'package:ambulance_app/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:go_router/go_router.dart';
 
 class PatientHomePage extends StatefulWidget {
   const PatientHomePage({super.key});
@@ -49,7 +49,9 @@ class _PatientHomePageState extends State<PatientHomePage> {
                         ),
                       )),
                   onPressed: () {
-                    router.push("/ambulance-request");
+                    //GoRouter.of(context).push("/ambulance-request");
+                    context.push("/ambulance-request");
+                    print(GoRouter.of(context).routeInformationProvider.value.uri);
                   },
                   child: const Icon(
                     Icons.add_to_home_screen_rounded,

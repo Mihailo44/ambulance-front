@@ -87,24 +87,25 @@ class MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      onMapCreated: (GoogleMapController controller) {
-      _controller.complete(controller);
-      _controller.future.then((value) {
-        value.setMapStyle(_mapStyleString);
-      });
-    },
-      zoomControlsEnabled: false,
-      initialCameraPosition: CameraPosition(
-      target: _center ?? const LatLng(45.257828,19.8196241),
-      zoom: 17,
-      ),
-      markers: {
-        Marker(
-          markerId: const MarkerId("me"),
-          position: _center ?? const LatLng(45.257828,19.8196241),
-        ),
-      },
-    );
-  }
+    return const Text("ok");
+  //   return GoogleMap(
+  //     onMapCreated: (GoogleMapController controller) {
+  //     _controller.complete(controller);
+  //     _controller.future.then((value) {
+  //       value.setMapStyle(_mapStyleString);
+  //     });
+  //   },
+  //     zoomControlsEnabled: false,
+  //     initialCameraPosition: CameraPosition(
+  //     target: _center ?? const LatLng(45.257828,19.8196241),
+  //     zoom: 17,
+  //     ),
+  //     markers: {
+  //       Marker(
+  //         markerId: const MarkerId("me"),
+  //         position: _center ?? const LatLng(45.257828,19.8196241),
+  //       ),
+  //     },
+  //   );
+   }
 }

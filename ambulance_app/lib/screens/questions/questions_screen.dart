@@ -2,15 +2,14 @@ import 'dart:developer';
 
 import 'package:ambulance_app/generic_widgets/buttons/button.dart';
 import 'package:ambulance_app/generic_widgets/buttons/questions_button.dart';
-import 'package:ambulance_app/main_layout.dart';
 import 'package:ambulance_app/mock_data/questions_mock.dart';
 import 'package:ambulance_app/model/question.dart';
 import 'package:ambulance_app/model/quiz.dart';
 import 'package:ambulance_app/model/response.dart' as my;
-import 'package:ambulance_app/navigation/routes.dart';
 import 'package:ambulance_app/util/snackbar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class QuestionsScreen extends StatefulWidget {
   const QuestionsScreen({required this.traumaCause, super.key});
@@ -63,12 +62,13 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         questionIndex++;
       });
     } else {
-      router.push("/patients");
+      context.push("/patients");
+      print(GoRouter.of(context).routeInformationProvider.value.uri);
     }
   }
 
   void _answerQuestion(String answer) {
-    setState(() {
+  
       if (questionIndex < _questions.length - 1) {
         questionIndex++;
         var response = my.Response(
@@ -77,18 +77,20 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         for (int i = 0; i < _responses.length; i++) {
           if (_responses[i].question == _questions[questionIndex].body) {
             if (_responses[i].response != answer) {
+              setState(() {
               _responses[i].response = answer;
+              });
             }
           } else {
+            setState(() {
             _responses.add(response);
+            });
             break;
           }
         }
       } else {
-        print(router.routeInformationProvider.value.uri.toString());
-        router.push("/patients");
+        context.push("/patients");
       }
-    });
   }
 
   @override
@@ -105,8 +107,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             Icons.arrow_back
           ),
           onPressed: () {
-            if(router.canPop()){
-              router.pop();
+            if(GoRouter.of(context).canPop()){
+              context.pop();
+              print(GoRouter.of(context).routeInformationProvider.value.uri);
              }
           }
         ),

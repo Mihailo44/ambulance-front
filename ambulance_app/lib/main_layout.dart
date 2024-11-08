@@ -20,7 +20,6 @@ class ScaffoldWithDrawer extends StatelessWidget {
   ];
 
   bool _isNonoRoute(String route) {
-    print(route);
     return nonoRoutes.contains(route);
   }
 
@@ -58,8 +57,7 @@ class ScaffoldWithDrawer extends StatelessWidget {
                       Theme.of(context).textTheme.bodySmall),
                   value: "Logout",
                   onTap: () {
-                    router.push("/login");
-                    router.dispose();
+                    router.replace("/login");
                   },
                   child: const Text("Logout"),
                 )
@@ -69,16 +67,13 @@ class ScaffoldWithDrawer extends StatelessWidget {
         ],
       ),
 
-      body: Builder(builder: (context) {
-        return navigationShell;
-      }),
-
+      body: navigationShell,
+  
       drawer: kIsWeb ? NavDrawer(navigationShell) : null,
       bottomNavigationBar: ValueListenableBuilder(
           valueListenable: router.routeInformationProvider,
           builder: (ctx, routeName, _) {
-            var currentRoute =
-                router.routeInformationProvider.value.uri.toString();
+            var currentRoute = GoRouter.of(context).routeInformationProvider.value.uri.toString();
 
             return kIsWeb || _isNonoRoute(currentRoute)
                 ? const SizedBox.shrink()

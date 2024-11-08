@@ -1,7 +1,7 @@
 import 'package:ambulance_app/generic_widgets/custom_list_tile.dart';
 import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/model/users/unregistered_user.dart';
-import 'package:ambulance_app/navigation/routes.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ambulance_app/screens/questions/add_patient_screen.dart';
 import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
@@ -46,8 +46,9 @@ class _VictimListState extends State<VictimList> {
             Icons.arrow_back
           ),
           onPressed: () {
-            if(router.canPop()){
-              router.pop();
+            if(context.canPop()){
+              context.pop();
+              print(GoRouter.of(context).routeInformationProvider.value.uri.toString());
              }
           }
         ),

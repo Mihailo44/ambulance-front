@@ -1,6 +1,6 @@
 import 'package:ambulance_app/generic_widgets/trauma_type_card.dart';
 import 'package:ambulance_app/model/question.dart';
-import 'package:ambulance_app/navigation/routes.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
 class TraumaTypeScreen extends StatelessWidget {
@@ -10,39 +10,27 @@ class TraumaTypeScreen extends StatelessWidget {
     return e.name.replaceAll(RegExp("_"), " ").toUpperCase();
   }).toList();
 
-  void _openQuestionsOverlay(String traumaType) {
-      router.push(
-        "/questions",
-        extra: traumaType,
-      );
-    }
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          iconSize: 32,
-          color: Colors.amber,
-          icon: const Icon(
-            Icons.arrow_back
-          ),
-          onPressed: () {
-            if(router.canPop()){
-              router.pop();
-             }
-          }
-        ),
+            iconSize: 32,
+            color: Colors.amber,
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.pop();
+              print(GoRouter.of(context).routeInformationProvider.value.uri);
+            }),
         backgroundColor: const Color.fromARGB(255, 253, 253, 247),
       ),
       body: Column(children: [
         const SizedBox(
           height: 20.0,
         ),
-         Text(
+        Text(
           "Please select the trauma cause",
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyLarge,
@@ -63,7 +51,12 @@ class TraumaTypeScreen extends StatelessWidget {
               return TraumaTypeCard(
                   label: traumaTypes[index],
                   onTap: () {
-                    _openQuestionsOverlay(traumaTypes[index]);
+                    // GoRouter.of(context).push(
+                    //   "/questions",
+                    //   extra: traumaTypes[index],
+                    // );
+                    context.push("/questions",extra: traumaTypes[index]);
+                    print(GoRouter.of(context).routeInformationProvider.value.uri);
                   });
             },
           ),
