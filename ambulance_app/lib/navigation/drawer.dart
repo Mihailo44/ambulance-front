@@ -7,10 +7,9 @@ import 'package:go_router/go_router.dart';
 
 class NavDrawer extends StatelessWidget {
 
+  NavDrawer({super.key});
+  
   final AuthService _authService = AuthService();
-  final StatefulNavigationShell navigationShell;
-
- NavDrawer(this.navigationShell, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,6 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             title: const Text("Medical Evaluator Registration"),
             onTap: () {
-              navigationShell.goBranch(0);
               context.go("/evaluator_registration");
               Navigator.pop(context);
             },

@@ -1,6 +1,6 @@
 import 'package:ambulance_app/generic_widgets/trauma_type_card.dart';
 import 'package:ambulance_app/model/question.dart';
-import 'package:go_router/go_router.dart';
+import 'package:ambulance_app/screens/questions/questions_screen.dart';
 import 'package:flutter/material.dart';
 
 class TraumaTypeScreen extends StatelessWidget {
@@ -21,8 +21,7 @@ class TraumaTypeScreen extends StatelessWidget {
             color: Colors.amber,
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              context.pop();
-              print(GoRouter.of(context).routeInformationProvider.value.uri);
+              Navigator.pop(context);
             }),
         backgroundColor: const Color.fromARGB(255, 253, 253, 247),
       ),
@@ -51,12 +50,15 @@ class TraumaTypeScreen extends StatelessWidget {
               return TraumaTypeCard(
                   label: traumaTypes[index],
                   onTap: () {
-                    // GoRouter.of(context).push(
-                    //   "/questions",
-                    //   extra: traumaTypes[index],
-                    // );
-                    context.push("/questions",extra: traumaTypes[index]);
-                    print(GoRouter.of(context).routeInformationProvider.value.uri);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctx) {
+                          final traumaType =
+                              parseTraumaType(traumaTypes[index]);
+                          return QuestionsScreen(traumaCause: traumaType);
+                        },
+                      ),
+                    );
                   });
             },
           ),

@@ -2,6 +2,7 @@ import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/main_layout.dart';
 import 'package:ambulance_app/model/question.dart';
 import 'package:ambulance_app/model/users/user.dart';
+import 'package:ambulance_app/navigation/observer.dart';
 import 'package:ambulance_app/screens/auth/account_activation_screen.dart';
 import 'package:ambulance_app/screens/auth/login_screen.dart';
 import 'package:ambulance_app/screens/home/patient_home_screen.dart';
@@ -16,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final sectionNavigatorKey = GlobalKey<NavigatorState>();
 
 final router = GoRouter(
   navigatorKey: _rootNavigatorKey,
@@ -28,21 +28,49 @@ final router = GoRouter(
   //     return null;
   //   }
   // },
+  observers: [
+    MyNavigatorObserver(),
+  ],
   routes: <RouteBase>[
     GoRoute(
-          path: "/login",
-          builder: (context, state) => const LoginPage(),
-        ),
-    StatefulShellRoute.indexedStack(
-      builder: (context, state, navigationShell) {
-        // Return the widget that implements the custom shell (e.g a BottomNavigationBar).
-        // The [StatefulNavigationShell] is passed to be able to navigate to other branches in a stateful way.
-        return ScaffoldWithDrawer(navigationShell);
-      },
-      branches: [
-        ..._loggedRoleRoutes(),
-      ],
+      path: "/login",
+      builder: (context, state) => const LoginPage(),
     ),
+    GoRoute(
+          path: "/",
+          builder: (ctx, state) {
+            return PatientHomePage();
+          },
+          routes: [
+            GoRoute(
+                path: "questions",
+                builder: (ctx, state) {
+                  final traumaType = parseTraumaType(state.extra as String);
+                  return QuestionsScreen(traumaCause: traumaType);
+                }),
+            GoRoute(
+              path: "ambulance-request",
+              builder: (ctx, state) => TraumaTypeScreen(),
+            ),
+            GoRoute(
+                path: "patients",
+                builder: (ctx, state) {
+                  return VictimList();
+                }),
+          ],
+        ),
+      GoRoute(
+        path: "/patient-registration",
+        builder: (context, state) => const PatientRegistration(),
+      ),
+      GoRoute(
+        path: "/account-activation",
+        builder: (ctx, state) => const AccountActivationScreen(),
+      ),
+      GoRoute(
+          path: "/profile",
+          builder: (ctx, state) => const PatientProfile(),
+        )
   ],
 );
 
@@ -68,46 +96,6 @@ List<StatefulShellBranch> _loggedRoleRoutes() {
 List<StatefulShellBranch> _getPatientRoutes() {
   final routes = <StatefulShellBranch>[
     StatefulShellBranch(
-      navigatorKey: sectionNavigatorKey,
-      // Add this branch routes
-      // each routes with its sub routes if available e.g feed/uuid/details
-      routes: <RouteBase>[
-        //* onu rutu koju ovde stavis prvu na nju vodi navigationShell.goBranch()
-        GoRoute(
-          path: "/",
-          builder: (ctx, state) {
-            //* if user is patient
-            return const PatientHomePage();
-          },
-        ),
-        GoRoute(
-          path: "/patient-registration",
-          builder: (context, state) => const PatientRegistration(),
-        ),
-        GoRoute(
-          path: "/questions",
-          builder: (ctx, state) {
-              final traumaType = parseTraumaType(state.extra as String);
-              return QuestionsScreen(traumaCause: traumaType);
-          }
-        ),
-        GoRoute(
-          path: "/ambulance-request",
-          builder: (ctx, state) => TraumaTypeScreen(),
-        ),
-        GoRoute(
-          path: "/patients",
-          builder: (ctx,state){
-            return const VictimList();
-          }
-        ),
-        GoRoute(
-          path: "/account-activation",
-          builder: (ctx,state) => const AccountActivationScreen(),  
-        )
-      ],
-    ),
-    StatefulShellBranch(
       routes: [
         GoRoute(
           path: "/profile",
@@ -122,14 +110,3 @@ List<StatefulShellBranch> _getPatientRoutes() {
 
   return routes;
 }
-
-// void navigateWithSave(String route, Object extra) async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   await prefs.setString('lastRoute', route);
-//   router.push(route, extra: extra);
-// }
-
-// Future<String> getLastRoute() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   return prefs.getString('lastRoute') ?? '/login';
-// }

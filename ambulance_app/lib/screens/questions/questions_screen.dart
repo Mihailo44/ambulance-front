@@ -6,10 +6,10 @@ import 'package:ambulance_app/mock_data/questions_mock.dart';
 import 'package:ambulance_app/model/question.dart';
 import 'package:ambulance_app/model/quiz.dart';
 import 'package:ambulance_app/model/response.dart' as my;
+import 'package:ambulance_app/screens/questions/patients_list.dart';
 import 'package:ambulance_app/util/snackbar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class QuestionsScreen extends StatefulWidget {
   const QuestionsScreen({required this.traumaCause, super.key});
@@ -62,8 +62,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         questionIndex++;
       });
     } else {
-      context.push("/patients");
-      print(GoRouter.of(context).routeInformationProvider.value.uri);
+      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const VictimList()));
     }
   }
 
@@ -89,7 +88,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           }
         }
       } else {
-        context.push("/patients");
+        Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const VictimList()));
       }
   }
 
@@ -107,9 +106,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             Icons.arrow_back
           ),
           onPressed: () {
-            if(GoRouter.of(context).canPop()){
-              context.pop();
-              print(GoRouter.of(context).routeInformationProvider.value.uri);
+            if(Navigator.of(context).canPop()){
+              Navigator.of(context).pop();
              }
           }
         ),
