@@ -1,34 +1,23 @@
-import 'package:ambulance_app/navigation/drawer.dart';
-import 'package:ambulance_app/navigation/routes.dart';
-import 'package:flutter/foundation.dart';
+import 'package:ambulance_app/screens/auth/login_screen.dart';
+import 'package:ambulance_app/screens/home/patient_home_screen.dart';
+import 'package:ambulance_app/screens/profile/patient_profile.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-class ScaffoldWithDrawer extends StatelessWidget {
-  ScaffoldWithDrawer(this.navigationShell, {super.key});
+class ScaffoldForMobile extends StatefulWidget {
+  const ScaffoldForMobile({super.key});
 
-  final StatefulNavigationShell navigationShell;
+  @override
+  State<ScaffoldForMobile> createState() => _ScaffoldForMobileState();
+}
 
+class _ScaffoldForMobileState extends State<ScaffoldForMobile> {
   final double bottomBarHeight = 56;
-
-  static const nonoRoutes = [
-    "/login",
-    "/patient-registration",
-    "/ambulance-request",
-    "/questions",
-    "/patients"
-  ];
-
-  bool _isNonoRoute(String route) {
-    print(route);
-    return nonoRoutes.contains(route);
-  }
+  int currentTab = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _isNonoRoute(router.routeInformationProvider.value.uri.toString()) ? null :
-      AppBar(
+      appBar: AppBar(
         title: const Text(
           "Zovi Hitnu",
           style: TextStyle(
@@ -38,7 +27,6 @@ class ScaffoldWithDrawer extends StatelessWidget {
         ),
         actions: [
           PopupMenuButton<String>(
-            //onSelected: (value) => print(value),
             offset: const Offset(0, 50),
             itemBuilder: (context) {
               return [
@@ -58,8 +46,11 @@ class ScaffoldWithDrawer extends StatelessWidget {
                       Theme.of(context).textTheme.bodySmall),
                   value: "Logout",
                   onTap: () {
-                    router.push("/login");
-                    router.dispose();
+                   Navigator.of(context).pushAndRemoveUntil(
+  MaterialPageRoute(builder: (context) => const LoginPage()),
+  (Route<dynamic> route) => false, // This removes all previous routes
+);
+
                   },
                   child: const Text("Logout"),
                 )
@@ -68,44 +59,40 @@ class ScaffoldWithDrawer extends StatelessWidget {
           )
         ],
       ),
-
-      body: Builder(builder: (context) {
-        return navigationShell;
-      }),
-
-      drawer: kIsWeb ? NavDrawer(navigationShell) : null,
-      bottomNavigationBar: ValueListenableBuilder(
-          valueListenable: router.routeInformationProvider,
-          builder: (ctx, routeName, _) {
-            var currentRoute =
-                router.routeInformationProvider.value.uri.toString();
-
-            return kIsWeb || _isNonoRoute(currentRoute)
-                ? const SizedBox.shrink()
-                : BottomNavigationBar(
-                    backgroundColor: Colors.white,
-                    selectedItemColor: Colors.amber,
-                    currentIndex: navigationShell.currentIndex,
-                    onTap: (index) {
-                      //print(router.routeInformationProvider.value.uri);
-                      navigationShell.goBranch(
-                        index,
-                        initialLocation: index == navigationShell.currentIndex,
-                      );
-                      //print(router.routeInformationProvider.value.uri);
-                    },
-                    items: const [
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.account_circle_rounded),
-                        label: 'Profile',
-                      ),
-                    ],
-                  );
-          }),
+      body: currentTab == 0 ? const PatientHomePage() : const PatientProfile(),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentTab,
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.amber,
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              if (currentTab != 0) {
+                setState(() {
+                  currentTab = 0;
+                });
+                //TODO riverPod stavi na home page
+                //Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const ScaffoldForMobile()));
+              }
+            case 1:
+              if (currentTab != 1) {
+                setState(() {
+                  currentTab = 1;
+                });
+              }
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle_rounded),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,5 @@
-import 'package:ambulance_app/navigation/routes.dart';
 import 'package:ambulance_app/screens/map_screen.dart';
+import 'package:ambulance_app/screens/questions/trauma_type_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:url_launcher/url_launcher_string.dart';
@@ -49,7 +49,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
                         ),
                       )),
                   onPressed: () {
-                    router.push("/ambulance-request");
+                    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => TraumaTypeScreen()));
                   },
                   child: const Icon(
                     Icons.add_to_home_screen_rounded,

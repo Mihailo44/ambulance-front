@@ -36,7 +36,7 @@ class MapScreenState extends State<MapScreen> {
   @override
   void initState(){
     super.initState();
-    _getLocation();
+    //_getLocation();
     _timer = Timer.periodic(const Duration(seconds: 69000), (timer) {
       _getLocation();
     });
@@ -87,6 +87,7 @@ class MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //return const Text("ok");
     return GoogleMap(
       onMapCreated: (GoogleMapController controller) {
       _controller.complete(controller);
@@ -106,5 +107,5 @@ class MapScreenState extends State<MapScreen> {
         ),
       },
     );
-  }
+   }
 }
