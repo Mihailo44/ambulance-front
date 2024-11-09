@@ -3,6 +3,7 @@ import 'package:ambulance_app/navigation/routes.dart';
 import 'package:ambulance_app/services/auth_service.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -93,9 +94,16 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  router.go("/home");
+                  context.push("/home");
                 },
                 child: const Text("Home"),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  router.go("/account-activation");
+                },
+                child: const Text("Activate"),
               ),
             ],
           ),
