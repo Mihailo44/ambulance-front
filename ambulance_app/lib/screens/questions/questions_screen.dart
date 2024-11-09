@@ -35,7 +35,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   @override
   void initState() {
     super.initState();
-    Quiz q = QuizMock.quizes.firstWhere((e) => e.traumaType == widget.traumaCause);
+    Quiz q =
+        QuizMock.quizes.firstWhere((e) => e.traumaType == widget.traumaCause);
     _questions.addAll(q.questions);
   }
 
@@ -62,34 +63,36 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         questionIndex++;
       });
     } else {
-      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const VictimList()));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (ctx) => const VictimList()));
     }
   }
 
   void _answerQuestion(String answer) {
   
-      if (questionIndex < _questions.length - 1) {
-        questionIndex++;
-        var response = my.Response(
-            question: _questions[questionIndex].body, response: answer);
+    var response = my.Response(
+        id: questionIndex,
+        question: _questions[questionIndex].body,
+        response: answer);
 
-        for (int i = 0; i < _responses.length; i++) {
-          if (_responses[i].question == _questions[questionIndex].body) {
-            if (_responses[i].response != answer) {
-              setState(() {
-              _responses[i].response = answer;
-              });
-            }
-          } else {
-            setState(() {
-            _responses.add(response);
-            });
-            break;
-          }
-        }
-      } else {
-        Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const VictimList()));
+    if (_responses.length > questionIndex) {
+      if (_responses[questionIndex].response != answer) {
+        _responses[questionIndex].response = answer;
       }
+    } else {
+        _responses.add(response);
+    }
+
+    if (questionIndex != _questions.length - 1) {
+      setState(() {
+        questionIndex++;
+      });
+    }else{
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (ctx) => const VictimList()));
+    }
+
+    return;
   }
 
   @override
@@ -100,17 +103,14 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          iconSize: 32,
-          color: Colors.amber,
-          icon: const Icon(
-            Icons.arrow_back
-          ),
-          onPressed: () {
-            if(Navigator.of(context).canPop()){
-              Navigator.of(context).pop();
-             }
-          }
-        ),
+            iconSize: 32,
+            color: Colors.amber,
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+            }),
         title: Text("Question ${questionIndex + 1}/${_questions.length}"),
         backgroundColor: const Color.fromARGB(255, 253, 253, 247),
       ),
@@ -120,7 +120,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 35,),
+              const SizedBox(
+                height: 35,
+              ),
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.15,
@@ -142,7 +144,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                 );
               }),
               Padding(
-                padding: const EdgeInsets.fromLTRB(60,15,60,20),
+                padding: const EdgeInsets.fromLTRB(60, 15, 60, 20),
                 child: TextField(
                   style: Theme.of(context).textTheme.bodyMedium,
                   autocorrect: true,
@@ -169,7 +171,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                       child: QuestionsButton(
                         label: "I don't know",
                         fun: _nextQuestion,
-                    )),
+                      )),
                 ],
               ),
             ],

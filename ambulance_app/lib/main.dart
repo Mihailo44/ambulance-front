@@ -2,7 +2,6 @@ import 'package:ambulance_app/main_layout.dart';
 import 'package:ambulance_app/model/users/basic_user_info.dart';
 import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/navigation/routes.dart';
-import 'package:ambulance_app/screens/home/patient_home_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
