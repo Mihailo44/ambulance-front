@@ -1,9 +1,10 @@
 import 'package:ambulance_app/main.dart';
+import 'package:ambulance_app/main_layout.dart';
 import 'package:ambulance_app/navigation/routes.dart';
+import 'package:ambulance_app/screens/registration/patient_registration.dart';
 import 'package:ambulance_app/services/auth_service.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -54,58 +55,59 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      widthFactor: 0.7,
-      child: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              buildTextFormField(
-                controller: _usernameController,
-                labelText: "Username",
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              buildTextFormField(
-                controller: _passwordController,
-                labelText: "Password",
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _login,
-                child: const Text('Login'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  router.go("/patient-registration");
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => const PatientRegistration()),
-                  // );
-                },
-                child: const Text("Register"),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  context.push("/home");
-                },
-                child: const Text("Home"),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  router.go("/account-activation");
-                },
-                child: const Text("Activate"),
-              ),
-            ],
+    return Material(
+      child: FractionallySizedBox(
+        widthFactor: 0.7,
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                buildTextFormField(
+                  controller: _usernameController,
+                  labelText: "Username",
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                buildTextFormField(
+                  controller: _passwordController,
+                  labelText: "Password",
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _login,
+                  child: const Text('Login'),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PatientRegistration()),
+                    );
+                  },
+                  child: const Text("Register"),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const ScaffoldForMobile()));
+                  },
+                  child: const Text("Home"),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    router.go("/account-activation");
+                  },
+                  child: const Text("Activate"),
+                ),
+              ],
+            ),
           ),
         ),
       ),
