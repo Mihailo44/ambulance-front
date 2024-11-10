@@ -1,9 +1,11 @@
 import 'package:ambulance_app/generic_widgets/trauma_type_card.dart';
 import 'package:ambulance_app/model/question.dart';
+import 'package:ambulance_app/navigation/provider.dart';
 import 'package:ambulance_app/screens/questions/questions_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TraumaTypeScreen extends StatelessWidget {
+class TraumaTypeScreen extends ConsumerWidget {
   TraumaTypeScreen({super.key});
 
   final List<String> traumaTypes = TraumaType.values.map((e) {
@@ -11,7 +13,7 @@ class TraumaTypeScreen extends StatelessWidget {
   }).toList();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -21,6 +23,7 @@ class TraumaTypeScreen extends StatelessWidget {
             color: Colors.amber,
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
+              ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
               Navigator.pop(context);
             }),
         backgroundColor: const Color.fromARGB(255, 253, 253, 247),

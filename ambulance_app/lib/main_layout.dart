@@ -1,98 +1,154 @@
+import 'package:ambulance_app/navigation/provider.dart';
 import 'package:ambulance_app/screens/auth/login_screen.dart';
 import 'package:ambulance_app/screens/home/patient_home_screen.dart';
 import 'package:ambulance_app/screens/profile/patient_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ScaffoldForMobile extends StatefulWidget {
+class ScaffoldForMobile extends ConsumerStatefulWidget {
   const ScaffoldForMobile({super.key});
 
   @override
-  State<ScaffoldForMobile> createState() => _ScaffoldForMobileState();
+  ConsumerState<ScaffoldForMobile> createState() => _ScaffoldForMobileState();
 }
 
-class _ScaffoldForMobileState extends State<ScaffoldForMobile> {
+class _ScaffoldForMobileState extends ConsumerState<ScaffoldForMobile> {
   final double bottomBarHeight = 56;
-  int currentTab = 0;
+  int _currentTab = 0;
+
+  final List<GlobalKey<NavigatorState>> _navigatorKeys = [
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+  ];
+
+  final List<Widget> _pages = [
+    const PatientHomeScreen(),
+    const PatientProfile(),
+  ];
+
+  void _selectTab(int idx) {
+    final isVisible = ref.read(appBarVisibilityProvider);
+
+    if (_currentTab != idx) {
+      var previousTab = _currentTab;
+      setState(() {
+        _currentTab = idx;
+      });
+
+      if (!_navigatorKeys[previousTab].currentState!.canPop() &&
+          !_navigatorKeys[_currentTab].currentState!.canPop()) {
+        if (!isVisible) {
+          ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
+        }
+      } else if (_navigatorKeys[previousTab].currentState!.canPop() &&
+          !_navigatorKeys[_currentTab].currentState!.canPop()) {
+        ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
+      } else if (!_navigatorKeys[previousTab].currentState!.canPop() &&
+          _navigatorKeys[_currentTab].currentState!.canPop()) {
+        ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
+      } else {
+        if (isVisible) {
+          ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
+        }
+      }
+    } else {
+      if (_navigatorKeys[idx].currentState!.canPop()) {
+        _navigatorKeys[idx].currentState!.popUntil((route) => route.isFirst);
+        ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isVisible = ref.watch(appBarVisibilityProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Zovi Hitnu",
-          style: TextStyle(
-            fontSize: 23.0,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        actions: [
-          PopupMenuButton<String>(
-            offset: const Offset(0, 50),
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 30, 2),
-                  height: 45,
-                  labelTextStyle: WidgetStatePropertyAll(
-                      Theme.of(context).textTheme.bodySmall),
-                  value: "Settings",
-                  onTap: () {},
-                  child: const Text("Settings"),
+      appBar: !isVisible
+          ? null
+          : AppBar(
+              title: const Text(
+                "Zovi Hitnu",
+                style: TextStyle(
+                  fontSize: 23.0,
+                  fontWeight: FontWeight.w500,
                 ),
-                PopupMenuItem(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 30, 2),
-                  height: 45,
-                  labelTextStyle: WidgetStatePropertyAll(
-                      Theme.of(context).textTheme.bodySmall),
-                  value: "Logout",
-                  onTap: () {
-                   Navigator.of(context).pushAndRemoveUntil(
-  MaterialPageRoute(builder: (context) => const LoginPage()),
-  (Route<dynamic> route) => false, // This removes all previous routes
-);
-
+              ),
+              actions: [
+                PopupMenuButton<String>(
+                  offset: const Offset(0, 50),
+                  itemBuilder: (context) {
+                    return [
+                      PopupMenuItem(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 30, 2),
+                        height: 45,
+                        labelTextStyle: WidgetStatePropertyAll(
+                            Theme.of(context).textTheme.bodySmall),
+                        value: "Settings",
+                        onTap: () {},
+                        child: const Text("Settings"),
+                      ),
+                      PopupMenuItem(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 30, 2),
+                        height: 45,
+                        labelTextStyle: WidgetStatePropertyAll(
+                            Theme.of(context).textTheme.bodySmall),
+                        value: "Logout",
+                        onTap: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()),
+                            (Route<dynamic> route) =>
+                                false, // This removes all previous routes
+                          );
+                        },
+                        child: const Text("Logout"),
+                      )
+                    ];
                   },
-                  child: const Text("Logout"),
                 )
-              ];
-            },
-          )
-        ],
+              ],
+            ),
+      body: Stack(
+        children: _pages.asMap().entries.map((entry) {
+          int idx = entry.key;
+          Widget page = entry.value;
+
+          return Offstage(
+            offstage: _currentTab != idx,
+            child: Navigator(
+              key: _navigatorKeys[idx],
+              onGenerateRoute: (RouteSettings settings) {
+                return MaterialPageRoute(builder: (ctx) => page);
+              },
+            ),
+          );
+        }).toList(),
       ),
-      body: currentTab == 0 ? const PatientHomePage() : const PatientProfile(),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentTab,
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.amber,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              if (currentTab != 0) {
-                setState(() {
-                  currentTab = 0;
-                });
-                //TODO riverPod stavi na home page
-                //Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const ScaffoldForMobile()));
-              }
-            case 1:
-              if (currentTab != 1) {
-                setState(() {
-                  currentTab = 1;
-                });
-              }
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_rounded),
-            label: 'Profile',
-          ),
-        ],
-      ),
+      bottomNavigationBar: !isVisible
+          ? null
+          : BottomNavigationBar(
+              currentIndex: _currentTab,
+              backgroundColor: Colors.white,
+              selectedItemColor: Colors.amber,
+              onTap: (index) {
+                switch (index) {
+                  case 0:
+                    _selectTab(0);
+                  case 1:
+                    _selectTab(1);
+                }
+              },
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.account_circle_rounded),
+                  label: 'Profile',
+                ),
+              ],
+            ),
     );
   }
 }
