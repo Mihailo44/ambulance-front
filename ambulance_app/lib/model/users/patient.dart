@@ -9,8 +9,8 @@ class Patient {
   String bloodType;
   String gender;
   String yearOfBirth;
-  List<Allergy>? alergies;
-  List<Disease>? diseases;
+  List<Allergy> alergies;
+  List<Disease> diseases;
   String? pastOperations;
 
   Patient({
@@ -20,10 +20,11 @@ class Patient {
     required this.bloodType,
     required this.gender,
     required this.yearOfBirth,
-    this.alergies,
-    this.diseases,
+    List<Allergy>? alergies,
+    List<Disease>? diseases,
     this.pastOperations,
-  });
+  }) : alergies = alergies ?? [],
+       diseases = diseases ?? [];
 
 
   //TODO Namestiti da se popune alergije i bolesti

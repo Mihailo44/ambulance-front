@@ -11,7 +11,7 @@ class CustomListTile<T> extends StatelessWidget {
 
   const CustomListTile({
       this.item,
-      required this.whoCalled,
+      this.whoCalled = Screen.victimsScreen,
       required this.title,
       this.subtitle,
       this.iconData,
