@@ -16,9 +16,11 @@ class MapScreen extends StatefulWidget {
 class MapScreenState extends State<MapScreen> {
   Timer? _timer;
   final MapService mapService = MapService();
-  String? addy;
+  bool serviceEnabled = false;
+  PermissionStatus permissionGranted = PermissionStatus.granted;
+  String? _address;
   LatLng? _center;
-  final Completer<GoogleMapController> _controller = Completer();
+  Completer<GoogleMapController> _controller = Completer();
   final String _mapStyleString = '''
   [
   {
@@ -34,17 +36,13 @@ class MapScreenState extends State<MapScreen> {
   ''';
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    //_getLocation();
+    _requestPermissions();
     _timer = Timer.periodic(const Duration(seconds: 69000), (timer) {
       _getLocation();
     });
   }
-
-  // void initMapStyle() async{
-  //   _mapStyleString = await rootBundle.loadString('assets/map_style.json');
-  // }
 
   @override
   void dispose() {
@@ -52,15 +50,11 @@ class MapScreenState extends State<MapScreen> {
     super.dispose();
   }
 
-
-  void _getLocation() async {
+  void _requestPermissions() async {
     Location location = Location();
 
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-    LocationData locationData;
-
     serviceEnabled = await location.serviceEnabled();
+    
     if (!serviceEnabled) {
       serviceEnabled = await location.requestService();
       if (!serviceEnabled) {
@@ -69,43 +63,62 @@ class MapScreenState extends State<MapScreen> {
     }
 
     permissionGranted = await location.hasPermission();
+
     if (permissionGranted == PermissionStatus.denied) {
       permissionGranted = await location.requestPermission();
       if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
+  }
+
+  void _getLocation() async {
+    Location location = Location();
+    LocationData locationData;
 
     locationData = await location.getLocation();
-    addy = await mapService.getAddress(lat: locationData.latitude!,lon: locationData.longitude!); 
+    _address = await mapService.getAddress(
+        lat: locationData.latitude!, lon: locationData.longitude!);
+
     setState(() {
-     _center = LatLng(locationData.latitude!,locationData.longitude!); 
+      _center = LatLng(locationData.latitude!, locationData.longitude!);
     });
 
-    //TODO novi objekat koji ima adresu i lon i lat
+    moveToLocation(_center!);
   }
+
+  Future<void> moveToLocation(LatLng position) async {
+  final GoogleMapController controller = await _controller.future;
+  controller.animateCamera(CameraUpdate.newLatLng(position));
+}
 
   @override
   Widget build(BuildContext context) {
-    return const Text("ok");
-    // return GoogleMap(
-    //   onMapCreated: (GoogleMapController controller) {
-    //   _controller.complete(controller);
-    //   _controller.future.then((value) {
-    //     value.setMapStyle(_mapStyleString);
-    //   });
-    // },
-    //   zoomControlsEnabled: false,
-    //   initialCameraPosition: CameraPosition(
-    //   target: _center ?? const LatLng(45.257828,19.8196241),
-    //   zoom: 17,
-    //   ),
-    //   markers: {
-    //     Marker(
-    //       markerId: const MarkerId("me"),
-    //       position: _center ?? const LatLng(45.257828,19.8196241),
-    //     ),
-    //   },
-    // );
-   }
+    return GoogleMap(
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+        _controller.future.then((value) {
+          value.setMapStyle(_mapStyleString);
+          if(permissionGranted == PermissionStatus.granted){
+            _getLocation();
+          }
+        });
+      },
+      initialCameraPosition: CameraPosition(
+        target: _center ?? const LatLng(45.257828, 19.8196241),
+        zoom: 17,
+      ),
+      mapToolbarEnabled: false,
+      zoomControlsEnabled: false,
+      markers: _center != null
+          ? {
+              Marker(
+                markerId: const MarkerId("me"),
+                infoWindow: InfoWindow(title: "You", snippet: _address),
+                position: _center!,
+              ),
+            }
+          : {},
+    );
+  }
 }
