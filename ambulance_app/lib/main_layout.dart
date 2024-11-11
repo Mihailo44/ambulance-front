@@ -81,8 +81,10 @@ class _ScaffoldForMobileState extends ConsumerState<ScaffoldForMobile> {
                       PopupMenuItem(
                         padding: const EdgeInsets.fromLTRB(20, 0, 30, 2),
                         height: 45,
-                        labelTextStyle: WidgetStatePropertyAll(
-                            Theme.of(context).textTheme.bodySmall),
+                        labelTextStyle: WidgetStatePropertyAll(Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(fontSize: 19)),
                         value: "Settings",
                         onTap: () {},
                         child: const Text("Settings"),
@@ -91,7 +93,11 @@ class _ScaffoldForMobileState extends ConsumerState<ScaffoldForMobile> {
                         padding: const EdgeInsets.fromLTRB(20, 0, 30, 2),
                         height: 45,
                         labelTextStyle: WidgetStatePropertyAll(
-                            Theme.of(context).textTheme.bodySmall),
+                          Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(fontSize: 19),
+                        ),
                         value: "Logout",
                         onTap: () {
                           Navigator.of(context).pushAndRemoveUntil(

@@ -26,6 +26,12 @@ enum Screen {
   allBases,
 }
 
+enum Mode{
+  delete,
+  create,
+  display
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

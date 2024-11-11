@@ -131,7 +131,7 @@ class _VictimListState extends State<VictimList> {
                                           patients.remove(patients[idx]);
                                         });
                                       },
-                                      whoCalled: Screen.victimsScreen,
+                                      mode: Mode.delete,
                                     ),
                                     onDismissed: (direction) {
                                       setState(() {
@@ -282,7 +282,7 @@ class _VictimListState extends State<VictimList> {
                                       patients.remove(patients[idx]);
                                     });
                                   },
-                                  whoCalled: Screen.victimsScreen,
+                                  mode: Mode.delete,
                                 ),
                                 onDismissed: (direction) {
                                   setState(() {

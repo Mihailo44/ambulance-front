@@ -4,6 +4,7 @@ import 'package:ambulance_app/model/medication.dart';
 import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/navigation/provider.dart';
+import 'package:ambulance_app/screens/auth/account_activation_screen.dart';
 import 'package:ambulance_app/screens/profile/medical_info_screen.dart';
 import 'package:ambulance_app/screens/profile/user_info_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,9 @@ class PatientProfile extends ConsumerWidget {
       children: [
         const SizedBox(height: 20),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AccountActivationScreen()));
+          },
           child: const Text("Activate Account"),
         ),
         const SizedBox(height: 20),
@@ -39,19 +42,17 @@ class PatientProfile extends ConsumerWidget {
             User user = User(firstname: "Boban", lastname: "Rajovic", password: "Rerna", dateOfBirth: DateTime.now(),role: UserRole.PATIENT);
             
             List<Allergy> alergies = [
-              Allergy(allergen: "ugly hoes", description: "des",medications: [Medication(name: "Bromazepam", weeklyDosage: 3)]),
+              Allergy(allergen: "ugly hoes", description: "Allergies are immune system reactions to substances that are typically harmless to most people, such as pollen, food, or medications. When exposed to an allergen, the body can produce symptoms ranging from mild (like sneezing or itching) to severe, potentially causing life-threatening anaphylaxis.",medications: [Medication(name: "Bromazepam", weeklyDosage: 3)]),
               Allergy(allergen: "fake niggas", description: "I just can't",medications: [Medication(name: "Hennessy", weeklyDosage: 12)])
             ];
 
-            List<Disease> disease = [
+            List<Disease> diseases = [
               Disease(name: "Jealosy",medications: []),
               Disease(name: "Revertiligo", medications: []),
               Disease(name: "Alcoholism", medications: [Medication(name: "Heroin", weeklyDosage: 3)]),
             ];
 
-            Patient patient = Patient(user: user, contactNumber: "061/623-49-33", closePersonContact: "061/632-32-21", bloodType: "A-", gender: "M", yearOfBirth: "2001",pastOperations: "Knee operation",alergies: alergies,diseases: disease);
-
-            print(patient.alergies[0].allergen);
+            Patient patient = Patient(user: user, contactNumber: "061/623-49-33", closePersonContact: "061/632-32-21", bloodType: "A-", gender: "M", yearOfBirth: "2001",pastOperations: "Knee operation",alergies: alergies,diseases: diseases);
 
             Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => MedicalInfoScreen(patient: patient)));
           },
