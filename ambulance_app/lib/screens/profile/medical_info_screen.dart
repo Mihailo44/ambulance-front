@@ -2,7 +2,8 @@ import 'package:ambulance_app/generic_widgets/custom_list_tile.dart';
 import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/navigation/provider.dart';
-import 'package:ambulance_app/screens/details/allergy_details_screen.dart';
+import 'package:ambulance_app/screens/allergy/add_allergy_screen.dart';
+import 'package:ambulance_app/screens/allergy/allergy_details_screen.dart';
 import 'package:ambulance_app/screens/details/disease_details_screen.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
   }
 
   void _addAllergy(){
-    
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AddAllergyScreen()));
   }
 
   void _addDisease(){
