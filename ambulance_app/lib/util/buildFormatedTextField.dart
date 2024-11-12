@@ -1,9 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 Widget buildFormattedTextField(
     BuildContext context, String label, String text ) {
   return Padding(
-    padding: const EdgeInsets.all(10.0),
+    padding: const EdgeInsets.fromLTRB(10,10,10,15),
     child: SizedBox(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -12,11 +13,12 @@ Widget buildFormattedTextField(
             label,
             style: Theme.of(context).textTheme.headlineMedium,
           ),
-          text.isEmpty ? const SizedBox.shrink() : Text(
+          const SizedBox(height: 5,),
+          text.isEmpty ? const SizedBox.shrink() : AutoSizeText(
             text,
+            maxLines: 9,
             style: Theme.of(context).textTheme.bodyMedium,
-            //maxLines: 5,
-            overflow: TextOverflow.ellipsis,
+            overflow: TextOverflow.clip,
           ),
         ],
       ),

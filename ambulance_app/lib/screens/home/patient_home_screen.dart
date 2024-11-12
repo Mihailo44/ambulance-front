@@ -26,9 +26,11 @@ class _PatientHomeScreenState extends ConsumerState<PatientHomeScreen>{
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end, 
+      children: [
       Expanded(
-          child: Stack(
+        child: Stack(
         alignment: AlignmentDirectional.bottomStart,
         children: [
           const MapScreen(),

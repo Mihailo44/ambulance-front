@@ -80,45 +80,46 @@ class MapScreenState extends State<MapScreen> {
     _address = await mapService.getAddress(
         lat: locationData.latitude!, lon: locationData.longitude!);
 
-    setState(() {
-      _center = LatLng(locationData.latitude!, locationData.longitude!);
-    });
+    _center = LatLng(locationData.latitude!, locationData.longitude!);
 
     moveToLocation(_center!);
   }
 
   Future<void> moveToLocation(LatLng position) async {
   final GoogleMapController controller = await _controller.future;
+  setState(() {
   controller.animateCamera(CameraUpdate.newLatLng(position));
+  });
 }
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      onMapCreated: (GoogleMapController controller) {
-        _controller.complete(controller);
-        _controller.future.then((value) {
-          value.setMapStyle(_mapStyleString);
-          if(permissionGranted == PermissionStatus.granted){
-            _getLocation();
-          }
-        });
-      },
-      initialCameraPosition: CameraPosition(
-        target: _center ?? const LatLng(45.257828, 19.8196241),
-        zoom: 17,
-      ),
-      mapToolbarEnabled: false,
-      zoomControlsEnabled: false,
-      markers: _center != null
-          ? {
-              Marker(
-                markerId: const MarkerId("me"),
-                infoWindow: InfoWindow(title: "You", snippet: _address),
-                position: _center!,
-              ),
-            }
-          : {},
-    );
+    return const Text("ok");
+    // return GoogleMap(
+    //   onMapCreated: (GoogleMapController controller) {
+    //     _controller.complete(controller);
+    //     _controller.future.then((value) {
+    //       value.setMapStyle(_mapStyleString);
+    //       if(permissionGranted == PermissionStatus.granted){
+    //         _getLocation();
+    //       }
+    //     });
+    //   },
+    //   initialCameraPosition: CameraPosition(
+    //     target: _center ?? const LatLng(45.257828, 19.8196241),
+    //     zoom: 17,
+    //   ),
+    //   mapToolbarEnabled: false,
+    //   zoomControlsEnabled: false,
+    //   markers: _center != null
+    //       ? {
+    //           Marker(
+    //             markerId: const MarkerId("me"),
+    //             infoWindow: InfoWindow(title: "You", snippet: _address),
+    //             position: _center!,
+    //           ),
+    //         }
+    //       : {},
+    // );
   }
 }

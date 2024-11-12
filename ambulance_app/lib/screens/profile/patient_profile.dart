@@ -20,13 +20,6 @@ class PatientProfile extends ConsumerWidget {
         const SizedBox(height: 20),
         ElevatedButton(
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AccountActivationScreen()));
-          },
-          child: const Text("Activate Account"),
-        ),
-        const SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () {
             ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
             User user = User(firstname: "Mihailo", lastname: "Djajic", password: "Rerna", dateOfBirth: DateTime.now(),role: UserRole.PATIENT);
             Patient patient = Patient(user: user, contactNumber: "061/623-49-33", closePersonContact: "061/632-32-21", bloodType: "A-", gender: "M", yearOfBirth: "2001");

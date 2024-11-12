@@ -18,7 +18,7 @@ class AppTheme {
       textTheme: ThemeData().textTheme.copyWith(
             headlineMedium: const TextStyle(
               fontSize: 19,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
               color: Colors.black,
             ),
             bodyLarge: const TextStyle(
@@ -30,14 +30,14 @@ class AppTheme {
               //overflow: TextOverflow.ellipsis,
             ),
             bodyMedium: const TextStyle(
-              fontSize: 24,
+              fontSize: 23,
               height: 1.5,
               fontWeight: FontWeight.w400,
               color: Colors.black,
               overflow: TextOverflow.ellipsis,
             ),
             bodySmall: const TextStyle(
-              fontSize: 22,
+              fontSize: 21,
               fontWeight: FontWeight.w400,
               color: Colors.black,
               overflow: TextOverflow.ellipsis,

@@ -29,7 +29,8 @@ enum Screen {
 enum Mode{
   delete,
   create,
-  display
+  display,
+  none,
 }
 
 class MyApp extends StatelessWidget {

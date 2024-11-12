@@ -89,8 +89,8 @@ class CustomListTile<T> extends StatelessWidget {
               color: Colors.black54,
             ),
           ),
-          trailing: _buildTrailing(mode),
-          splashColor: const Color.fromARGB(255, 192, 240, 255),
+          trailing: mode == Mode.none ? null : _buildTrailing(mode),
+          splashColor: const Color.fromARGB(255, 198, 242, 255),
           onTap: mode == Mode.display
               ? () {
                   onPressed();

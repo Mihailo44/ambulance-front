@@ -1,11 +1,12 @@
-import 'package:ambulance_app/model/allergy.dart';
-import 'package:flutter/material.dart';
+import 'package:ambulance_app/model/disease.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
+import 'package:flutter/material.dart';
 
-class AllergyDetailsScreen extends StatelessWidget {
-  const AllergyDetailsScreen({required this.allergy, super.key});
+class DiseaseDetailsScreen extends StatelessWidget {
 
-  final Allergy allergy;
+  const DiseaseDetailsScreen({required this.disease,super.key});
+
+  final Disease disease;
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +18,7 @@ class AllergyDetailsScreen extends StatelessWidget {
           const SizedBox(
             height: 50,
           ),
-          buildFormattedTextField(context, "Allergen", allergy.allergen),
-          buildFormattedTextField(context, "Description", allergy.description),
+          buildFormattedTextField(context, "Disease", disease.name),
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             child: Text(
@@ -26,11 +26,14 @@ class AllergyDetailsScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),
-          allergy.medications == null || allergy.medications!.isEmpty
-              ? const Text('No medications available')
+          disease.medications.isEmpty
+              ? const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Text('No medications'),
+              )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: allergy.medications!.map((e) {
+                  children: disease.medications.map((e) {
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
                       child: Text(
@@ -65,4 +68,5 @@ class AllergyDetailsScreen extends StatelessWidget {
       ),
     );
   }
+  
 }

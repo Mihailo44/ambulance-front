@@ -1,10 +1,9 @@
 import 'dart:developer';
-
 import 'package:ambulance_app/screens/tables/all_operating_bases.dart';
 import 'package:flutter/material.dart';
 
 class UserRegistration extends StatefulWidget {
-  const UserRegistration({Key? key}) : super(key: key);
+  const UserRegistration({super.key});
 
   @override
   _UserRegistrationState createState() => _UserRegistrationState();
@@ -33,7 +32,7 @@ class _UserRegistrationState extends State<UserRegistration> {
   }
 
   void _register() {
-    log("treba");
+    
   }
 
   @override
@@ -88,20 +87,6 @@ class _UserRegistrationState extends State<UserRegistration> {
                     decoration:
                         const InputDecoration(labelText: "Date of birth"),
                   ),
-                  //const SizedBox(height: 20.0),
-                  // DropdownButtonFormField(
-                  //   items: _dropdownOptions.map((String option) {
-                  //   return DropdownMenuItem<String>(
-                  //     value: option,
-                  //     child: Text(option),
-                  //   );
-                  //   }).toList(),
-                  //   onChanged: (String? newValue){
-                  //     setState(() {
-                  //       _selectedOption = newValue;
-                  //     });
-                  //   },
-                  // ),
                   const SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: () {

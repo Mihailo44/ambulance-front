@@ -61,6 +61,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     if (questionIndex < _questions.length - 1) {
       setState(() {
         questionIndex++;
+        _customAnswerController.clear();
       });
     } else {
       Navigator.of(context)
