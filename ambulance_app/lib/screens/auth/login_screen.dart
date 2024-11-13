@@ -98,14 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) => const ScaffoldForMobile()));
                   },
                   child: const Text("Home"),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    router.go("/account-activation");
-                  },
-                  child: const Text("Activate"),
-                ),
+                ),       
               ],
             ),
           ),
