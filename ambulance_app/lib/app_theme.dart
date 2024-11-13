@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 class AppTheme {
   static const ui.Size? minButtonSize = ui.Size(140, 56);
+  //static const ui.Size? minTileButtonSize = ui.Size(110, 49);
 
   static ThemeData get theme {
     return ThemeData().copyWith(
@@ -27,20 +28,20 @@ class AppTheme {
               fontWeight: FontWeight.w500,
               color: Colors.black,
               letterSpacing: 0.6,
-              //overflow: TextOverflow.ellipsis,
+              overflow: TextOverflow.visible,
             ),
             bodyMedium: const TextStyle(
               fontSize: 23,
               height: 1.5,
               fontWeight: FontWeight.w400,
               color: Colors.black,
-              overflow: TextOverflow.ellipsis,
+              overflow: TextOverflow.visible,
             ),
             bodySmall: const TextStyle(
               fontSize: 21,
               fontWeight: FontWeight.w400,
               color: Colors.black,
-              overflow: TextOverflow.ellipsis,
+              overflow: TextOverflow.visible,
             ),
           ),
       elevatedButtonTheme: ElevatedButtonThemeData(

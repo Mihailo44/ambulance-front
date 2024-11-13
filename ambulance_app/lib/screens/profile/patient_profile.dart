@@ -16,6 +16,7 @@ class PatientProfile extends ConsumerWidget {
   @override
   Widget build(BuildContext context,WidgetRef ref) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(height: 20),
         ElevatedButton(

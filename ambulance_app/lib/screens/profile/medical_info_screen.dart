@@ -4,8 +4,10 @@ import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/navigation/provider.dart';
 import 'package:ambulance_app/screens/allergy/add_allergy_screen.dart';
 import 'package:ambulance_app/screens/allergy/allergy_details_screen.dart';
-import 'package:ambulance_app/screens/details/disease_details_screen.dart';
+import 'package:ambulance_app/screens/disease/add_disease_screen.dart';
+import 'package:ambulance_app/screens/disease/disease_details_screen.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
+import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:ui' as ui;
@@ -21,13 +23,26 @@ class MedicalInfoScreen extends ConsumerStatefulWidget {
 class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
     with SingleTickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
+  final _diseaseNameController = TextEditingController();
   late Patient patient;
   bool _showButtons = false;
-  double _rotationAngle = 0; // Unique key value to trigger reanimation
+  double _rotationAngle = 0;
+  final List<String> _bloodTypes = [
+    "A-",
+    "A+",
+    "B-",
+    "B+",
+    "AB+",
+    "AB-",
+    "O+",
+    "O-"
+  ];
+
+  String? _selectedBloodType = "";
 
   void _rotateIcon() {
     setState(() {
-      _rotationAngle += 0.5; // Increment the key to trigger the rotation animation
+      _rotationAngle += 0.5;
     });
   }
 
@@ -54,20 +69,146 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
     });
   }
 
-  void _addAllergy(){
-    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AddAllergyScreen()));
+  void _addAllergy() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (ctx) => const AddAllergyScreen()));
   }
 
-  void _addDisease(){
-
+  void _addDisease() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (ctx) => const AddDiseaseScreen()));
   }
 
-  void _addOperation(){}
+  void _addOperation(TextEditingController diseaseNameController) {
+    FocusScope.of(context).unfocus();
+    showModalBottomSheet(
+        isDismissible: false,
+        context: context,
+        builder: (ctx) {
+          return SizedBox(
+            height: 250,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: buildTextFormField(
+                        controller: diseaseNameController, labelText: "Name"),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          Navigator.of(context).pop();
+                          diseaseNameController.clear();
+                        },
+                        label: const Text("Cancel"),
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          Navigator.of(context).pop();
+                          diseaseNameController.clear();
+                        },
+                        child: const Text("Save"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void _confirmBloodtypeModal() {
+    showDialog<bool>(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            title: const Text('Confirm'),
+            content: Text(
+              'Are you sure you want to proceed?',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Yes'),
+              ),
+            ],
+          );
+        });
+  }
+
+  //TODO nametiti ovo
+  void _changeBloodType() {
+    showModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return Padding(
+            padding: const EdgeInsets.all(25),
+            child: Column(
+              children: [
+                const Text("Choose blood type"),
+                const SizedBox(
+                  height: 20,
+                ),
+                DropdownButtonFormField<String>(
+                    hint: buildFormattedTextField(context, "Blood type", ""),
+                    items: [
+                      for (final b in _bloodTypes)
+                        DropdownMenuItem(
+                            value: b,
+                            child: Text(
+                              b,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 20,
+                              ),
+                            ))
+                    ],
+                    onChanged: (value) {
+                      if (value == null) {
+                        return;
+                      }
+                      setState(() {
+                        _selectedBloodType = value;
+                      });
+                    }),
+                const SizedBox(
+                  height: 60,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      //_confirmBloodtypeModal();
+                    },
+                    child: const Text("Save"))
+              ],
+            ),
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Color.fromARGB(255, 255, 251, 240),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: const Color.fromARGB(255, 255, 249, 234),
@@ -100,8 +241,11 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                   children: [
                     Row(
                       children: [
-                        buildFormattedTextField(
-                            context, "Blood Type", patient.bloodType),
+                        InkWell(
+                          onTap: _changeBloodType,
+                          child: buildFormattedTextField(
+                              context, "Blood Type", patient.bloodType),
+                        ),
                         buildFormattedTextField(
                             context, "Gender", patient.gender)
                       ],
@@ -187,60 +331,63 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                   _toggleButtons();
                 },
                 label: TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 250),
-                    tween: Tween<double>(begin: 0, end: _rotationAngle),
-                    builder: (context, angle, child) {
-                      return Transform.rotate(
-                        angle: angle * 3.1416 * 2,
-                        child: child,
-                      );
-                    },
-                    child: const Icon(
-                      Icons.add,
-                      size: 34,
-                    ),    
+                  duration: const Duration(milliseconds: 250),
+                  tween: Tween<double>(begin: 0, end: _rotationAngle),
+                  builder: (context, angle, child) {
+                    return Transform.rotate(
+                      angle: angle * 3.1416 * 2,
+                      child: child,
+                    );
+                  },
+                  child: const Icon(
+                    Icons.add,
+                    size: 34,
+                  ),
                 ),
               ),
             ),
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 300),
-              bottom: 140,
-              child: AnimatedOpacity(
-                opacity: _showButtons ? 1 : 0,
+            Visibility(
+              visible: _showButtons,
+              child: AnimatedPositioned(
                 duration: const Duration(milliseconds: 300),
-                child: Column(
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: (){
-                        _toggleButtons();
-                        _addAllergy();
-                      },
-                      label: const Text("Add Allergy"),
-                      icon: const Icon(Icons.add),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: (){
-                        _toggleButtons();
-                        _addDisease();
-                      },
-                      label: const Text("Add Disease"),
-                      icon: const Icon(Icons.add),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: (){
-                        _toggleButtons();
-                        _addOperation();
-                      },
-                      label: const Text("Add Operation"),
-                      icon: const Icon(Icons.add),
-                    ),
-                  ],
+                bottom: 140,
+                child: AnimatedOpacity(
+                  opacity: _showButtons ? 1 : 0,
+                  duration: const Duration(milliseconds: 300),
+                  child: Column(
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          _toggleButtons();
+                          _addAllergy();
+                        },
+                        label: const Text("Add Allergy"),
+                        icon: const Icon(Icons.add),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          _toggleButtons();
+                          _addDisease();
+                        },
+                        label: const Text("Add Disease"),
+                        icon: const Icon(Icons.add),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          _toggleButtons();
+                          _addOperation(_diseaseNameController);
+                        },
+                        label: const Text("Add Operation"),
+                        icon: const Icon(Icons.add),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -250,8 +397,8 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.small(
         onPressed: _scrollToBottom,
-        backgroundColor: const Color.fromARGB(255, 255, 247, 224),
-        foregroundColor: Colors.amber,
+        backgroundColor: const Color.fromARGB(255, 201, 200, 197),
+        foregroundColor: Colors.white,
         child: const Icon(Icons.arrow_downward),
       ),
     );

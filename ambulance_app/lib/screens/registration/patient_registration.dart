@@ -136,250 +136,253 @@ class PatientRegistrationState extends State<PatientRegistration> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: FractionallySizedBox(
-          widthFactor: 0.85,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 55.0,
-              ),
-              Row(
-                children: [
-                  Text("Register your account",
-                      style: Theme.of(context).textTheme.bodyLarge)
-                ],
-              ),
-              Center(
-                child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 15.0),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: buildTextFormField(
-                                  controller: _firstnameController,
-                                  labelText: "Firstname"),
-                            ),
-                            const SizedBox(
-                              width: 12.0,
-                            ),
-                            Expanded(
-                              child: buildTextFormField(
-                                  controller: _lastnameController,
-                                  labelText: "Lastname"),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 15.0,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: GestureDetector(
+        onTap: FocusScope.of(context).unfocus,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: FractionallySizedBox(
+            widthFactor: 0.85,
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 55.0,
+                ),
+                Row(
+                  children: [
+                    Text("Register your account",
+                        style: Theme.of(context).textTheme.bodyLarge)
+                  ],
+                ),
+                Center(
+                  child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 15.0),
+                          Row(
                             children: [
                               Expanded(
-                                child: Text(
-                                  _pickedDate == null
-                                      ? "Date of Birth"
-                                      : formatter.format(_pickedDate!),
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500),
-                                ),
+                                child: buildTextFormField(
+                                    controller: _firstnameController,
+                                    labelText: "Firstname"),
                               ),
-                              ElevatedButton.icon(
-                                label: const Text("Open"),
-                                onPressed: () {
-                                  _openDatePicker();
-                                },
-                                icon: const Icon(Icons.calendar_month),
+                              const SizedBox(
+                                width: 12.0,
+                              ),
+                              Expanded(
+                                child: buildTextFormField(
+                                    controller: _lastnameController,
+                                    labelText: "Lastname"),
                               ),
                             ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10.0,
-                        ),
-                        buildTextFormField(
-                            controller: _contactController,
-                            labelText: "Contact"),
-                
-                        buildTextFormField(
-                            controller: _emergencyContactController,
-                            labelText: "Emergency Contact"),
-                
-                        buildTextFormField(
-                            controller: _passwordController,
-                            labelText: "Password"),
-                
-                        buildTextFormField(
-                            controller: _repeatPasswordController,
-                            labelText: "Repeat Password"),
-                        const SizedBox(
-                          height: 10.0,
-                        ),
-                        DropdownButtonFormField<String>(
+                          const SizedBox(
+                            height: 15.0,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    _pickedDate == null
+                                        ? "Date of Birth"
+                                        : formatter.format(_pickedDate!),
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                                ElevatedButton.icon(
+                                  label: const Text("Open"),
+                                  onPressed: () {
+                                    _openDatePicker();
+                                  },
+                                  icon: const Icon(Icons.calendar_month),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                          buildTextFormField(
+                              controller: _contactController,
+                              labelText: "Contact"),
+                  
+                          buildTextFormField(
+                              controller: _emergencyContactController,
+                              labelText: "Emergency Contact"),
+                  
+                          buildTextFormField(
+                              controller: _passwordController,
+                              labelText: "Password"),
+                  
+                          buildTextFormField(
+                              controller: _repeatPasswordController,
+                              labelText: "Repeat Password"),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                          DropdownButtonFormField<String>(
+                              hint: const Text(
+                                "Blood Type",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                              items: [
+                                for (final b in _bloodTypes)
+                                  DropdownMenuItem(
+                                      value: b,
+                                      child: Text(
+                                        b,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ))
+                              ],
+                              onChanged: (value) {
+                                if (value == null) {
+                                  return;
+                                }
+                                setState(() {
+                                  _selectedBloodType = value;
+                                });
+                          }),
+                          const SizedBox(
+                            height: 18.0,
+                          ),
+                          DropdownButtonFormField<String>(
                             hint: const Text(
-                              "Blood Type",
+                              "Gender",
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 20,
                               ),
                             ),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedGender = value;
+                              });
+                            },
                             items: [
-                              for (final b in _bloodTypes)
+                              for (final g in _genders)
                                 DropdownMenuItem(
-                                    value: b,
+                                    value: g,
                                     child: Text(
-                                      b,
-                                      textAlign: TextAlign.center,
+                                      g,
                                       style: const TextStyle(
                                         fontSize: 20,
                                       ),
                                     ))
                             ],
-                            onChanged: (value) {
-                              if (value == null) {
-                                return;
-                              }
-                              setState(() {
-                                _selectedBloodType = value;
-                              });
-                            }),
-                        const SizedBox(
-                          height: 18.0,
-                        ),
-                        DropdownButtonFormField<String>(
-                          hint: const Text(
-                            "Gender",
-                            style: TextStyle(
-                              fontSize: 20,
+                          ),
+                          const SizedBox(
+                            height: 20.0,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.45,
+                                    60),
+                                textStyle: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onPressed: _register,
+                              label: const Text(
+                                "Register",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                              icon: const Icon(Icons.add),
                             ),
                           ),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedGender = value;
-                            });
-                          },
-                          items: [
-                            for (final g in _genders)
-                              DropdownMenuItem(
-                                  value: g,
-                                  child: Text(
-                                    g,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                    ),
-                                  ))
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20.0,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(
-                                  MediaQuery.of(context).size.width * 0.45,
-                                  60),
-                              textStyle: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                            onPressed: _register,
-                            label: const Text(
-                              "Register",
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            icon: const Icon(Icons.add),
+                          const SizedBox(
+                            height: 15.0,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15.0,
-                        ),
-                        // Container(
-                        //   child: Column(
-                        //     children: [
-                        //       OutlinedButton.icon(
-                        //         label: const Text("Add Allergies"),
-                        //         icon: const Icon(Icons.add),
-                        //         onPressed: () {
-                        //           showDialog(
-                        //               context: context,
-                        //               builder: (BuildContext context) {
-                        //                 return AlertDialog(
-                        //                     title: const Text("New Allergy"),
-                        //                     content: Container(
-                        //                       height: MediaQuery.of(context)
-                        //                               .size
-                        //                               .height *
-                        //                           0.5,
-                        //                       width: MediaQuery.of(context)
-                        //                               .size
-                        //                               .width *
-                        //                           0.85,
-                        //                       child: Form(
-                        //                           child: Column(
-                        //                         children: [
-                        //                           const SizedBox(
-                        //                             height: 15.0,
-                        //                           ),
-                        //                           buildTextFormField(
-                        //                               controller:
-                        //                                   _allergenController,
-                        //                               labelText: "Allergen"),
-                        //                           const SizedBox(
-                        //                             height: 15.0,
-                        //                           ),
-                        //                           buildTextFormField(
-                        //                               controller:
-                        //                                   _allergyDescriptionController,
-                        //                               labelText:
-                        //                                   "Description (optional)"),
-                        //                           const SizedBox(
-                        //                             height: 15.0,
-                        //                           ),
-                        //                           buildTextFormField(
-                        //                               controller:
-                        //                                   _medicationNameController,
-                        //                               labelText:
-                        //                                   "Medication Name"),
-                        //                           const SizedBox(
-                        //                             height: 15.0,
-                        //                           ),
-                        //                           buildTextFormField(
-                        //                               controller:
-                        //                                   _medicationDosageController,
-                        //                               labelText: "Weekly Dosage"),
-                        //                           const SizedBox(
-                        //                             height: 15.0,
-                        //                           ),
-                        //                           ElevatedButton(
-                        //                               onPressed: () {
-                        //                                 Navigator.pop(context);
-                        //                               },
-                        //                               child: const Text("Add"))
-                        //                         ],
-                        //                       )),
-                        //                     ));
-                        //               });
-                        //         },
-                        //       ),
-                        //    ],
-                        //  ),
-                        // )
-                      ],
-                    )),
-              ),
-            ],
+                          // Container(
+                          //   child: Column(
+                          //     children: [
+                          //       OutlinedButton.icon(
+                          //         label: const Text("Add Allergies"),
+                          //         icon: const Icon(Icons.add),
+                          //         onPressed: () {
+                          //           showDialog(
+                          //               context: context,
+                          //               builder: (BuildContext context) {
+                          //                 return AlertDialog(
+                          //                     title: const Text("New Allergy"),
+                          //                     content: Container(
+                          //                       height: MediaQuery.of(context)
+                          //                               .size
+                          //                               .height *
+                          //                           0.5,
+                          //                       width: MediaQuery.of(context)
+                          //                               .size
+                          //                               .width *
+                          //                           0.85,
+                          //                       child: Form(
+                          //                           child: Column(
+                          //                         children: [
+                          //                           const SizedBox(
+                          //                             height: 15.0,
+                          //                           ),
+                          //                           buildTextFormField(
+                          //                               controller:
+                          //                                   _allergenController,
+                          //                               labelText: "Allergen"),
+                          //                           const SizedBox(
+                          //                             height: 15.0,
+                          //                           ),
+                          //                           buildTextFormField(
+                          //                               controller:
+                          //                                   _allergyDescriptionController,
+                          //                               labelText:
+                          //                                   "Description (optional)"),
+                          //                           const SizedBox(
+                          //                             height: 15.0,
+                          //                           ),
+                          //                           buildTextFormField(
+                          //                               controller:
+                          //                                   _medicationNameController,
+                          //                               labelText:
+                          //                                   "Medication Name"),
+                          //                           const SizedBox(
+                          //                             height: 15.0,
+                          //                           ),
+                          //                           buildTextFormField(
+                          //                               controller:
+                          //                                   _medicationDosageController,
+                          //                               labelText: "Weekly Dosage"),
+                          //                           const SizedBox(
+                          //                             height: 15.0,
+                          //                           ),
+                          //                           ElevatedButton(
+                          //                               onPressed: () {
+                          //                                 Navigator.pop(context);
+                          //                               },
+                          //                               child: const Text("Add"))
+                          //                         ],
+                          //                       )),
+                          //                     ));
+                          //               });
+                          //         },
+                          //       ),
+                          //    ],
+                          //  ),
+                          // )
+                        ],
+                      )),
+                ),
+              ],
+            ),
           ),
         ),
       ),

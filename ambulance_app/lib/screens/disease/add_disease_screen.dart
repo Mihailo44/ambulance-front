@@ -5,29 +5,19 @@ import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:flutter/material.dart';
 
-class AddAllergyScreen extends StatefulWidget {
-  const AddAllergyScreen({super.key});
+class AddDiseaseScreen extends StatefulWidget {
+  const AddDiseaseScreen({super.key});
 
   @override
-  State<AddAllergyScreen> createState() => _AddAllergyScreenState();
+  State<StatefulWidget> createState() => _AddDiseaseScreen();
 }
 
-class _AddAllergyScreenState extends State<AddAllergyScreen> {
+class _AddDiseaseScreen extends State<AddDiseaseScreen>{
+
   final List<Medication> _medications = [];
-  final _allergenController = TextEditingController();
-  final _additionalInformationController = TextEditingController();
+  final _nameController = TextEditingController();
   final _medicationNameController = TextEditingController();
   final _medicationUsageController = TextEditingController();
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    _allergenController.dispose();
-    _additionalInformationController.dispose();
-    _medicationNameController.dispose();
-    _medicationUsageController.dispose();
-  }
 
   void _showAddMedication() {
     FocusScope.of(context).unfocus();
@@ -120,6 +110,14 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
+    _medicationNameController.dispose();
+    _medicationUsageController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -151,14 +149,14 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
                 height: 10,
               ),
               Text(
-                "Add Allergy",
+                "Add Disease",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(
                 height: 5,
               ),
               buildTextFormField(
-                  controller: _allergenController, labelText: "Alergen"),
+                  controller: _nameController, labelText: "Name"),
               const SizedBox(
                 height: 10,
               ),
@@ -204,34 +202,13 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 30,
+              SizedBox(
+                height: _medications.isEmpty ? 210 : 80,
               ),
-              buildFormattedTextField(context, "Note (Optional)", ""),
-              TextFormField(
-                controller: _additionalInformationController,
-                decoration: const InputDecoration(
-                  labelStyle: TextStyle(
-                    fontSize: 20,
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8))),
-                  alignLabelWithHint: true,
-                ),
-                maxLines: 5,
-                minLines: 2,
-                keyboardType: TextInputType.multiline,
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 18),
-                child: Center(
-                  child: ElevatedButton.icon(
-                    onPressed: () {},
-                    label: const Text("Save"),
-                  ),
+              Center(
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  label: const Text("Save"),
                 ),
               ),
             ],
@@ -239,5 +216,7 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
         ),
       ),
     );
+
   }
+  
 }
