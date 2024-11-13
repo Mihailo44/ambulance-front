@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-Widget buildTextFormField({required TextEditingController controller, required String labelText}) {
+Widget buildTextFormField({required TextEditingController controller, required String labelText,bool enabled = true}) {
   return Padding(
-    padding: const EdgeInsets.all(8),
+    padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 6),
     child: TextFormField(
       controller: controller,
+      enabled: enabled,
       decoration: InputDecoration(
+        enabledBorder: InputBorder.none,
         labelText: labelText,
         labelStyle: const TextStyle(
           fontSize: 20,

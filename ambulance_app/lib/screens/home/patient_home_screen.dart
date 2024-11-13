@@ -1,17 +1,20 @@
+import 'package:ambulance_app/navigation/observer.dart';
+import 'package:ambulance_app/navigation/provider.dart';
 import 'package:ambulance_app/screens/map_screen.dart';
 import 'package:ambulance_app/screens/questions/trauma_type_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:ui' as ui;
 import 'package:url_launcher/url_launcher_string.dart';
 
-class PatientHomePage extends StatefulWidget {
-  const PatientHomePage({super.key});
+class PatientHomeScreen extends ConsumerStatefulWidget {
+  const PatientHomeScreen({super.key});
 
   @override
-  State<PatientHomePage> createState() => _PatientHomePageState();
+  ConsumerState<PatientHomeScreen> createState() => _PatientHomeScreenState();
 }
 
-class _PatientHomePageState extends State<PatientHomePage> {
+class _PatientHomeScreenState extends ConsumerState<PatientHomeScreen>{
 
   Future<void> _makePhoneCall(String url) async {
     if (await canLaunchUrlString(url)) {
@@ -23,9 +26,11 @@ class _PatientHomePageState extends State<PatientHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end, 
+      children: [
       Expanded(
-          child: Stack(
+        child: Stack(
         alignment: AlignmentDirectional.bottomStart,
         children: [
           const MapScreen(),
@@ -49,7 +54,10 @@ class _PatientHomePageState extends State<PatientHomePage> {
                         ),
                       )),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => TraumaTypeScreen()));
+                    ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
+                    Navigator.of(context).push(MaterialPageRoute(
+                      settings: const RouteSettings(name: "/patient-list"),
+                      builder: (ctx) => TraumaTypeScreen(),));
                   },
                   child: const Icon(
                     Icons.add_to_home_screen_rounded,

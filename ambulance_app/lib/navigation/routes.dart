@@ -1,4 +1,3 @@
-import 'package:ambulance_app/navigation/observer.dart';
 import 'package:ambulance_app/screens/auth/account_activation_screen.dart';
 import 'package:ambulance_app/screens/auth/login_screen.dart';
 import 'package:ambulance_app/screens/registration/patient_registration.dart';
@@ -19,7 +18,7 @@ final router = GoRouter(
   //   }
   // },
   observers: [
-    MyNavigatorObserver(),
+    
   ],
   routes: <RouteBase>[
     GoRoute(
