@@ -95,13 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-<<<<<<< HEAD
                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) => const ScaffoldForMobile()));
-                  },
-                  child: const Text("Home"),
-                ),
-=======
-                    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const ScaffoldForMobile()));
                   },
                   child: const Text("Home"),
                 ),
@@ -112,7 +106,6 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: const Text("Activate"),
                 ),
->>>>>>> develop
               ],
             ),
           ),
