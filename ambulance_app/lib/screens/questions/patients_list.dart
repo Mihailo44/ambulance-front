@@ -131,7 +131,11 @@ class _VictimListState extends State<VictimList> {
                                           patients.remove(patients[idx]);
                                         });
                                       },
+<<<<<<< HEAD
                                       mode: Mode.delete,
+=======
+                                      whoCalled: Screen.victimsScreen,
+>>>>>>> develop
                                     ),
                                     onDismissed: (direction) {
                                       setState(() {

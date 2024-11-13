@@ -17,6 +17,9 @@ final router = GoRouter(
   //     return null;
   //   }
   // },
+  observers: [
+    
+  ],
   routes: <RouteBase>[
     GoRoute(
       path: "/login",
