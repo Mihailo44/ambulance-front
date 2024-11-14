@@ -18,6 +18,7 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
   final _additionalInformationController = TextEditingController();
   final _medicationNameController = TextEditingController();
   final _medicationUsageController = TextEditingController();
+  double  _medicationsBoxHeight = 0;
 
   @override
   void dispose() {
@@ -111,11 +112,16 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
     _medicationUsageController.clear();
     FocusScope.of(context).requestFocus(FocusNode());
     Navigator.of(context).pop();
+
+    setState(() {
+      _medicationsBoxHeight += 65;
+    });
   }
 
   void _removeMedication(String name) {
     setState(() {
       _medications.removeWhere((e) => e.name == name);
+      _medicationsBoxHeight-=65;
     });
   }
 
@@ -174,7 +180,7 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
                       ),
                     )
                   : SizedBox(
-                    height: 250,
+                    height: _medicationsBoxHeight,
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: _medications.length,
@@ -194,19 +200,16 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
                           );
                         }),
                   ),
-              Transform.translate(
-                offset: _medications.isNotEmpty && _medications.length <= 3 ? Offset(0, -190 + _medications.length * 65) : const Offset(0, 5),
-                child: Center(
-                  child: ElevatedButton.icon(
-                    onPressed: _showAddMedication,
-                    icon: const Icon(Icons.add),
-                    label: const Text("Add"),
-                  ),
+              const SizedBox(height: 20,),
+              Center(
+                child: ElevatedButton.icon(
+                  onPressed: _showAddMedication,
+                  icon: const Icon(Icons.add),
+                  label: const Text("Add"),
                 ),
               ),
-              const SizedBox(
-                height: 30,
-              ),
+              
+              const SizedBox(height: 30,),
               buildFormattedTextField(context, "Note (Optional)", ""),
               TextFormField(
                 controller: _additionalInformationController,
@@ -226,7 +229,7 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
                 height: 50,
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 18),
+                padding: const EdgeInsets.only(bottom: 28),
                 child: Center(
                   child: ElevatedButton.icon(
                     onPressed: () {},

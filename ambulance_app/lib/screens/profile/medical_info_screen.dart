@@ -6,6 +6,7 @@ import 'package:ambulance_app/screens/allergy/add_allergy_screen.dart';
 import 'package:ambulance_app/screens/allergy/allergy_details_screen.dart';
 import 'package:ambulance_app/screens/disease/add_disease_screen.dart';
 import 'package:ambulance_app/screens/disease/disease_details_screen.dart';
+import 'package:ambulance_app/screens/operation/operation_details_screen.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:flutter/material.dart';
@@ -145,11 +146,17 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
             ),
             actions: <Widget>[
               TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                  Navigator.of(context).pop();
+                },
                 child: const Text('No'),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                  Navigator.of(context).pop();
+                },
                 child: const Text('Yes'),
               ),
             ],
@@ -197,9 +204,9 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                 ),
                 ElevatedButton(
                     onPressed: () {
-                      //_confirmBloodtypeModal();
+                      _confirmBloodtypeModal();
                     },
-                    child: const Text("Save"))
+                    child: const Text("Save changes"))
               ],
             ),
           );
@@ -260,8 +267,14 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                               patient.pastOperations?.split(',')[idx].trim();
                           return CustomListTile(
                             title: operation!,
-                            onPressed: () {},
-                            mode: Mode.none,
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (ctx) => OperationDetailsScreen(
+                                        name: operation,
+                                      ));
+                            },
+                            mode: Mode.display,
                           );
                         }),
                     const SizedBox(

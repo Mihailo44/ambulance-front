@@ -91,7 +91,7 @@ class CustomListTile<T> extends StatelessWidget {
           ),
           trailing: mode == Mode.none ? null : _buildTrailing(mode),
           splashColor: const Color.fromARGB(255, 198, 242, 255),
-          onTap: mode == Mode.display
+          onTap: mode == Mode.display //* samo display jer mozes da kliknes na samu karticu i treba da otvori informacije
               ? () {
                   onPressed();
                 }
