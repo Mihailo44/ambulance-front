@@ -75,9 +75,21 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
         .push(MaterialPageRoute(builder: (ctx) => const AddAllergyScreen()));
   }
 
+  void _deleteAllergy(String allergen) {
+    setState(() {
+      patient.alergies.removeWhere((e) => e.allergen == allergen);
+    });
+  }
+
   void _addDisease() {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (ctx) => const AddDiseaseScreen()));
+  }
+
+  void _deleteDisease(String name) {
+    setState(() {
+      patient.diseases.removeWhere((e) => e.name == name);
+    });
   }
 
   void _addOperation(TextEditingController diseaseNameController) {
@@ -134,6 +146,20 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
         });
   }
 
+  void _deleteOperation(String name) {
+    setState(() {
+      if (patient.pastOperations == null || patient.pastOperations!.isEmpty) {
+        return;
+      }
+      patient.pastOperations = patient.pastOperations!
+          .replaceFirst(RegExp(r'^' + name + r','), '') // Start of string
+          .replaceFirst(RegExp(r',' + name + r','), ',') // Middle of string
+          .replaceFirst(RegExp(r',' + name + r'$'), '') // End of string
+          .replaceFirst(
+              RegExp(r'^' + name + r'$'), ''); // If it's the only name
+    });
+  }
+
   void _confirmBloodtypeModal() {
     showDialog<bool>(
         context: context,
@@ -156,6 +182,9 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                 onPressed: () {
                   Navigator.of(ctx).pop();
                   Navigator.of(context).pop();
+                  setState(() {
+                    patient.bloodType = _selectedBloodType!;
+                  });
                 },
                 child: const Text('Yes'),
               ),
@@ -164,50 +193,56 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
         });
   }
 
-  //TODO nametiti ovo
   void _changeBloodType() {
     showModalBottomSheet(
         context: context,
         builder: (ctx) {
-          return Padding(
-            padding: const EdgeInsets.all(25),
-            child: Column(
-              children: [
-                const Text("Choose blood type"),
-                const SizedBox(
-                  height: 20,
-                ),
-                DropdownButtonFormField<String>(
-                    hint: buildFormattedTextField(context, "Blood type", ""),
-                    items: [
-                      for (final b in _bloodTypes)
-                        DropdownMenuItem(
-                            value: b,
-                            child: Text(
-                              b,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 20,
-                              ),
-                            ))
-                    ],
-                    onChanged: (value) {
-                      if (value == null) {
-                        return;
-                      }
-                      setState(() {
-                        _selectedBloodType = value;
-                      });
-                    }),
-                const SizedBox(
-                  height: 60,
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      _confirmBloodtypeModal();
-                    },
-                    child: const Text("Save changes"))
-              ],
+          return SizedBox(
+            height: 320,
+            width: MediaQuery.of(context).size.width,
+            child: Padding(
+              padding: const EdgeInsets.all(25),
+              child: Column(
+                children: [
+                  const Text("Choose blood type"),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                    child: DropdownButtonFormField<String>(
+                        hint: const Text("Blood type"),
+                        items: [
+                          for (final b in _bloodTypes)
+                            DropdownMenuItem(
+                                value: b,
+                                child: Text(
+                                  b,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ))
+                        ],
+                        onChanged: (value) {
+                          if (value == null) {
+                            return;
+                          }
+                          setState(() {
+                            _selectedBloodType = value;
+                          });
+                        }),
+                  ),
+                  const SizedBox(
+                    height: 60,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        _confirmBloodtypeModal();
+                      },
+                      child: const Text("Save changes"))
+                ],
+              ),
             ),
           );
         });
@@ -235,176 +270,202 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
           style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Stack(
-          alignment: Alignment.bottomRight,
-          children: [
-            Scrollbar(
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        InkWell(
-                          onTap: _changeBloodType,
-                          child: buildFormattedTextField(
-                              context, "Blood Type", patient.bloodType),
-                        ),
-                        buildFormattedTextField(
-                            context, "Gender", patient.gender)
-                      ],
-                    ),
-                    buildFormattedTextField(context, "Past Operations", ""),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: patient.pastOperations?.split(',').length,
-                        itemBuilder: (ctx, idx) {
-                          final operation =
-                              patient.pastOperations?.split(',')[idx].trim();
-                          return CustomListTile(
-                            title: operation!,
-                            onPressed: () {
-                              showModalBottomSheet(
-                                  context: context,
-                                  builder: (ctx) => OperationDetailsScreen(
-                                        name: operation,
-                                      ));
-                            },
-                            mode: Mode.display,
-                          );
-                        }),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    buildFormattedTextField(context, "Allergies", ""),
-                    patient.alergies.isEmpty
-                        ? const Text("No alergies")
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: patient.alergies.length,
-                            itemBuilder: (ctx, idx) {
-                              return CustomListTile(
-                                title: patient.alergies[idx].allergen,
-                                onPressed: () {
-                                  showModalBottomSheet(
+      body: Container(
+        constraints: BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Scrollbar(
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: _changeBloodType,
+                            child: buildFormattedTextField(
+                                context, "Blood Type", patient.bloodType),
+                          ),
+                          buildFormattedTextField(
+                              context, "Gender", patient.gender)
+                        ],
+                      ),
+                      buildFormattedTextField(context, "Past Operations", ""),
+                      patient.pastOperations == null ||
+                              patient.pastOperations!.isEmpty
+                          ? const Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: Text("No operations"),
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount:
+                                  patient.pastOperations?.split(',').length,
+                              itemBuilder: (ctx, idx) {
+                                final operation = patient.pastOperations
+                                    ?.split(',')[idx]
+                                    .trim();
+                                if (operation!.isEmpty) return null;
+                                return CustomListTile(
+                                  title: operation!,
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (ctx) => OperationDetailsScreen(
+                                              name: operation,
+                                              onDelete: _deleteOperation,
+                                            ));
+                                  },
+                                  mode: Mode.display,
+                                );
+                              }),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      buildFormattedTextField(context, "Allergies", ""),
+                      patient.alergies.isEmpty
+                          ? const Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: Text("No alergies"),
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: patient.alergies.length,
+                              itemBuilder: (ctx, idx) {
+                                return CustomListTile(
+                                  title: patient.alergies[idx].allergen,
+                                  onPressed: () {
+                                    showModalBottomSheet(
                                       isScrollControlled: true,
                                       context: context,
                                       builder: (ctx) => AllergyDetailsScreen(
-                                          allergy: patient.alergies[idx]));
-                                },
-                                mode: Mode.display,
-                              );
-                            }),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    buildFormattedTextField(context, "Diseases", ""),
-                    patient.diseases.isEmpty
-                        ? const Text("No diseases")
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: patient.diseases.length,
-                            itemBuilder: (ctx, idx) {
-                              return CustomListTile(
-                                title: patient.diseases[idx].name,
-                                onPressed: () {
-                                  showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    context: context,
-                                    builder: (ctx) => DiseaseDetailsScreen(
-                                        disease: patient.diseases[idx]),
-                                  );
-                                },
-                                mode: Mode.display,
-                              );
-                            }),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 46),
-              child: ElevatedButton.icon(
-                style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
-                      backgroundColor:
-                          const WidgetStatePropertyAll(Colors.amber),
-                      minimumSize:
-                          const WidgetStatePropertyAll(ui.Size(75, 75)),
-                      foregroundColor:
-                          const WidgetStatePropertyAll(Colors.white),
-                    ),
-                onPressed: () {
-                  _rotateIcon();
-                  _toggleButtons();
-                },
-                label: TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 250),
-                  tween: Tween<double>(begin: 0, end: _rotationAngle),
-                  builder: (context, angle, child) {
-                    return Transform.rotate(
-                      angle: angle * 3.1416 * 2,
-                      child: child,
-                    );
-                  },
-                  child: const Icon(
-                    Icons.add,
-                    size: 34,
-                  ),
-                ),
-              ),
-            ),
-            Visibility(
-              visible: _showButtons,
-              child: AnimatedPositioned(
-                duration: const Duration(milliseconds: 300),
-                bottom: 140,
-                child: AnimatedOpacity(
-                  opacity: _showButtons ? 1 : 0,
-                  duration: const Duration(milliseconds: 300),
-                  child: Column(
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          _toggleButtons();
-                          _addAllergy();
-                        },
-                        label: const Text("Add Allergy"),
-                        icon: const Icon(Icons.add),
-                      ),
+                                        allergy: patient.alergies[idx],
+                                        onDelete: _deleteAllergy,
+                                      ),
+                                    );
+                                  },
+                                  mode: Mode.display,
+                                );
+                              }),
                       const SizedBox(
-                        height: 10,
+                        height: 12,
                       ),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          _toggleButtons();
-                          _addDisease();
-                        },
-                        label: const Text("Add Disease"),
-                        icon: const Icon(Icons.add),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          _toggleButtons();
-                          _addOperation(_diseaseNameController);
-                        },
-                        label: const Text("Add Operation"),
-                        icon: const Icon(Icons.add),
-                      ),
+                      buildFormattedTextField(context, "Diseases", ""),
+                      patient.diseases.isEmpty
+                          ? const Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: Text("No diseases"),
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: patient.diseases.length,
+                              itemBuilder: (ctx, idx) {
+                                return CustomListTile(
+                                  title: patient.diseases[idx].name,
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      context: context,
+                                      builder: (ctx) => DiseaseDetailsScreen(
+                                        disease: patient.diseases[idx],
+                                        onDelete: _deleteDisease,
+                                      ),
+                                    );
+                                  },
+                                  mode: Mode.display,
+                                );
+                              }),
                     ],
                   ),
                 ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.only(bottom: 46),
+                child: ElevatedButton.icon(
+                  style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
+                        backgroundColor:
+                            const WidgetStatePropertyAll(Colors.amber),
+                        minimumSize:
+                            const WidgetStatePropertyAll(ui.Size(75, 75)),
+                        foregroundColor:
+                            const WidgetStatePropertyAll(Colors.white),
+                      ),
+                  onPressed: () {
+                    _rotateIcon();
+                    _toggleButtons();
+                  },
+                  label: TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 250),
+                    tween: Tween<double>(begin: 0, end: _rotationAngle),
+                    builder: (context, angle, child) {
+                      return Transform.rotate(
+                        angle: angle * 3.1416 * 2,
+                        child: child,
+                      );
+                    },
+                    child: const Icon(
+                      Icons.add,
+                      size: 34,
+                    ),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: _showButtons,
+                child: AnimatedPositioned(
+                  duration: const Duration(milliseconds: 300),
+                  bottom: 140,
+                  child: AnimatedOpacity(
+                    opacity: _showButtons ? 1 : 0,
+                    duration: const Duration(milliseconds: 300),
+                    child: Column(
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            _toggleButtons();
+                            _addAllergy();
+                          },
+                          label: const Text("Add Allergy"),
+                          icon: const Icon(Icons.add),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            _toggleButtons();
+                            _addDisease();
+                          },
+                          label: const Text("Add Disease"),
+                          icon: const Icon(Icons.add),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            _toggleButtons();
+                            _addOperation(_diseaseNameController);
+                          },
+                          label: const Text("Add Operation"),
+                          icon: const Icon(Icons.add),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

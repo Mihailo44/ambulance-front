@@ -62,73 +62,73 @@ class _UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>{
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(14.0),
-      child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 50,),
-                buildTextFormField(labelText: "Firstname",controller:  _firstnameController),
-                buildTextFormField(labelText: "Lastname",controller:  _lastnameController),
-                Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    _pickedDate == null
-                                        ? "Date of Birth"
-                                        : formatter.format(_pickedDate!),
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                ElevatedButton.icon(
-                                  label: const Text("Open"),
-                                  onPressed: () {
-                                    _openDatePicker();
-                                  },
-                                  icon: const Icon(Icons.calendar_month),
-                                ),
-                              ],
-                            ),
-                buildTextFormField(labelText: "Password",controller:  _passwordController),
-                buildTextFormField(labelText: "Contact Number",controller:  _contactController),
-                buildTextFormField(labelText: "Emergency Contact",controller:  _emergencyContactController),
-                const Spacer(),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 30.0),
+    return SingleChildScrollView(
+      padding: EdgeInsets.fromLTRB(15,15,15,MediaQuery.of(context).viewInsets.bottom),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 70,),
+                  buildTextFormField(labelText: "Firstname",controller:  _firstnameController),
+                  buildTextFormField(labelText: "Lastname",controller:  _lastnameController),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _pickedDate == null
+                              ? "Date of Birth"
+                              : formatter.format(_pickedDate!),
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: ElevatedButton.icon(
+                          label: const Text("Open"),
+                          onPressed: () {
+                            _openDatePicker();
+                          },
+                          icon: const Icon(Icons.calendar_month),
+                        ),
+                      ),
+                    ],
+                  ),
+                  buildTextFormField(labelText: "Password",controller:  _passwordController),
+                  buildTextFormField(labelText: "Contact Number",controller:  _contactController),
+                  buildTextFormField(labelText: "Emergency Contact",controller:  _emergencyContactController),
+                  const SizedBox(height: 170,),
+                  Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        ElevatedButton.icon(
+                        ElevatedButton(
                           onPressed: (){
                             close(context);
                           }, 
-                          icon: const Icon(Icons.cancel),
-                          label: const Text("Cancel"),
                           style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
-                            minimumSize: const WidgetStatePropertyAll(Size(180, 62)),
+                            minimumSize: const WidgetStatePropertyAll(Size(140, 62)),
                           ),
+                          child: const Text("Cancel"),
                         ),
                     const SizedBox(height: 15,),
-                    ElevatedButton.icon(
+                    ElevatedButton(
                       onPressed: (){
                         close(context);
                       }, 
-                      icon: const Icon(Icons.edit),
-                      label: const Text("Save changes"),
                       style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
-                        minimumSize: const WidgetStatePropertyAll(Size(180, 62)),
+                        minimumSize: const WidgetStatePropertyAll(Size(160, 62)),
                       ),
+                      child: const Text("Save changes"),
                     ),
                       ],
                     ),
-                  ),
-                )
-              ],
-            ),
+                  )
+                ],
+              ),
+      ),
     );
   }
   

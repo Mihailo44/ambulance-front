@@ -1,12 +1,14 @@
+import 'package:ambulance_app/generic_widgets/my_dialog.dart';
 import 'package:ambulance_app/model/disease.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:flutter/material.dart';
 
 class DiseaseDetailsScreen extends StatelessWidget {
 
-  const DiseaseDetailsScreen({required this.disease,super.key});
+  const DiseaseDetailsScreen({required this.onDelete,required this.disease,super.key});
 
   final Disease disease;
+  final void Function(String) onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +60,13 @@ class DiseaseDetailsScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 26),
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () async {
+                  var nav = Navigator.of(context);
+                  bool? result = await showDialog<bool>(context: context, builder: (ctx) => MyDialog(onYesParam: onDelete,param: disease.name,));
+                  if(result != null && result == true){
+                    nav.pop();
+                  }
+                },
                 label: const Text("Delete"),
                 icon: const Icon(Icons.delete),
               ),

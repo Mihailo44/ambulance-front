@@ -46,7 +46,7 @@ class PatientProfile extends ConsumerWidget {
               Disease(name: "Alcoholism", medications: [Medication(name: "Heroin", weeklyDosage: 3)]),
             ];
 
-            Patient patient = Patient(user: user, contactNumber: "061/623-49-33", closePersonContact: "061/632-32-21", bloodType: "A-", gender: "M", yearOfBirth: "2001",pastOperations: "Knee operation",alergies: alergies,diseases: diseases);
+            Patient patient = Patient(user: user, contactNumber: "061/623-49-33", closePersonContact: "061/632-32-21", bloodType: "A-", gender: "M", yearOfBirth: "2001",pastOperations: "Knee operation,Back surgery,Leg surgery",alergies: alergies,diseases: diseases);
 
             Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => MedicalInfoScreen(patient: patient)));
           },

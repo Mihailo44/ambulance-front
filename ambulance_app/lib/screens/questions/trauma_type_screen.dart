@@ -30,7 +30,7 @@ class TraumaTypeScreen extends ConsumerWidget {
       ),
       body: Column(children: [
         const SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         Text(
           "Please select the trauma cause",

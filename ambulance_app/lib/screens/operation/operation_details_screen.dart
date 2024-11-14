@@ -1,10 +1,12 @@
+import 'package:ambulance_app/generic_widgets/my_dialog.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:flutter/material.dart';
 
 class OperationDetailsScreen extends StatelessWidget {
-  const OperationDetailsScreen({required this.name, super.key});
+  const OperationDetailsScreen({required this.name,required this.onDelete, super.key});
 
   final String name;
+  final void Function(String) onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,13 @@ class OperationDetailsScreen extends StatelessWidget {
               child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () async{
+                      var nav = Navigator.of(context);
+                      bool? result = await showDialog<bool>(context: context, builder: (ctx) => MyDialog(onYesParam: onDelete,param: name,));
+                      if(result != null && result == true){
+                        nav.pop();
+                      }
+                    },
                     label: const Text("Delete"),
                     icon: const Icon(Icons.delete),
                   ),

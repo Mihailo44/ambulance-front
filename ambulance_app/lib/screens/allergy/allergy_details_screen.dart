@@ -1,11 +1,14 @@
+import 'package:ambulance_app/generic_widgets/my_dialog.dart';
 import 'package:ambulance_app/model/allergy.dart';
+import 'package:ambulance_app/util/close.dart';
 import 'package:flutter/material.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 
 class AllergyDetailsScreen extends StatelessWidget {
-  const AllergyDetailsScreen({required this.allergy, super.key});
+  const AllergyDetailsScreen({required this.allergy,required this.onDelete, super.key});
 
   final Allergy allergy;
+  final void Function(String) onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +58,13 @@ class AllergyDetailsScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 26),
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () async{
+                  var nav = Navigator.of(context);
+                  bool? result = await showDialog<bool>(context: context, builder: (ctx) => MyDialog(onYesParam: onDelete,param: allergy.allergen,));
+                  if(result != null && result == true){
+                      nav.pop();
+                  }
+                },
                 label: const Text("Delete"),
                 icon: const Icon(Icons.delete),
               ),

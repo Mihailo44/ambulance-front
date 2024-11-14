@@ -85,7 +85,7 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
             buildFormattedTextField(
                 context, "Emergency Contact", _emergencyContactController.text),
             const SizedBox(
-              height: 40,
+              height: 50,
             ),
             Center(
               child: ElevatedButton.icon(

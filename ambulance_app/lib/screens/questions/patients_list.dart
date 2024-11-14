@@ -19,7 +19,6 @@ class _VictimListState extends State<VictimList> {
   @override
   void initState() {
     super.initState();
-    patients.add("P1");
   }
 
   void _addPatient(String patient) {

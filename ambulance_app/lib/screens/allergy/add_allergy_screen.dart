@@ -22,7 +22,6 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _allergenController.dispose();
     _additionalInformationController.dispose();
@@ -114,14 +113,14 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
     Navigator.of(context).pop();
 
     setState(() {
-      _medicationsBoxHeight += 65;
+      _medicationsBoxHeight += 60;
     });
   }
 
   void _removeMedication(String name) {
     setState(() {
       _medications.removeWhere((e) => e.name == name);
-      _medicationsBoxHeight-=65;
+      _medicationsBoxHeight-=60;
     });
   }
 
