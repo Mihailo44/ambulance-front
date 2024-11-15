@@ -26,6 +26,7 @@ class _ScaffoldForMobileState extends ConsumerState<ScaffoldForMobile> {
     const PatientProfile(),
   ];
 
+
   void _selectTab(int idx) {
     final isVisible = ref.read(appBarVisibilityProvider);
 

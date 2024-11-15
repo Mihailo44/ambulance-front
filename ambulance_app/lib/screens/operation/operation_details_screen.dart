@@ -1,15 +1,16 @@
 import 'package:ambulance_app/generic_widgets/my_dialog.dart';
+import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class OperationDetailsScreen extends StatelessWidget {
-  const OperationDetailsScreen({required this.name,required this.onDelete, super.key});
+class OperationDetailsScreen extends ConsumerWidget {
+  const OperationDetailsScreen({required this.name,super.key});
 
   final String name;
-  final void Function(String) onDelete;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return SizedBox(
       height: 330,
       child: Padding(
@@ -35,12 +36,13 @@ class OperationDetailsScreen extends StatelessWidget {
             ),
             Center(
               child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   child: ElevatedButton.icon(
                     onPressed: () async{
                       var nav = Navigator.of(context);
-                      bool? result = await showDialog<bool>(context: context, builder: (ctx) => MyDialog(onYesParam: onDelete,param: name,));
+                      bool? result = await showDialog<bool>(context: context, builder: (ctx) => const MyDialog());
                       if(result != null && result == true){
+                        ref.read(patientProvider.notifier).removeOperation(name);
                         nav.pop();
                       }
                     },

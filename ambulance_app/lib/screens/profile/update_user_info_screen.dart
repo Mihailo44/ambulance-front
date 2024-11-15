@@ -1,18 +1,20 @@
 import 'package:ambulance_app/model/users/patient.dart';
+import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:ambulance_app/util/close.dart';
 import 'package:ambulance_app/util/dateFormater.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UpdateUserInfoScreen extends StatefulWidget {
+class UpdateUserInfoScreen extends ConsumerStatefulWidget {
   const UpdateUserInfoScreen({required this.patient,super.key});
   final Patient patient;
 
   @override
-  State<UpdateUserInfoScreen> createState() => _UpdateUserInfoScreenState();
+  ConsumerState<UpdateUserInfoScreen> createState() => _UpdateUserInfoScreenState();
 }
 
-class _UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>{
+class _UpdateUserInfoScreenState extends ConsumerState<UpdateUserInfoScreen>{
   final _firstnameController = TextEditingController();
   final _lastnameController = TextEditingController();
   final _dateOfBirthController = TextEditingController();
@@ -58,6 +60,11 @@ class _UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>{
         _pickedDate = value;
       });
     });
+  }
+
+  void _saveUser(){
+    ref.read(patientProvider.notifier).updateUserInfo(firstname: _firstnameController.text,lastname: _lastnameController.text,contactNumber: _contactController.text,emergencyContact: _emergencyContactController.text,password: _passwordController.text,dateOfBirth: _pickedDate);
+    close(context);
   }
 
   @override
@@ -115,9 +122,7 @@ class _UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>{
                         ),
                     const SizedBox(height: 15,),
                     ElevatedButton(
-                      onPressed: (){
-                        close(context);
-                      }, 
+                      onPressed: _saveUser, 
                       style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
                         minimumSize: const WidgetStatePropertyAll(Size(160, 62)),
                       ),

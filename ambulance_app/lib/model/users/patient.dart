@@ -23,29 +23,49 @@ class Patient {
     List<Allergy>? alergies,
     List<Disease>? diseases,
     this.pastOperations,
-  }) : alergies = alergies ?? [],
-       diseases = diseases ?? [];
+  })  : alergies = alergies ?? [],
+        diseases = diseases ?? [];
 
-
-  //TODO Namestiti da se popune alergije i bolesti
-  factory Patient.fromJson(Map<String,dynamic> json){
+  Patient copyWith(
+      {
+      User? user,
+      String? contactNumber,
+      String? emergencyContact,
+      String? bloodType,
+      String? gender,
+      List<Allergy>? allergies,
+      List<Disease>? diseases,
+      String? pastOperations}) {
     return Patient(
-      user: User.fromJson(json['user']),
-      contactNumber: json['contact_number'],
-      closePersonContact: json['close_person_contact'],
-      bloodType: json['blood_type'],
-      gender: json['gender'],
-      yearOfBirth: json['year_of_birth'],
-      pastOperations: json['past_operations']
-    );
+        user: user ?? this.user,
+        contactNumber: contactNumber ?? this.contactNumber,
+        closePersonContact: emergencyContact ?? closePersonContact,
+        bloodType: bloodType ?? this.bloodType,
+        gender: gender ?? this.gender,
+        alergies: allergies ?? this.alergies,
+        diseases: diseases ?? this.diseases,
+        pastOperations: pastOperations ?? this.pastOperations,
+        yearOfBirth: yearOfBirth);
   }
 
-  Map<String,dynamic> toJson(){
+  //TODO Namestiti da se popune alergije i bolesti
+  factory Patient.fromJson(Map<String, dynamic> json) {
+    return Patient(
+        user: User.fromJson(json['user']),
+        contactNumber: json['contact_number'],
+        closePersonContact: json['close_person_contact'],
+        bloodType: json['blood_type'],
+        gender: json['gender'],
+        yearOfBirth: json['year_of_birth'],
+        pastOperations: json['past_operations']);
+  }
+
+  Map<String, dynamic> toJson() {
     return {
-      'user':user.toJson(),
+      'user': user.toJson(),
       'contact_number': contactNumber,
       'close_person_contact': closePersonContact,
-      'blood_type' : bloodType,
+      'blood_type': bloodType,
     };
   }
 }

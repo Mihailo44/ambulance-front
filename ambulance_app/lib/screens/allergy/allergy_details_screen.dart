@@ -1,17 +1,17 @@
 import 'package:ambulance_app/generic_widgets/my_dialog.dart';
 import 'package:ambulance_app/model/allergy.dart';
-import 'package:ambulance_app/util/close.dart';
+import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AllergyDetailsScreen extends StatelessWidget {
-  const AllergyDetailsScreen({required this.allergy,required this.onDelete, super.key});
+class AllergyDetailsScreen extends ConsumerWidget {
+  const AllergyDetailsScreen({required this.allergy, super.key});
 
   final Allergy allergy;
-  final void Function(String) onDelete;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.all(14),
       child: Column(
@@ -60,8 +60,9 @@ class AllergyDetailsScreen extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () async{
                   var nav = Navigator.of(context);
-                  bool? result = await showDialog<bool>(context: context, builder: (ctx) => MyDialog(onYesParam: onDelete,param: allergy.allergen,));
+                  bool? result = await showDialog<bool>(context: context, builder: (ctx) => const MyDialog());
                   if(result != null && result == true){
+                      ref.read(patientProvider.notifier).removeAllergy(allergy);
                       nav.pop();
                   }
                 },

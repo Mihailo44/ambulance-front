@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
 void close(BuildContext context){
-  Navigator.of(context).pop();
+  if(Navigator.of(context).canPop()){
+    Navigator.of(context).pop();
+  }
 }

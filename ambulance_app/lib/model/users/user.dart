@@ -26,6 +26,15 @@ class User {
     required this.role,
   });
 
+  User copyWith({String? firstname, String? lastname, String? password,DateTime? dateOfBirth}) {
+    return User(
+        firstname: firstname ?? this.firstname,
+        lastname: lastname ?? this.lastname,
+        password: password ?? this.password,
+        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+        role: role);
+  }
+
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],

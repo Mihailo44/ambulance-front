@@ -1,12 +1,7 @@
-import 'package:ambulance_app/util/close.dart';
 import 'package:flutter/material.dart';
 
 class MyDialog extends StatelessWidget {
-  const MyDialog({this.onYes,this.onYesParam,this.param,super.key});
-
-  final void Function()? onYes;
-  final void Function(String)? onYesParam;
-  final String? param;
+  const MyDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,17 +14,12 @@ class MyDialog extends StatelessWidget {
       actions: <Widget>[
         TextButton(
           onPressed: () {
-           close(context);
+           Navigator.of(context).pop(false);
           },
           child: const Text('No'),
         ),
         TextButton(
           onPressed: () {
-            if(onYes != null){
-              onYes!();
-            }else if(onYesParam != null){
-              onYesParam!(param!);
-            }
             Navigator.of(context).pop(true);
           },
           child: const Text('Yes'),

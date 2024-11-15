@@ -17,10 +17,10 @@ class MapScreenState extends State<MapScreen> {
   Timer? _timer;
   final MapService mapService = MapService();
   bool serviceEnabled = false;
-  PermissionStatus permissionGranted = PermissionStatus.granted;
+  PermissionStatus permissionGranted = PermissionStatus.denied;
   String? _address;
   LatLng? _center;
-  Completer<GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
   final String _mapStyleString = '''
   [
   {
@@ -39,7 +39,7 @@ class MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
     _requestPermissions();
-    _timer = Timer.periodic(const Duration(seconds: 69000), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
       _getLocation();
     });
   }
@@ -53,23 +53,32 @@ class MapScreenState extends State<MapScreen> {
   void _requestPermissions() async {
     Location location = Location();
 
-    serviceEnabled = await location.serviceEnabled();
-    
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
+    try{
+      serviceEnabled = await location.serviceEnabled();
+
       if (!serviceEnabled) {
-        return;
+        serviceEnabled = await location.requestService();
+        if (!serviceEnabled) {
+          return;
+        }
       }
+
+      permissionGranted = await location.hasPermission();
+
+      if (permissionGranted == PermissionStatus.denied) {
+        permissionGranted = await location.requestPermission();
+        if (permissionGranted != PermissionStatus.granted) {
+          return;
+        }
     }
 
-    permissionGranted = await location.hasPermission();
-
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return;
-      }
+    }on PlatformException catch(e){
+      print(e);
+      _requestPermissions();
+    }catch(e){
+      print(e);
     }
+
   }
 
   void _getLocation() async {
@@ -94,32 +103,33 @@ class MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Text("ok");
-    // return GoogleMap(
-    //   onMapCreated: (GoogleMapController controller) {
-    //     _controller.complete(controller);
-    //     _controller.future.then((value) {
-    //       value.setMapStyle(_mapStyleString);
-    //       if(permissionGranted == PermissionStatus.granted){
-    //         _getLocation();
-    //       }
-    //     });
-    //   },
-    //   initialCameraPosition: CameraPosition(
-    //     target: _center ?? const LatLng(45.257828, 19.8196241),
-    //     zoom: 17,
-    //   ),
-    //   mapToolbarEnabled: false,
-    //   zoomControlsEnabled: false,
-    //   markers: _center != null
-    //       ? {
-    //           Marker(
-    //             markerId: const MarkerId("me"),
-    //             infoWindow: InfoWindow(title: "You", snippet: _address),
-    //             position: _center!,
-    //           ),
-    //         }
-    //       : {},
-    // );
+    //return const Text("ok");
+    return GoogleMap(
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+        _controller.future.then((value) {
+          value.setMapStyle(_mapStyleString);
+          if(permissionGranted == PermissionStatus.granted){
+            print("usao");
+             _getLocation();
+          }
+        });
+      },
+      initialCameraPosition: CameraPosition(
+        target: _center ?? const LatLng(45.257828, 19.8196241),
+        zoom: 17,
+      ),
+      mapToolbarEnabled: false,
+      zoomControlsEnabled: false,
+      markers: _center != null
+          ? {
+              Marker(
+                markerId: const MarkerId("me"),
+                infoWindow: InfoWindow(title: "You", snippet: _address),
+                position: _center!,
+              ),
+            }
+          : {},
+    );
   }
 }

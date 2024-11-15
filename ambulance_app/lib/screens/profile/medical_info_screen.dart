@@ -1,11 +1,14 @@
 import 'package:ambulance_app/generic_widgets/custom_list_tile.dart';
+import 'package:ambulance_app/generic_widgets/my_dialog.dart';
 import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/navigation/provider.dart';
+import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/screens/allergy/add_allergy_screen.dart';
 import 'package:ambulance_app/screens/allergy/allergy_details_screen.dart';
 import 'package:ambulance_app/screens/disease/add_disease_screen.dart';
 import 'package:ambulance_app/screens/disease/disease_details_screen.dart';
+import 'package:ambulance_app/screens/operation/add_operation_screen.dart';
 import 'package:ambulance_app/screens/operation/operation_details_screen.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
@@ -14,8 +17,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:ui' as ui;
 
 class MedicalInfoScreen extends ConsumerStatefulWidget {
-  const MedicalInfoScreen({required this.patient, super.key});
-  final Patient patient;
+  const MedicalInfoScreen({super.key});
 
   @override
   ConsumerState<MedicalInfoScreen> createState() => _MedicalInfoScreenState();
@@ -24,7 +26,6 @@ class MedicalInfoScreen extends ConsumerStatefulWidget {
 class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
     with SingleTickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
-  final _diseaseNameController = TextEditingController();
   late Patient patient;
   bool _showButtons = false;
   double _rotationAngle = 0;
@@ -38,25 +39,23 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
     "O+",
     "O-"
   ];
-
   String? _selectedBloodType = "";
-
-  void _rotateIcon() {
-    setState(() {
-      _rotationAngle += 0.5;
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    patient = widget.patient;
   }
 
   @override
   void dispose() {
     super.dispose();
     _scrollController.dispose();
+  }
+
+   void _rotateIcon() {
+    setState(() {
+      _rotationAngle += 0.5;
+    });
   }
 
   void _scrollToBottom() {
@@ -75,122 +74,29 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
         .push(MaterialPageRoute(builder: (ctx) => const AddAllergyScreen()));
   }
 
-  void _deleteAllergy(String allergen) {
-    setState(() {
-      patient.alergies.removeWhere((e) => e.allergen == allergen);
-    });
-  }
-
   void _addDisease() {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (ctx) => const AddDiseaseScreen()));
   }
 
-  void _deleteDisease(String name) {
-    setState(() {
-      patient.diseases.removeWhere((e) => e.name == name);
-    });
-  }
-
-  void _addOperation(TextEditingController diseaseNameController) {
+  void _addOperation() {
     FocusScope.of(context).unfocus();
     showModalBottomSheet(
         isDismissible: false,
         context: context,
         builder: (ctx) {
-          return SizedBox(
-            height: 250,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: buildTextFormField(
-                        controller: diseaseNameController, labelText: "Name"),
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          Navigator.of(context).pop();
-                          diseaseNameController.clear();
-                        },
-                        label: const Text("Cancel"),
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          Navigator.of(context).pop();
-                          diseaseNameController.clear();
-                        },
-                        child: const Text("Save"),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
+          return const AddOperationScreen();
         });
   }
 
-  void _deleteOperation(String name) {
-    setState(() {
-      if (patient.pastOperations == null || patient.pastOperations!.isEmpty) {
-        return;
-      }
-      patient.pastOperations = patient.pastOperations!
-          .replaceFirst(RegExp(r'^' + name + r','), '') // Start of string
-          .replaceFirst(RegExp(r',' + name + r','), ',') // Middle of string
-          .replaceFirst(RegExp(r',' + name + r'$'), '') // End of string
-          .replaceFirst(
-              RegExp(r'^' + name + r'$'), ''); // If it's the only name
-    });
-  }
-
-  void _confirmBloodtypeModal() {
-    showDialog<bool>(
+  Future<bool?> _confirmBloodtypeModal() async{
+   bool? result = await showDialog<bool>(
         context: context,
         builder: (ctx) {
-          return AlertDialog(
-            title: const Text('Confirm'),
-            content: Text(
-              'Are you sure you want to proceed?',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                  Navigator.of(context).pop();
-                },
-                child: const Text('No'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                  Navigator.of(context).pop();
-                  setState(() {
-                    patient.bloodType = _selectedBloodType!;
-                  });
-                },
-                child: const Text('Yes'),
-              ),
-            ],
-          );
+          return const MyDialog();
         });
+
+    return result;
   }
 
   void _changeBloodType() {
@@ -237,8 +143,15 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                     height: 60,
                   ),
                   ElevatedButton(
-                      onPressed: () {
-                        _confirmBloodtypeModal();
+                      onPressed: () async{
+                        var nav = Navigator.of(context);
+                        bool? result = await _confirmBloodtypeModal();
+
+                        if(result == true){
+                          ref.read(patientProvider.notifier).updateBloodType(_selectedBloodType!);
+                        }
+
+                        nav.pop();
                       },
                       child: const Text("Save changes"))
                 ],
@@ -250,6 +163,8 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
 
   @override
   Widget build(BuildContext context) {
+    final patient = ref.watch(patientProvider);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -290,7 +205,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                           InkWell(
                             onTap: _changeBloodType,
                             child: buildFormattedTextField(
-                                context, "Blood Type", patient.bloodType),
+                                context, "Blood Type", patient!.bloodType),
                           ),
                           buildFormattedTextField(
                               context, "Gender", patient.gender)
@@ -320,7 +235,6 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                                         context: context,
                                         builder: (ctx) => OperationDetailsScreen(
                                               name: operation,
-                                              onDelete: _deleteOperation,
                                             ));
                                   },
                                   mode: Mode.display,
@@ -348,7 +262,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                                       context: context,
                                       builder: (ctx) => AllergyDetailsScreen(
                                         allergy: patient.alergies[idx],
-                                        onDelete: _deleteAllergy,
+                                       
                                       ),
                                     );
                                   },
@@ -377,7 +291,6 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                                       context: context,
                                       builder: (ctx) => DiseaseDetailsScreen(
                                         disease: patient.diseases[idx],
-                                        onDelete: _deleteDisease,
                                       ),
                                     );
                                   },
@@ -454,7 +367,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                         ElevatedButton.icon(
                           onPressed: () {
                             _toggleButtons();
-                            _addOperation(_diseaseNameController);
+                            _addOperation();
                           },
                           label: const Text("Add Operation"),
                           icon: const Icon(Icons.add),

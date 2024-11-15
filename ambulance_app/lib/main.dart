@@ -1,7 +1,6 @@
 import 'package:ambulance_app/app_theme.dart';
 import 'package:ambulance_app/main_layout.dart';
 import 'package:ambulance_app/model/users/basic_user_info.dart';
-import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/navigation/observer.dart';
 import 'package:ambulance_app/navigation/routes.dart';
 import 'package:flutter/foundation.dart';
@@ -19,7 +18,6 @@ void main() {
 String accessTokenExpiry = "";
 String accessToken = "";
 BasicUserInfo? basicUser;
-User? loggedUser;
 
 enum Screen {
   victimsScreen,

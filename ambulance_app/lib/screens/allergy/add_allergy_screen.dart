@@ -1,18 +1,22 @@
 import 'package:ambulance_app/generic_widgets/custom_list_tile.dart';
 import 'package:ambulance_app/main.dart';
+import 'package:ambulance_app/model/allergy.dart';
 import 'package:ambulance_app/model/medication.dart';
+import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
+import 'package:ambulance_app/util/close.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddAllergyScreen extends StatefulWidget {
+class AddAllergyScreen extends ConsumerStatefulWidget {
   const AddAllergyScreen({super.key});
 
   @override
-  State<AddAllergyScreen> createState() => _AddAllergyScreenState();
+  ConsumerState<AddAllergyScreen> createState() => _AddAllergyScreenState();
 }
 
-class _AddAllergyScreenState extends State<AddAllergyScreen> {
+class _AddAllergyScreenState extends ConsumerState<AddAllergyScreen> {
   final List<Medication> _medications = [];
   final _allergenController = TextEditingController();
   final _additionalInformationController = TextEditingController();
@@ -124,6 +128,12 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
     });
   }
 
+  void _saveAllergy(){
+    Allergy allergy = Allergy(allergen: _allergenController.text, description: _additionalInformationController.text,medications: _medications);
+    ref.read(patientProvider.notifier).addAllergy(allergy);
+    close(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -231,7 +241,7 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
                 padding: const EdgeInsets.only(bottom: 28),
                 child: Center(
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: _saveAllergy,
                     label: const Text("Save"),
                   ),
                 ),
