@@ -54,7 +54,11 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
 
    void _rotateIcon() {
     setState(() {
+      if(!_showButtons){
       _rotationAngle += 0.5;
+      }else{
+        _rotationAngle = -0.5;
+      }
     });
   }
 
