@@ -7,6 +7,7 @@ import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/navigation/routes.dart';
 import 'package:ambulance_app/providers/patient_provider.dart';
+import 'package:ambulance_app/screens/questions/location_dialog_screen.dart';
 import 'package:ambulance_app/screens/registration/patient_registration.dart';
 import 'package:ambulance_app/services/auth_service.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';

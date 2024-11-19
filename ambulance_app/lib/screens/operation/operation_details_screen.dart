@@ -1,6 +1,8 @@
 import 'package:ambulance_app/generic_widgets/my_dialog.dart';
 import 'package:ambulance_app/providers/patient_provider.dart';
+import 'package:ambulance_app/screens/operation/edit_operation_screen.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
+import 'package:ambulance_app/util/close.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,7 +30,10 @@ class OperationDetailsScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Center(
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    close(context);
+                    showModalBottomSheet(context: context, builder: (ctx) => EditOperationScreen(operation: name));
+                  },
                   label: const Text("Edit"),
                   icon: const Icon(Icons.edit),
                 ),

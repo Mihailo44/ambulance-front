@@ -1,19 +1,21 @@
 import 'dart:async';
 
+import 'package:ambulance_app/providers/location_provider.dart';
 import 'package:ambulance_app/services/map_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class MapScreen extends StatefulWidget {
+class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => MapScreenState();
+  ConsumerState<MapScreen> createState() => _MapScreenState();
 }
 
-class MapScreenState extends State<MapScreen> {
+class _MapScreenState extends ConsumerState<MapScreen> {
   Timer? _timer;
   final MapService mapService = MapService();
   bool serviceEnabled = false;
@@ -91,7 +93,10 @@ class MapScreenState extends State<MapScreen> {
 
     _center = LatLng(locationData.latitude!, locationData.longitude!);
 
-    moveToLocation(_center!);
+    if(_center != null){
+      ref.read(locationProvider.notifier).setCoordinates(_center!);
+      moveToLocation(_center!);
+    }
   }
 
   Future<void> moveToLocation(LatLng position) async {
@@ -131,5 +136,5 @@ class MapScreenState extends State<MapScreen> {
             }
           : {},
     );
-  }
+   }
 }

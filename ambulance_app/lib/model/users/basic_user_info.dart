@@ -4,13 +4,13 @@ class BasicUserInfo {
   String username;
   UserRole role;
   String? accessToken;
-  String? location;
+  //String? location;
 
 BasicUserInfo({
   required this.username,
   required this.role,
   this.accessToken,
-  this.location
+  //this.location
 });
 
 factory BasicUserInfo.fromJson(Map<String,dynamic> json){

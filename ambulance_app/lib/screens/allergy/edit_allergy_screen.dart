@@ -112,14 +112,14 @@ class _EditAllergyScreenState extends ConsumerState<EditAllergyScreen>{
     Navigator.of(context).pop();
 
     setState(() {
-      _medicationsBoxHeight += 60;
+      _medicationsBoxHeight += 78;
     });
   }
 
   void _removeMedication(String name) {
     setState(() {
       _medications.removeWhere((e) => e.name == name);
-      _medicationsBoxHeight-=60;
+      _medicationsBoxHeight-=78;
     });
   }
 

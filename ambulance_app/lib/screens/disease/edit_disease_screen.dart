@@ -9,15 +9,17 @@ import 'package:ambulance_app/util/close.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddDiseaseScreen extends ConsumerStatefulWidget {
-  const AddDiseaseScreen({super.key});
+class EditDiseaseScreen extends ConsumerStatefulWidget {
+  const EditDiseaseScreen({required this.disease,super.key});
+
+  final Disease disease;
 
   @override
-  ConsumerState<AddDiseaseScreen> createState() => _AddDiseaseScreenState();
+  ConsumerState<EditDiseaseScreen> createState() => _EditDiseaseScreenState();
 }
 
-class _AddDiseaseScreenState extends ConsumerState<AddDiseaseScreen>{
-
+class _EditDiseaseScreenState extends ConsumerState<EditDiseaseScreen>{
+  
   final List<Medication> _medications = [];
   final _nameController = TextEditingController();
   final _medicationNameController = TextEditingController();
@@ -114,9 +116,18 @@ class _AddDiseaseScreenState extends ConsumerState<AddDiseaseScreen>{
   }
 
   void _saveDisease(){
+    ref.read(patientProvider.notifier).removeDisease(widget.disease);
     Disease disease = Disease(name: _nameController.text, medications: _medications);
     ref.read(patientProvider.notifier).addDisease(disease);
     close(context);
+    close(context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.text = widget.disease.name;
+    _medications.addAll(widget.disease.medications);
   }
 
   @override
@@ -129,7 +140,7 @@ class _AddDiseaseScreenState extends ConsumerState<AddDiseaseScreen>{
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+   return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
@@ -226,6 +237,6 @@ class _AddDiseaseScreenState extends ConsumerState<AddDiseaseScreen>{
         ),
       ),
     );
-  }
-  
+
+  } 
 }

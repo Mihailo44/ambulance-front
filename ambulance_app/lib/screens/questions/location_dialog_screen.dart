@@ -1,0 +1,149 @@
+import 'package:ambulance_app/model/address.dart';
+import 'package:ambulance_app/providers/location_provider.dart';
+import 'package:ambulance_app/screens/questions/add_address_screen.dart';
+import 'package:ambulance_app/services/map_service.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class LocationDialogScreen extends ConsumerStatefulWidget {
+  const LocationDialogScreen({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _LocationDialogScreenState();
+}
+
+class _LocationDialogScreenState extends ConsumerState<LocationDialogScreen> {
+  final MapService mapService = MapService();
+  String _location = "";
+
+  void _getLocation() async {
+    String location = await ref.read(locationProvider.notifier).getLocation();
+    setState(() {
+      _location = location;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getLocation();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: const Color.fromARGB(255, 255, 249, 234),
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+            iconSize: 32,
+            color: Colors.amber,
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+            }),
+      ),
+      body: Container(
+        constraints: BoxConstraints(
+          minWidth: MediaQuery.of(context).size.width,
+        ),
+        child: FractionallySizedBox(
+          widthFactor: 0.8,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                "Choose location",
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(
+                height: 80,
+              ),
+              _location.isEmpty ? const CircularProgressIndicator(backgroundColor: Colors.amber,) : InkWell(
+                splashColor: const Color.fromARGB(255, 234, 229, 192),
+                borderRadius: BorderRadius.circular(12),
+                onTap: () {},
+                child: Container(
+                  constraints: const BoxConstraints(
+                      minHeight: 150, minWidth: 270, maxWidth: 270),
+                  child: Card(
+                    color: const Color.fromARGB(255, 255, 249, 231),
+                    shadowColor: Colors.amber,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12))),
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: AutoSizeText(
+                        _location,
+                        maxLines: 3,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              InkWell(
+                splashColor: const Color.fromARGB(255, 234, 229, 192),
+                borderRadius: BorderRadius.circular(12),
+                onTap: () {
+                  showModalBottomSheet(
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (ctx) => const AddAddressScreen());
+                },
+                child: Container(
+                  constraints: const BoxConstraints(
+                      minHeight: 150, minWidth: 270, maxWidth: 270),
+                  child: Card(
+                    color: const Color.fromARGB(255, 255, 249, 231),
+                    shadowColor: Colors.amber,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12))),
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Text(
+                        "Add Different Address",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 150,
+              ),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(20),
+                  minimumSize: const Size(180, 70),
+                  backgroundColor: const Color.fromARGB(255, 7, 154, 180),
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () {
+                  //TODO ako nisi izabrao adresu snackbar
+                },
+                icon: const Icon(Icons.send),
+                label: const Text(
+                  "Send Request",
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

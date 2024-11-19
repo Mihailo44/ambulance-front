@@ -1,3 +1,4 @@
+import 'package:ambulance_app/generic_widgets/custom_card.dart';
 import 'package:ambulance_app/model/allergy.dart';
 import 'package:ambulance_app/model/disease.dart';
 import 'package:ambulance_app/model/medication.dart';
@@ -14,7 +15,6 @@ class PatientProfile extends ConsumerWidget {
   const PatientProfile({super.key});
 
   Patient _setupDummyPatient() {
-    
     User user = User(
         firstname: "Boban",
         lastname: "Rajovic",
@@ -56,31 +56,32 @@ class PatientProfile extends ConsumerWidget {
     return patient;
   }
 
+  void _goToMedicalInfo(WidgetRef ref, BuildContext context) {
+    ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
+
+    final patient = _setupDummyPatient();
+    ref.read(patientProvider.notifier).setPatient(patient);
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (ctx) => const MedicalInfoScreen()));
+  }
+
+  void _goToUserInfo(WidgetRef ref,BuildContext context){
+    ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
+            final patient = _setupDummyPatient();
+            ref.read(patientProvider.notifier).setPatient(patient);
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (ctx) => const UserInfoScreen()));
+  }
+
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () {
-            ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
-            final patient = _setupDummyPatient();
-            ref.read(patientProvider.notifier).setPatient(patient);
-            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const UserInfoScreen()));
-          },
-          child: const Text("User info"),
-        ),
+        CustomCard(title: "User Info", onTap: _goToUserInfo),
         const SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () {
-            ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
-            final patient = _setupDummyPatient();
-            ref.read(patientProvider.notifier).setPatient(patient);
-            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const MedicalInfoScreen()));
-          },
-          child: const Text("Show Medical Info"),
-        ),
+        CustomCard(title: "Medical Info", onTap: _goToMedicalInfo)
       ],
     );
   }

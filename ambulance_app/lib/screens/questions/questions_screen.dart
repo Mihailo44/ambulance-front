@@ -6,23 +6,25 @@ import 'package:ambulance_app/mock_data/questions_mock.dart';
 import 'package:ambulance_app/model/question.dart';
 import 'package:ambulance_app/model/quiz.dart';
 import 'package:ambulance_app/model/response.dart' as my;
+import 'package:ambulance_app/providers/ambulance_request_provider.dart';
 import 'package:ambulance_app/screens/questions/patients_list.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:ambulance_app/util/close.dart';
 import 'package:ambulance_app/util/snackbar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class QuestionsScreen extends StatefulWidget {
+class QuestionsScreen extends ConsumerStatefulWidget {
   const QuestionsScreen({required this.traumaCause, super.key});
 
   final TraumaType traumaCause;
 
   @override
-  State<QuestionsScreen> createState() => _QuestionsScreenState();
+  ConsumerState<QuestionsScreen> createState() => _QuestionsScreenState();
 }
 
-class _QuestionsScreenState extends State<QuestionsScreen> {
+class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
   final List<Question> _questions = [];
   final List<my.Response> _responses = [];
   final _customAnswerController = TextEditingController();
@@ -49,6 +51,11 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     _customAnswerController.dispose();
   }
 
+  void _addToRequest(){
+      ref.read(ambulanceRequestProvider.notifier).setTraumaType(widget.traumaCause.toString());
+      ref.read(ambulanceRequestProvider.notifier).setResponses(_responses);
+  }
+
   void _previousQuestion() {
     if (questionIndex > 0) {
       setState(() {
@@ -66,6 +73,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         _customAnswerController.clear();
       });
     } else {
+      _addToRequest();
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (ctx) => const VictimList()));
     }
@@ -90,6 +98,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         questionIndex++;
       });
     } else {
+      _addToRequest();
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (ctx) => const VictimList()));
     }

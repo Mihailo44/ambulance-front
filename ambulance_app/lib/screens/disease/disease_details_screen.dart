@@ -1,18 +1,18 @@
 import 'package:ambulance_app/generic_widgets/my_dialog.dart';
 import 'package:ambulance_app/model/disease.dart';
 import 'package:ambulance_app/providers/patient_provider.dart';
+import 'package:ambulance_app/screens/disease/edit_disease_screen.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DiseaseDetailsScreen extends ConsumerWidget {
-
-  const DiseaseDetailsScreen({required this.disease,super.key});
+  const DiseaseDetailsScreen({required this.disease, super.key});
 
   final Disease disease;
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.all(14),
       child: Column(
@@ -31,9 +31,9 @@ class DiseaseDetailsScreen extends ConsumerWidget {
           ),
           disease.medications.isEmpty
               ? const Padding(
-                padding: EdgeInsets.only(left: 8),
-                child: Text('No medications'),
-              )
+                  padding: EdgeInsets.only(left: 8),
+                  child: Text('No medications'),
+                )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: disease.medications.map((e) {
@@ -49,7 +49,13 @@ class DiseaseDetailsScreen extends ConsumerWidget {
           const Spacer(),
           Center(
             child: ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (ctx) => EditDiseaseScreen(disease: disease),
+                  ),
+                );
+              },
               label: const Text("Edit"),
               icon: const Icon(Icons.edit),
             ),
@@ -63,8 +69,9 @@ class DiseaseDetailsScreen extends ConsumerWidget {
               child: ElevatedButton.icon(
                 onPressed: () async {
                   var nav = Navigator.of(context);
-                  bool? result = await showDialog<bool>(context: context, builder: (ctx) => const MyDialog());
-                  if(result != null && result == true){
+                  bool? result = await showDialog<bool>(
+                      context: context, builder: (ctx) => const MyDialog());
+                  if (result != null && result == true) {
                     ref.read(patientProvider.notifier).removeDisease(disease);
                     nav.pop();
                   }
@@ -78,5 +85,4 @@ class DiseaseDetailsScreen extends ConsumerWidget {
       ),
     );
   }
-  
 }

@@ -4,20 +4,29 @@ import 'package:ambulance_app/util/close.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddOperationScreen extends ConsumerStatefulWidget {
-  const AddOperationScreen({super.key});
+class EditOperationScreen extends ConsumerStatefulWidget{
+  const EditOperationScreen({required this.operation,super.key});
+
+  final String operation;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _AddOperationScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _EditOperationScreenState();
 }
 
-class _AddOperationScreenState extends ConsumerState<AddOperationScreen>{
+class _EditOperationScreenState extends ConsumerState<EditOperationScreen>{
 
   final _nameController = TextEditingController();
 
   void _saveOperation(){
+    ref.read(patientProvider.notifier).removeOperation(widget.operation);
     ref.read(patientProvider.notifier).addOperation(_nameController.text);
     close(context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.text = widget.operation;
   }
 
   @override
@@ -69,6 +78,5 @@ class _AddOperationScreenState extends ConsumerState<AddOperationScreen>{
               ),
             ),
           );
-  }
-  
+  } 
 }
