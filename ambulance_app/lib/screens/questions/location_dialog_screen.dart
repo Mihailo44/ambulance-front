@@ -1,4 +1,6 @@
+import 'package:ambulance_app/generic_widgets/my_dialog.dart';
 import 'package:ambulance_app/model/address.dart';
+import 'package:ambulance_app/providers/ambulance_request_provider.dart';
 import 'package:ambulance_app/providers/location_provider.dart';
 import 'package:ambulance_app/screens/questions/add_address_screen.dart';
 import 'package:ambulance_app/services/map_service.dart';
@@ -23,6 +25,21 @@ class _LocationDialogScreenState extends ConsumerState<LocationDialogScreen> {
     setState(() {
       _location = location;
     });
+  }
+
+  void _selectGPS(){
+     String streetAndNumber = _location.split(",")[0];
+     String city = _location.split(",")[1];
+     String country = _location.split(",")[2];
+     Address address = Address(city: city, street: streetAndNumber.split("")[0], number: streetAndNumber.split("")[1],country: country);
+     ref.read(ambulanceRequestProvider.notifier).setAddress(address);
+  }
+
+  void _sendRequest() async{
+    bool? result = await showDialog<bool>(context: context, builder: (ctx) => const MyDialog());
+    if(result != null && result == true){
+      ref.read(ambulanceRequestProvider).x();
+    }
   }
 
   @override
@@ -70,7 +87,7 @@ class _LocationDialogScreenState extends ConsumerState<LocationDialogScreen> {
               _location.isEmpty ? const CircularProgressIndicator(backgroundColor: Colors.amber,) : InkWell(
                 splashColor: const Color.fromARGB(255, 234, 229, 192),
                 borderRadius: BorderRadius.circular(12),
-                onTap: () {},
+                onTap: _selectGPS,
                 child: Container(
                   constraints: const BoxConstraints(
                       minHeight: 150, minWidth: 270, maxWidth: 270),
@@ -132,9 +149,7 @@ class _LocationDialogScreenState extends ConsumerState<LocationDialogScreen> {
                   backgroundColor: const Color.fromARGB(255, 7, 154, 180),
                   foregroundColor: Colors.white,
                 ),
-                onPressed: () {
-                  //TODO ako nisi izabrao adresu snackbar
-                },
+                onPressed: _sendRequest,
                 icon: const Icon(Icons.send),
                 label: const Text(
                   "Send Request",

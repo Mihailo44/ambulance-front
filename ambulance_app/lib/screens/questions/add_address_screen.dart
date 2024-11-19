@@ -1,16 +1,18 @@
 import 'package:ambulance_app/model/address.dart';
+import 'package:ambulance_app/providers/ambulance_request_provider.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:ambulance_app/util/close.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddAddressScreen extends StatefulWidget {
+class AddAddressScreen extends ConsumerStatefulWidget {
   const AddAddressScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => _AddAddressScreenState();
+  ConsumerState<AddAddressScreen> createState() => _AddAddressScreenState();
 }
 
-class _AddAddressScreenState extends State<AddAddressScreen> {
+class _AddAddressScreenState extends ConsumerState<AddAddressScreen> {
   final _cityController = TextEditingController();
   final _streetController = TextEditingController();
   final _numberController = TextEditingController();
@@ -19,8 +21,10 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
   void _addAddress() {
     Address address = Address(city: _cityController.text, street: _streetController.text, number: _numberController.text,floor: _floorController.text,apartmentNumber: _aparmentNumberController.text);
+    ref.read(ambulanceRequestProvider.notifier).setAddress(address);
+    close(context);
   }
-
+  
   @override
   void dispose() {
     super.dispose();

@@ -46,6 +46,7 @@ class AuthService extends AuthServiceAbstract {
 
   @override
   Future<void> refreshTokens() async {
+    print("refresh pozvan");
     final url = Uri.parse('$mobileUrl/refresh-tokens');
     try {
 
