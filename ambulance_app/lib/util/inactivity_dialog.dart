@@ -33,7 +33,7 @@ class _InactivityDialogState extends ConsumerState<InactivityDialog> {
 
   void _sendEmergencyRequest(){
     final AmbulanceRequest request = ref.read(ambulanceRequestProvider);
-    print("kita");
+    //TODO poslati zahtev
   }
 
   @override

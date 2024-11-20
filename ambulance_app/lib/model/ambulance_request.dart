@@ -38,7 +38,7 @@ class AmbulanceRequest {
       responses:  responses ?? this.responses,
       registeredPatientIDs: registeredPatientIDs ?? this.registeredPatientIDs,
       unregisteredUsers: unregisteredUsers ?? this.unregisteredUsers,
-      address: address ?? this.address,
+      address: address,
     );
   }
 

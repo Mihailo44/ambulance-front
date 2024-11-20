@@ -7,10 +7,11 @@ import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/navigation/routes.dart';
 import 'package:ambulance_app/providers/patient_provider.dart';
-import 'package:ambulance_app/screens/questions/location_dialog_screen.dart';
 import 'package:ambulance_app/screens/registration/patient_registration.dart';
 import 'package:ambulance_app/services/auth_service.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
+import 'package:ambulance_app/util/inactivity_wrapper.dart';
+import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -85,17 +86,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       });
       _formKey.currentState!.save();
 
+      final nav = Navigator.of(context);
+
       var _ = await _authService.login(
           _usernameController.text, _passwordController.text);
 
       if (accessToken.isNotEmpty) {
-        router.go("/");
+        //router.go("/");
+        nav.pushReplacement(MaterialPageRoute(builder: (ctx) => const InactivityWrapper(child: ScaffoldForMobile())));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Login failed please try again"),
-          ),
-        );
+        showSnackBar(context, "Login failed please try again");
       }
 
       setState(() {

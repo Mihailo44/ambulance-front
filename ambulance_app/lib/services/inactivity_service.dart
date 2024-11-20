@@ -28,7 +28,6 @@ class InactivityService {
   }
 
   void resetTimer() {
-    print("reset");
     _inactivityTimer?.cancel();
     _emergencyTimer?.cancel();
     _remainingTime = _inactivityThreshold;

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:ambulance_app/services/abstracts/auth_service_abstract.dart';
 import 'package:ambulance_app/config.dart';
@@ -5,6 +6,7 @@ import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/model/users/basic_user_info.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AuthService extends AuthServiceAbstract {
 
@@ -38,15 +40,31 @@ class AuthService extends AuthServiceAbstract {
 
         basicUser = BasicUserInfo.fromJson(responseBody["user"]);
         basicUser?.accessToken = accessToken;
+
+        _scheduleNextRefresh();
+      }else{
+        accessToken = "";
       }
     } catch (error) {
-      throw error;
+      print("nece");
     }
+  }
+
+  void _scheduleNextRefresh(){
+    if(basicUser?.accessToken == null) return;
+
+    DateTime expiryDate = JwtDecoder.getExpirationDate(basicUser!.accessToken!);
+    final adjustedExpiryDate = expiryDate.subtract(const Duration(seconds: 10));
+    DateTime now = DateTime.now();
+
+    Timer(Duration(seconds: adjustedExpiryDate.difference(now).inSeconds), (
+      refreshTokens
+    ));
   }
 
   @override
   Future<void> refreshTokens() async {
-    print("refresh pozvan");
+  
     final url = Uri.parse('$mobileUrl/refresh-tokens');
     try {
 
@@ -60,14 +78,22 @@ class AuthService extends AuthServiceAbstract {
         url,
         headers: {
           'Authorization': 'Bearer $accessToken',
-          'Cookie': 'Refresh-token=$refreshToken'
+          'RefreshToken': refreshToken,
+          'User-Agent': 'Mobile'
           },
       );
 
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        accessToken = responseBody['access_token'] ?? '';
+        accessToken = responseBody['access_token'] ?? "";
+        refreshToken = responseBody["refresh_token"] ?? "";
+
+        print(accessToken);
+        print(refreshToken);
+
         basicUser?.accessToken = accessToken;
+        _scheduleNextRefresh();
+
       }
     } catch (error) {
       throw error;
@@ -86,7 +112,6 @@ class AuthService extends AuthServiceAbstract {
       );
 
       if (response.statusCode == 200) {
-        accessToken = '';
         basicUser = null;
       }
     } catch (error) {

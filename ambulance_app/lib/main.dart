@@ -3,7 +3,7 @@ import 'package:ambulance_app/main_layout.dart';
 import 'package:ambulance_app/model/users/basic_user_info.dart';
 import 'package:ambulance_app/navigation/observer.dart';
 import 'package:ambulance_app/navigation/routes.dart';
-import 'package:ambulance_app/services/inactivity_service.dart';
+import 'package:ambulance_app/screens/auth/login_screen.dart';
 import 'package:ambulance_app/util/inactivity_wrapper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +48,8 @@ class MyApp extends StatelessWidget {
       );
     } else {
       return MaterialApp(
-        home: const InactivityWrapper(child: ScaffoldForMobile()),
+        //home: const InactivityWrapper(child: ScaffoldForMobile()),
+        home: const LoginPage(),
         navigatorObservers: [MyNavigationObserver()],
         title: "Zovi Hitnu",
         debugShowCheckedModeBanner: false,

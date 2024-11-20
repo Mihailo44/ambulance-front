@@ -39,7 +39,7 @@ class AmbulanceRequestStateNotifier extends StateNotifier<AmbulanceRequest>{
     state = state.copyWith(unregisteredUsers: unregisteredPatients);
   }
 
-  void setAddress(Address address){
+  void setAddress(Address? address){
     state = state.copyWith(address: address);
   }
 
