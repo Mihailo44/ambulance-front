@@ -46,14 +46,16 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
 
   @override
   void dispose() {
-    //TODO obrisi listu odgovora
     super.dispose();
     _customAnswerController.dispose();
   }
 
-  void _addToRequest(){
-      ref.read(ambulanceRequestProvider.notifier).setTraumaType(widget.traumaCause.toString());
+  void _addAllResponses(){
       ref.read(ambulanceRequestProvider.notifier).setResponses(_responses);
+  }
+
+  void _addResponse(my.Response response){
+    ref.read(ambulanceRequestProvider.notifier).addResponse(response);
   }
 
   void _previousQuestion() {
@@ -70,10 +72,9 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
     if (questionIndex < _questions.length - 1) {
       setState(() {
         questionIndex++;
-        _customAnswerController.clear();
       });
     } else {
-      _addToRequest();
+      _addAllResponses();
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (ctx) => const VictimList()));
     }
@@ -91,6 +92,7 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
       }
     } else {
       _responses.add(response);
+      _addResponse(response);
     }
 
     if (questionIndex < _questions.length - 1) {
@@ -98,7 +100,7 @@ class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
         questionIndex++;
       });
     } else {
-      _addToRequest();
+      _addAllResponses();
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (ctx) => const VictimList()));
     }

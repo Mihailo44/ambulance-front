@@ -43,19 +43,19 @@ class AmbulanceRequest {
   }
 
   void x(){
-    print("${submitterID} ${traumaType} ${address!.street}");
+    print("${submitterID} ${traumaType} ${address?.street}");
     
     for(Response r in responses!){
       print("${r.question}\n${r.response}");
     }
 
     print("Patient IDs\n");
-    for(String s in registeredPatientIDs!){
-      print(s);
+    
+    if(registeredPatientIDs != null && registeredPatientIDs!.isNotEmpty){
+      for(String s in registeredPatientIDs!){
+        print(s);
+      }
     }
-
-    print(address.toString());
-
   }
 
   String get formatedCreationTimestamp {

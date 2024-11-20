@@ -1,4 +1,5 @@
 import 'package:ambulance_app/navigation/provider.dart';
+import 'package:ambulance_app/providers/input_monitor_provider.dart';
 import 'package:ambulance_app/screens/auth/login_screen.dart';
 import 'package:ambulance_app/screens/home/patient_home_screen.dart';
 import 'package:ambulance_app/screens/profile/patient_profile.dart';
@@ -63,6 +64,7 @@ class _ScaffoldForMobileState extends ConsumerState<ScaffoldForMobile> {
   @override
   Widget build(BuildContext context) {
     final isVisible = ref.watch(appBarVisibilityProvider);
+    final shouldMonitor = ref.watch(userInputMonitoringProvider.notifier);
     return Scaffold(
       appBar: !isVisible
           ? null

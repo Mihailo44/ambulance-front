@@ -1,24 +1,20 @@
+import 'package:ambulance_app/providers/input_monitor_provider.dart';
 import 'package:ambulance_app/services/inactivity_service.dart';
+import 'package:ambulance_app/util/inactivity_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class InactivityWrapper extends StatefulWidget {
+class InactivityWrapper extends ConsumerStatefulWidget {
   final Widget child;
 
   const InactivityWrapper({super.key, required this.child});
 
   @override
-  State<InactivityWrapper> createState() => _InactivityWrapperState();
+  ConsumerState<InactivityWrapper> createState() => _InactivityWrapperState();
 }
 
-class _InactivityWrapperState extends State<InactivityWrapper> {
-  @override
-  void initState() {
-    super.initState();
-    InactivityService().startTracking(() {
-      _showInactivityDialog();
-    });
-  }
-
+class _InactivityWrapperState extends ConsumerState<InactivityWrapper> {
+  
   @override
   void dispose() {
     InactivityService().dispose();
@@ -27,31 +23,30 @@ class _InactivityWrapperState extends State<InactivityWrapper> {
 
   void _showInactivityDialog() {
     if (context.mounted) {
-      //TODO pozvati drugi tajmer
       showDialog(
         context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Inactive'),
-          content: Text('Are you still there? ${InactivityService().remainingTime}'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-              child: const Text('Yes'),
-            ),
-          ],
-        ),
+        builder: (ctx) => InactivityDialog(duration: InactivityService().getEmergencyTimerDuration),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final shouldMonitor = ref.watch(userInputMonitoringProvider);
+   
+    if(shouldMonitor){
+      InactivityService().startTracking(() {
+      _showInactivityDialog();
+    });
+    }else{
+      InactivityService().stopTracking();
+    }
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: () => InactivityService().resetTimer(),
-      onPanUpdate: (_) => InactivityService().resetTimer(),
+      onTap: shouldMonitor ? () => InactivityService().resetTimer() : null,
+      onPanUpdate: shouldMonitor ? (_) => InactivityService().resetTimer() : null,
+      onVerticalDragDown: shouldMonitor ? (_) => InactivityService().resetTimer() : null,
       child: widget.child,
     );
   }

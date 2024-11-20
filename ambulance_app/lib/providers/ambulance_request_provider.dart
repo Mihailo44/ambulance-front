@@ -20,6 +20,17 @@ class AmbulanceRequestStateNotifier extends StateNotifier<AmbulanceRequest>{
     state = state.copyWith(responses: responses);
   }
 
+  void addResponse(Response response){
+    final List<Response> updatedResponses;
+    if(state.responses == null){
+      updatedResponses = [response];
+    }else{
+      updatedResponses = [...state.responses!,response];
+    }
+    
+    state = state.copyWith(responses: updatedResponses);
+  }
+
   void setRegisteredPatientsIDs(List<String> registeredPatientIDs){
     state = state.copyWith(registeredPatientIDs: registeredPatientIDs);
   }

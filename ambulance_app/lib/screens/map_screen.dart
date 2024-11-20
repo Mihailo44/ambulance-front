@@ -108,33 +108,33 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //return const Text("ok");
-    return GoogleMap(
-      onMapCreated: (GoogleMapController controller) {
-        _controller.complete(controller);
-        _controller.future.then((value) {
-          value.setMapStyle(_mapStyleString);
-          if(permissionGranted == PermissionStatus.granted){
-            print("usao");
-             _getLocation();
-          }
-        });
-      },
-      initialCameraPosition: CameraPosition(
-        target: _center ?? const LatLng(45.257828, 19.8196241),
-        zoom: 17,
-      ),
-      mapToolbarEnabled: false,
-      zoomControlsEnabled: false,
-      markers: _center != null
-          ? {
-              Marker(
-                markerId: const MarkerId("me"),
-                infoWindow: InfoWindow(title: "You", snippet: _address),
-                position: _center!,
-              ),
-            }
-          : {},
-    );
+    return const Text("ok");
+    // return GoogleMap(
+    //   onMapCreated: (GoogleMapController controller) {
+    //     _controller.complete(controller);
+    //     _controller.future.then((value) {
+    //       value.setMapStyle(_mapStyleString);
+    //       if(permissionGranted == PermissionStatus.granted){
+    //         print("usao");
+    //          _getLocation();
+    //       }
+    //     });
+    //   },
+    //   initialCameraPosition: CameraPosition(
+    //     target: _center ?? const LatLng(45.257828, 19.8196241),
+    //     zoom: 17,
+    //   ),
+    //   mapToolbarEnabled: false,
+    //   zoomControlsEnabled: false,
+    //   markers: _center != null
+    //       ? {
+    //           Marker(
+    //             markerId: const MarkerId("me"),
+    //             infoWindow: InfoWindow(title: "You", snippet: _address),
+    //             position: _center!,
+    //           ),
+    //         }
+    //       : {},
+    // );
    }
 }
