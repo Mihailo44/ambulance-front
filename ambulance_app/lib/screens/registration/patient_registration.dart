@@ -1,3 +1,6 @@
+import 'package:ambulance_app/model/allergy.dart';
+import 'package:ambulance_app/model/disease.dart';
+import 'package:ambulance_app/model/medication.dart';
 import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/screens/auth/account_activation_screen.dart';
@@ -23,10 +26,6 @@ class PatientRegistrationState extends State<PatientRegistration> {
   final _contactController = TextEditingController();
   final _emergencyContactController = TextEditingController();
   DateTime? _pickedDate;
-  // final _allergenController = TextEditingController();
-  // final _allergyDescriptionController = TextEditingController();
-  // final _medicationNameController = TextEditingController();
-  // final _medicationDosageController = TextEditingController();
 
   final List<String> _genders = ["Male", "Female"];
   String? _selectedGender = "";
@@ -55,10 +54,6 @@ class PatientRegistrationState extends State<PatientRegistration> {
     _passwordController.dispose();
     _contactController.dispose();
     _emergencyContactController.dispose();
-    // _allergenController.dispose();
-    // _allergyDescriptionController.dispose();
-    // _medicationNameController.dispose();
-    // _medicationDosageController.dispose();
   }
 
   void _openDatePicker() {
@@ -101,6 +96,48 @@ class PatientRegistrationState extends State<PatientRegistration> {
     return newPatient;
   }
 
+  Patient _setupDummyPatient() {
+    User user = User(
+        firstname: "w11",
+        lastname: "w1",
+        password: "Rerna",
+        dateOfBirth: DateTime.now().toUtc(),
+        role: UserRole.PATIENT);
+
+    List<Allergy> alergies = [
+      Allergy(
+          allergen: "ugly hoes",
+          description:
+              "Allergies are immune system reactions to substances that are typically harmless to most people, such as pollen, food, or medications. When exposed to an allergen, the body can produce symptoms ranging from mild (like sneezing or itching) to severe, potentially causing life-threatening anaphylaxis.",
+          medications: [Medication(name: "Bromazepam", weeklyDosage: 3)]),
+      Allergy(
+          allergen: "fake niggas",
+          description: "I just can't",
+          medications: [Medication(name: "Hennessy", weeklyDosage: 12)])
+    ];
+
+    List<Disease> diseases = [
+      Disease(name: "Jealosy", medications: []),
+      Disease(name: "Revertiligo", medications: []),
+      Disease(
+          name: "Alcoholism",
+          medications: [Medication(name: "Heroin", weeklyDosage: 3)]),
+    ];
+
+    Patient patient = Patient(
+        user: user,
+        contactNumber: "123",
+        closePersonContact: "0616323221",
+        bloodType: "A-",
+        gender: "M",
+        yearOfBirth: "2001",
+        pastOperations: "Knee operation,Back surgery,Leg surgery",
+        alergies: alergies,
+        diseases: diseases);
+
+    return patient;
+  }
+
   void _register() async {
     // if (!_formKey.currentState!.validate()) {
     //   return;
@@ -112,9 +149,8 @@ class PatientRegistrationState extends State<PatientRegistration> {
     // }
 
     final navigator = Navigator.of(context);
-    final newPatient = createPatient();
-    //bool isSuccessfull = await _patientService.register(newPatient);
-    bool isSuccessfull = true;
+    final newPatient = _setupDummyPatient();
+    bool isSuccessfull = await _patientService.register(newPatient);
 
     if(!mounted) return;
 
@@ -135,17 +171,18 @@ class PatientRegistrationState extends State<PatientRegistration> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: GestureDetector(
+    return Scaffold(
+      body: GestureDetector(
         onTap: FocusScope.of(context).unfocus,
         child: SingleChildScrollView(
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: FractionallySizedBox(
-            widthFactor: 0.85,
+          child: Padding(
+            padding: const EdgeInsets.all(14),
             child: Column(
               children: [
-                const SizedBox(
+                 SizedBox(
                   height: 55.0,
+                  width: MediaQuery.of(context).size.width,
                 ),
                 Row(
                   children: [
@@ -307,77 +344,6 @@ class PatientRegistrationState extends State<PatientRegistration> {
                           const SizedBox(
                             height: 15.0,
                           ),
-                          // Container(
-                          //   child: Column(
-                          //     children: [
-                          //       OutlinedButton.icon(
-                          //         label: const Text("Add Allergies"),
-                          //         icon: const Icon(Icons.add),
-                          //         onPressed: () {
-                          //           showDialog(
-                          //               context: context,
-                          //               builder: (BuildContext context) {
-                          //                 return AlertDialog(
-                          //                     title: const Text("New Allergy"),
-                          //                     content: Container(
-                          //                       height: MediaQuery.of(context)
-                          //                               .size
-                          //                               .height *
-                          //                           0.5,
-                          //                       width: MediaQuery.of(context)
-                          //                               .size
-                          //                               .width *
-                          //                           0.85,
-                          //                       child: Form(
-                          //                           child: Column(
-                          //                         children: [
-                          //                           const SizedBox(
-                          //                             height: 15.0,
-                          //                           ),
-                          //                           buildTextFormField(
-                          //                               controller:
-                          //                                   _allergenController,
-                          //                               labelText: "Allergen"),
-                          //                           const SizedBox(
-                          //                             height: 15.0,
-                          //                           ),
-                          //                           buildTextFormField(
-                          //                               controller:
-                          //                                   _allergyDescriptionController,
-                          //                               labelText:
-                          //                                   "Description (optional)"),
-                          //                           const SizedBox(
-                          //                             height: 15.0,
-                          //                           ),
-                          //                           buildTextFormField(
-                          //                               controller:
-                          //                                   _medicationNameController,
-                          //                               labelText:
-                          //                                   "Medication Name"),
-                          //                           const SizedBox(
-                          //                             height: 15.0,
-                          //                           ),
-                          //                           buildTextFormField(
-                          //                               controller:
-                          //                                   _medicationDosageController,
-                          //                               labelText: "Weekly Dosage"),
-                          //                           const SizedBox(
-                          //                             height: 15.0,
-                          //                           ),
-                          //                           ElevatedButton(
-                          //                               onPressed: () {
-                          //                                 Navigator.pop(context);
-                          //                               },
-                          //                               child: const Text("Add"))
-                          //                         ],
-                          //                       )),
-                          //                     ));
-                          //               });
-                          //         },
-                          //       ),
-                          //    ],
-                          //  ),
-                          // )
                         ],
                       )),
                 ),

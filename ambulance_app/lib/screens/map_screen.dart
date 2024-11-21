@@ -84,6 +84,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 
   void _getLocation() async {
+    if (!mounted) return;
     Location location = Location();
     LocationData locationData;
 

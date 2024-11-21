@@ -19,4 +19,12 @@ class Allergy {
           : null,
     );
   }
+
+  Map<String,dynamic> toJson(){
+    return {
+      "allergen": allergen,
+      "description":description,
+      "medication":medications?.map((medication) => medication.toJson()).toList()
+    };
+  }
 }

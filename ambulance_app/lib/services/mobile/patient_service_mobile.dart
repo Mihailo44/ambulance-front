@@ -15,9 +15,8 @@ class PatientService extends PatientServiceAbstract{
   @override
   Future<bool> register(Patient patient) async {
     final uri = Uri.parse('$mobileUrl/patient');
-
+    
     try{
-
      final response = await _client.post(
         uri,
         headers: {
@@ -27,6 +26,7 @@ class PatientService extends PatientServiceAbstract{
         );
 
       if (response.statusCode == 201){
+        //? da li da pozove auth ovde
         return true;
       }
 

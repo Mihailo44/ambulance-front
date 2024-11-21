@@ -65,7 +65,12 @@ class Patient {
       'user': user.toJson(),
       'contact_number': contactNumber,
       'close_person_contact': closePersonContact,
+      'year_of_birth': int.parse(yearOfBirth),
+      'gender': gender,
       'blood_type': bloodType,
+      'alergies': alergies.map((allergy) => allergy.toJson()).toList(),
+      'diseases': diseases.map((disease) => disease.toJson()).toList(),
+      'past_operations': pastOperations
     };
   }
 }

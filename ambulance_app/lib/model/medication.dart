@@ -12,4 +12,11 @@ class Medication {
     return Medication(name: json['name'], weeklyDosage: json['weekly_dosage'],);
   }
 
+  Map<String,dynamic> toJson(){
+    return {
+      "name":name,
+      "weekly_dosage":weeklyDosage
+    };
+  }
+
 }

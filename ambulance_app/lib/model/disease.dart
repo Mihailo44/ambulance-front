@@ -8,4 +8,11 @@ class Disease {
     required this.name,
     required this.medications,
   });
+
+  Map<String,dynamic> toJson(){
+    return {
+      "name":name,
+      "medications": medications.map((medication) => medication.toJson()).toList()
+    };
+  }
 }
