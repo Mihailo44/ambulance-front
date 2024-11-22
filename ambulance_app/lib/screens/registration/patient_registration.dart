@@ -98,9 +98,9 @@ class PatientRegistrationState extends State<PatientRegistration> {
 
   Patient _setupDummyPatient() {
     User user = User(
-        firstname: "w11",
-        lastname: "w1",
-        password: "Rerna",
+        firstname: "p",
+        lastname: "p",
+        password: "sifra",
         dateOfBirth: DateTime.now().toUtc(),
         role: UserRole.PATIENT);
 
@@ -152,15 +152,19 @@ class PatientRegistrationState extends State<PatientRegistration> {
     final newPatient = _setupDummyPatient();
     bool isSuccessfull = await _patientService.register(newPatient);
 
-    if(!mounted) return;
+    if (!mounted) return;
 
     if (isSuccessfull) {
       showSnackBar(
         context,
         "You have registered successfully",
       );
-      navigator.push(
-          MaterialPageRoute(builder: (ctx) => const AccountActivationScreen()));
+      navigator.pop();
+      navigator.push(MaterialPageRoute(
+        builder: (ctx) => AccountActivationScreen(
+          phoneNumber: newPatient.contactNumber,
+        ),
+      ));
     } else {
       showSnackBar(
         context,
@@ -175,12 +179,13 @@ class PatientRegistrationState extends State<PatientRegistration> {
       body: GestureDetector(
         onTap: FocusScope.of(context).unfocus,
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Column(
               children: [
-                 SizedBox(
+                SizedBox(
                   height: 55.0,
                   width: MediaQuery.of(context).size.width,
                 ),
@@ -247,15 +252,12 @@ class PatientRegistrationState extends State<PatientRegistration> {
                           buildTextFormField(
                               controller: _contactController,
                               labelText: "Contact"),
-                  
                           buildTextFormField(
                               controller: _emergencyContactController,
                               labelText: "Emergency Contact"),
-                  
                           buildTextFormField(
                               controller: _passwordController,
                               labelText: "Password"),
-                  
                           buildTextFormField(
                               controller: _repeatPasswordController,
                               labelText: "Repeat Password"),
@@ -288,7 +290,7 @@ class PatientRegistrationState extends State<PatientRegistration> {
                                 setState(() {
                                   _selectedBloodType = value;
                                 });
-                          }),
+                              }),
                           const SizedBox(
                             height: 18.0,
                           ),

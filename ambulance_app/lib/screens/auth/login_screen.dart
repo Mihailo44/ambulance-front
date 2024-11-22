@@ -1,14 +1,12 @@
-import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/main_layout.dart';
 import 'package:ambulance_app/model/allergy.dart';
 import 'package:ambulance_app/model/disease.dart';
 import 'package:ambulance_app/model/medication.dart';
 import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/model/users/user.dart';
-import 'package:ambulance_app/navigation/routes.dart';
+import 'package:ambulance_app/providers/service_provider.dart';
 import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/screens/registration/patient_registration.dart';
-import 'package:ambulance_app/services/auth_service.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:ambulance_app/util/inactivity_wrapper.dart';
 import 'package:ambulance_app/util/snackbar.dart';
@@ -26,7 +24,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _authService = AuthService();
   bool _isLoading = false;
 
   @override
@@ -38,9 +35,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   void _setupDummyPatient() {
     User user = User(
-        firstname: "Boban",
-        lastname: "Rajovic",
-        password: "Rerna",
+        firstname: "p",
+        lastname: "p",
+        password: "sifra",
         dateOfBirth: DateTime.now(),
         role: UserRole.PATIENT);
 
@@ -87,16 +84,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       _formKey.currentState!.save();
 
       final nav = Navigator.of(context);
-
-      var _ = await _authService.login(
+      final authService = ref.read(authServiceProvider);
+      var _ = await authService.login(
           _usernameController.text, _passwordController.text);
 
-      if (accessToken.isNotEmpty) {
-        //router.go("/");
-        nav.pushReplacement(MaterialPageRoute(builder: (ctx) => const InactivityWrapper(child: ScaffoldForMobile())));
-      } else {
-        showSnackBar(context, "Login failed please try again");
-      }
+      nav.pushReplacement(MaterialPageRoute(builder: (ctx) => const InactivityWrapper(child: ScaffoldForMobile())));
+      // if (accessToken.isNotEmpty) {
+      // router.go("/");
+      //   nav.pushReplacement(MaterialPageRoute(builder: (ctx) => const InactivityWrapper(child: ScaffoldForMobile())));
+      // } else {
+      //   showSnackBar(context, "Login failed please try again");
+      // }
 
       setState(() {
         _isLoading = false;
@@ -146,7 +144,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                   // _setupDummyPatient();
                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) => const ScaffoldForMobile()));
                   },
                   child: const Text("Home"),

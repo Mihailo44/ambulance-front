@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 class AccountActivationScreen extends StatefulWidget {
-  const AccountActivationScreen({super.key});
+  const AccountActivationScreen({required this.phoneNumber,super.key});
+
+  final String phoneNumber;
 
   @override
   State<AccountActivationScreen> createState() =>
@@ -19,7 +21,7 @@ class _AccountActivationScreenState extends State<AccountActivationScreen> {
   final _codeController = TextEditingController();
 
   void _activate() async{
-    final credentials = AccountActivationCredentials(phoneNumber: "123",activationCode: _codeController.text);
+    final credentials = AccountActivationCredentials(phoneNumber: widget.phoneNumber,activationCode: _codeController.text);
     final nav = Navigator.of(context);
     final result = await _activationService.activateAccount(credentials);
     nav.pop();

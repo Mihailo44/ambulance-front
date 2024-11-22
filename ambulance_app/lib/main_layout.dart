@@ -1,4 +1,5 @@
 import 'package:ambulance_app/navigation/provider.dart';
+import 'package:ambulance_app/providers/service_provider.dart';
 import 'package:ambulance_app/screens/auth/login_screen.dart';
 import 'package:ambulance_app/screens/home/patient_home_screen.dart';
 import 'package:ambulance_app/screens/profile/patient_profile.dart';
@@ -25,7 +26,6 @@ class _ScaffoldForMobileState extends ConsumerState<ScaffoldForMobile> {
     const PatientHomeScreen(),
     const PatientProfile(),
   ];
-
 
   void _selectTab(int idx) {
     final isVisible = ref.read(appBarVisibilityProvider);
@@ -58,6 +58,16 @@ class _ScaffoldForMobileState extends ConsumerState<ScaffoldForMobile> {
         ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
       }
     }
+  }
+
+  //? da li logout treba da bude async
+  void _logout() async {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+      (Route<dynamic> route) => false, // This removes all previous routes
+    );
+
+    await ref.read(authServiceProvider).logout();
   }
 
   @override
@@ -101,14 +111,7 @@ class _ScaffoldForMobileState extends ConsumerState<ScaffoldForMobile> {
                               .copyWith(fontSize: 19),
                         ),
                         value: "Logout",
-                        onTap: () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => const LoginPage()),
-                            (Route<dynamic> route) =>
-                                false, // This removes all previous routes
-                          );
-                        },
+                        onTap: _logout,
                         child: const Text("Logout"),
                       )
                     ];

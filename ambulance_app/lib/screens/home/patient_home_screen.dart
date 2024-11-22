@@ -1,5 +1,6 @@
-import 'package:ambulance_app/navigation/observer.dart';
+import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/navigation/provider.dart';
+import 'package:ambulance_app/providers/basic_user_provider.dart';
 import 'package:ambulance_app/providers/input_monitor_provider.dart';
 import 'package:ambulance_app/screens/map_screen.dart';
 import 'package:ambulance_app/screens/questions/trauma_type_screen.dart';
@@ -28,6 +29,7 @@ class _PatientHomeScreenState extends ConsumerState<PatientHomeScreen>{
   @override
   Widget build(BuildContext context) {
     final shouldMonitor = ref.read(userInputMonitoringProvider.notifier);
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end, 
       children: [

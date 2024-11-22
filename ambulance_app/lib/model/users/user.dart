@@ -6,6 +6,13 @@ enum UserRole {
   VEHICLE_OPERATOR,
 }
 
+UserRole getUserRole(String role) {
+  return UserRole.values.firstWhere(
+    (e) => e.toString().split('.').last == role,
+    orElse: () => UserRole.DISPATCHER,
+  );
+}
+
 class User {
   int? id;
   String firstname;
@@ -26,7 +33,11 @@ class User {
     required this.role,
   });
 
-  User copyWith({String? firstname, String? lastname, String? password,DateTime? dateOfBirth}) {
+  User copyWith(
+      {String? firstname,
+      String? lastname,
+      String? password,
+      DateTime? dateOfBirth}) {
     return User(
         firstname: firstname ?? this.firstname,
         lastname: lastname ?? this.lastname,

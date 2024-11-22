@@ -8,8 +8,6 @@ import 'package:go_router/go_router.dart';
 class NavDrawer extends StatelessWidget {
 
   NavDrawer({super.key});
-  
-  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {

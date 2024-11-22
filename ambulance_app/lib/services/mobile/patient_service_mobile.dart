@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:ambulance_app/config.dart';
 import 'package:ambulance_app/main.dart';
+import 'package:ambulance_app/providers/basic_user_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:ambulance_app/model/users/patient.dart';
@@ -40,9 +42,11 @@ class PatientService extends PatientServiceAbstract{
   @override
   Future<void> update(Patient patient) async {
     final uri = Uri.parse('$mobileUrl/patient');
-
+    final accessToken = "kita";
     try{
-
+      if(accessToken == null){
+        throw Exception("Access Token is null");
+      }
 
       final response = await _client.patch(
         uri,
