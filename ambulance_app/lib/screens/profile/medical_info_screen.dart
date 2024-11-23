@@ -6,6 +6,8 @@ import 'package:ambulance_app/navigation/provider.dart';
 import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/screens/allergy/add_allergy_screen.dart';
 import 'package:ambulance_app/screens/allergy/allergy_details_screen.dart';
+import 'package:ambulance_app/screens/disability/add_disability_screen.dart';
+import 'package:ambulance_app/screens/disability/disability_details_screen.dart';
 import 'package:ambulance_app/screens/disease/add_disease_screen.dart';
 import 'package:ambulance_app/screens/disease/disease_details_screen.dart';
 import 'package:ambulance_app/screens/operation/add_operation_screen.dart';
@@ -51,11 +53,11 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
     _scrollController.dispose();
   }
 
-   void _rotateIcon() {
+  void _rotateIcon() {
     setState(() {
-      if(!_showButtons){
-      _rotationAngle += 0.5;
-      }else{
+      if (!_showButtons) {
+        _rotationAngle += 0.5;
+      } else {
         _rotationAngle = -0.5;
       }
     });
@@ -92,8 +94,13 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
         });
   }
 
-  Future<bool?> _confirmBloodtypeModal() async{
-   bool? result = await showDialog<bool>(
+  void _addDisability() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (ctx) => const AddDisabilityScreen()));
+  }
+
+  Future<bool?> _confirmBloodtypeModal() async {
+    bool? result = await showDialog<bool>(
         context: context,
         builder: (ctx) {
           return const MyDialog();
@@ -146,12 +153,14 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                     height: 60,
                   ),
                   ElevatedButton(
-                      onPressed: () async{
+                      onPressed: () async {
                         var nav = Navigator.of(context);
                         bool? result = await _confirmBloodtypeModal();
 
-                        if(result == true){
-                          ref.read(patientProvider.notifier).updateBloodType(_selectedBloodType!);
+                        if (result == true) {
+                          ref
+                              .read(patientProvider.notifier)
+                              .updateBloodType(_selectedBloodType!);
                         }
 
                         nav.pop();
@@ -189,11 +198,10 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
         ),
       ),
       body: Container(
-        constraints: BoxConstraints(
-          minHeight: MediaQuery.of(context).size.height
-        ),
+        constraints:
+            BoxConstraints(minHeight: MediaQuery.of(context).size.height),
         child: Padding(
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
           child: Stack(
             alignment: Alignment.bottomRight,
             children: [
@@ -211,7 +219,58 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                                 context, "Blood Type", patient!.bloodType),
                           ),
                           buildFormattedTextField(
-                              context, "Gender", patient.gender)
+                              context, "Gender", patient.gender),
+                          InkWell(
+                            onTap: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (ctx) => DisabilityDetailsScreen(
+                                      disabilites: patient.disabilites.toList()));
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(10, 4, 10, 15),
+                              child: SizedBox(
+                                height: 62,
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Disabilities",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium,
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: patient.disabilites.isEmpty
+                                          ? [
+                                              const SizedBox.shrink()
+                                            ]
+                                          : [
+                                              ...patient.disabilites.map((e) {
+                                                final isFirst = patient.disabilites.toList().indexOf(e) == 0;
+                                                return Padding(
+                                                  padding: isFirst ? const EdgeInsets.all(0) : const EdgeInsets.only(left: 5),
+                                                  child: Image.asset(
+                                                    e.iconUrl,
+                                                    width: 28,
+                                                    height: 28,
+                                                    color:
+                                                        const Color.fromARGB(255, 21, 21, 21),
+                                                  ),
+                                                );
+                                              }),
+                                            ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       buildFormattedTextField(context, "Past Operations", ""),
@@ -222,6 +281,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                               child: Text("No operations"),
                             )
                           : ListView.builder(
+                              reverse: true,
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount:
@@ -232,11 +292,12 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                                     .trim();
                                 if (operation!.isEmpty) return null;
                                 return CustomListTile(
-                                  title: operation!,
+                                  title: operation,
                                   onPressed: () {
                                     showModalBottomSheet(
                                         context: context,
-                                        builder: (ctx) => OperationDetailsScreen(
+                                        builder: (ctx) =>
+                                            OperationDetailsScreen(
                                               name: operation,
                                             ));
                                   },
@@ -253,6 +314,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                               child: Text("No alergies"),
                             )
                           : ListView.builder(
+                              reverse: true,
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: patient.alergies.length,
@@ -265,7 +327,6 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                                       context: context,
                                       builder: (ctx) => AllergyDetailsScreen(
                                         allergy: patient.alergies[idx],
-                                       
                                       ),
                                     );
                                   },
@@ -282,6 +343,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                               child: Text("No diseases"),
                             )
                           : ListView.builder(
+                              reverse: true,
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: patient.diseases.length,
@@ -362,6 +424,17 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
                             _addDisease();
                           },
                           label: const Text("Add Disease"),
+                          icon: const Icon(Icons.add),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            _toggleButtons();
+                            _addDisability();
+                          },
+                          label: const Text("Add Disability"),
                           icon: const Icon(Icons.add),
                         ),
                         const SizedBox(

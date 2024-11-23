@@ -1,4 +1,5 @@
 import 'package:ambulance_app/model/allergy.dart';
+import 'package:ambulance_app/model/disability.dart';
 import 'package:ambulance_app/model/disease.dart';
 import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/model/users/user.dart';
@@ -68,6 +69,18 @@ class PatientNotifier extends StateNotifier<Patient?>{
 
     final updatedOperations = "${state!.pastOperations},$name";
     state = state!.copyWith(pastOperations: updatedOperations);
+  }
+
+  void addDisabilites(List<Disability> disabilites){
+    if(state == null) return;
+    final updatedDisabilites = {...state!.disabilites,...disabilites};
+    state = state!.copyWith(disabilites: updatedDisabilites);
+  }
+
+  void removeDisability(Disability disability){
+    if(state == null) return;
+    final updatedDisabilites = state!.disabilites.where((e) => e.id != disability.id).toSet();
+    state = state!.copyWith(disabilites: updatedDisabilites);
   }
 
 }

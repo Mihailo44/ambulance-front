@@ -43,6 +43,8 @@ class CustomListTile<T> extends StatelessWidget {
               Icons.add,
               size: 18,
             ),
+            backgroundColor: const Color.fromARGB(255, 41, 141, 240),
+            overlayColor: const Color.fromARGB(255, 112, 181, 250),
           );
         }
       default:
@@ -89,7 +91,7 @@ class CustomListTile<T> extends StatelessWidget {
             ),
           ),
           trailing: mode == Mode.none ? null : _buildTrailing(mode),
-          splashColor: const Color.fromARGB(255, 198, 242, 255),
+          splashColor: mode == Mode.delete ? const Color.fromARGB(255, 255, 198, 198) : const Color.fromARGB(255, 198, 242, 255),
           onTap: mode ==
                   Mode.display //* samo display jer mozes da kliknes na samu karticu i treba da otvori informacije
               ? () {

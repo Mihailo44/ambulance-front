@@ -1,10 +1,12 @@
 import 'package:ambulance_app/generic_widgets/custom_card.dart';
 import 'package:ambulance_app/model/allergy.dart';
+import 'package:ambulance_app/model/disability.dart';
 import 'package:ambulance_app/model/disease.dart';
 import 'package:ambulance_app/model/medication.dart';
 import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/navigation/provider.dart';
+import 'package:ambulance_app/providers/disability_provider.dart';
 import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/screens/profile/medical_info_screen.dart';
 import 'package:ambulance_app/screens/profile/user_info_screen.dart';
@@ -14,33 +16,34 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class PatientProfile extends ConsumerWidget {
   const PatientProfile({super.key});
 
-  Patient _setupDummyPatient() {
+  Patient _setupDummyPatient(WidgetRef ref) {
     User user = User(
-        firstname: "Boban",
-        lastname: "Rajovic",
-        password: "Rerna",
+        firstname: "Miran",
+        lastname: "Miran",
+        password: "sifra",
         dateOfBirth: DateTime.now(),
         role: UserRole.PATIENT);
 
     List<Allergy> alergies = [
       Allergy(
-          allergen: "ugly hoes",
+          allergen: "Lemonade",
           description:
               "Allergies are immune system reactions to substances that are typically harmless to most people, such as pollen, food, or medications. When exposed to an allergen, the body can produce symptoms ranging from mild (like sneezing or itching) to severe, potentially causing life-threatening anaphylaxis.",
           medications: [Medication(name: "Bromazepam", weeklyDosage: 3)]),
       Allergy(
-          allergen: "fake niggas",
+          allergen: "Apples",
           description: "I just can't",
           medications: [Medication(name: "Hennessy", weeklyDosage: 12)])
     ];
 
     List<Disease> diseases = [
-      Disease(name: "Jealosy", medications: []),
+      Disease(name: "Cold", medications: [
+        Medication(name: "Ibuprofren", weeklyDosage: 3)
+      ]),
       Disease(name: "Revertiligo", medications: []),
-      Disease(
-          name: "Alcoholism",
-          medications: [Medication(name: "Heroin", weeklyDosage: 3)]),
     ];
+
+    Set<Disability> disabilites = {ref.read(disabilityProvider)[0]};
 
     Patient patient = Patient(
         user: user,
@@ -51,7 +54,8 @@ class PatientProfile extends ConsumerWidget {
         yearOfBirth: "2001",
         pastOperations: "Knee operation,Back surgery,Leg surgery",
         alergies: alergies,
-        diseases: diseases);
+        diseases: diseases,
+        disabilites: disabilites);
 
     return patient;
   }
@@ -59,7 +63,7 @@ class PatientProfile extends ConsumerWidget {
   void _goToMedicalInfo(WidgetRef ref, BuildContext context) {
     ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
 
-    final patient = _setupDummyPatient();
+    final patient = _setupDummyPatient(ref);
     ref.read(patientProvider.notifier).setPatient(patient);
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (ctx) => const MedicalInfoScreen()));
@@ -67,7 +71,7 @@ class PatientProfile extends ConsumerWidget {
 
   void _goToUserInfo(WidgetRef ref,BuildContext context){
     ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
-            final patient = _setupDummyPatient();
+            final patient = _setupDummyPatient(ref);
             ref.read(patientProvider.notifier).setPatient(patient);
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (ctx) => const UserInfoScreen()));

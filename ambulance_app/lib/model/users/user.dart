@@ -8,7 +8,7 @@ enum UserRole {
 
 UserRole getUserRole(String role) {
   return UserRole.values.firstWhere(
-    (e) => e.toString().split('.').last == role,
+    (e) => e.toString() == role,
     orElse: () => UserRole.DISPATCHER,
   );
 }

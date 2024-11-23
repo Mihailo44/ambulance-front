@@ -1,6 +1,8 @@
 import 'package:ambulance_app/model/allergy.dart';
+import 'package:ambulance_app/model/disability.dart';
 import 'package:ambulance_app/model/disease.dart';
 import 'package:ambulance_app/model/users/user.dart';
+
 
 class Patient {
   User user;
@@ -12,6 +14,7 @@ class Patient {
   List<Allergy> alergies;
   List<Disease> diseases;
   String? pastOperations;
+  Set<Disability> disabilites;
 
   Patient({
     required this.user,
@@ -22,9 +25,11 @@ class Patient {
     required this.yearOfBirth,
     List<Allergy>? alergies,
     List<Disease>? diseases,
+    Set<Disability>? disabilites,
     this.pastOperations,
   })  : alergies = alergies ?? [],
-        diseases = diseases ?? [];
+        diseases = diseases ?? [],
+        disabilites = disabilites ?? {};
 
   Patient copyWith(
       {
@@ -35,7 +40,9 @@ class Patient {
       String? gender,
       List<Allergy>? allergies,
       List<Disease>? diseases,
-      String? pastOperations}) {
+      String? pastOperations,
+      Set<Disability>? disabilites
+      }) {
     return Patient(
         user: user ?? this.user,
         contactNumber: contactNumber ?? this.contactNumber,
@@ -45,6 +52,7 @@ class Patient {
         alergies: allergies ?? this.alergies,
         diseases: diseases ?? this.diseases,
         pastOperations: pastOperations ?? this.pastOperations,
+        disabilites: disabilites ?? this.disabilites,
         yearOfBirth: yearOfBirth);
   }
 
@@ -57,7 +65,11 @@ class Patient {
         bloodType: json['blood_type'],
         gender: json['gender'],
         yearOfBirth: json['year_of_birth'],
-        pastOperations: json['past_operations']);
+        pastOperations: json['past_operations'],
+        alergies: (json['alergies'] as List)
+        .map((alergyJson) => Allergy.fromJson(alergyJson))
+        .toList(),
+        );
   }
 
   Map<String, dynamic> toJson() {

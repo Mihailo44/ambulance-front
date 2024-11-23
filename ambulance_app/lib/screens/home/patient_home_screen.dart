@@ -1,4 +1,3 @@
-import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/navigation/provider.dart';
 import 'package:ambulance_app/providers/basic_user_provider.dart';
 import 'package:ambulance_app/providers/input_monitor_provider.dart';
