@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:ambulance_app/config.dart';
-import 'package:ambulance_app/main.dart';
+import 'package:ambulance_app/model/disability.dart';
 import 'package:ambulance_app/providers/basic_user_provider.dart';
+import 'package:ambulance_app/providers/disability_provider.dart';
+import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,6 +14,14 @@ import 'package:ambulance_app/services/abstracts/patient_service_abstract.dart';
 
 class PatientService extends PatientServiceAbstract{
 
+  final ProviderContainer container;
+  PatientService._privateConstructor(this.container);
+
+  static PatientService? _instance;
+  factory PatientService({required ProviderContainer container}){
+    return _instance ??= PatientService._privateConstructor(container);
+  }
+  
   final _client = http.Client();
 
   @override
@@ -35,26 +45,25 @@ class PatientService extends PatientServiceAbstract{
       return false;
 
     }catch(error){
-      rethrow;
+      print(error.toString());
+      return false;
     }
   }
 
-  @override
-  Future<void> update(Patient patient) async {
-    final uri = Uri.parse('$mobileUrl/patient');
-    final accessToken = "kita";
-    try{
-      if(accessToken == null){
-        throw Exception("Access Token is null");
-      }
+  
 
+  @override
+  Future<void> update(Patient updatedPatient) async {
+    final uri = Uri.parse('$mobileUrl/patient');
+    final accessToken = container.read(basicUserProvider)!.accessToken;
+    try{
       final response = await _client.patch(
         uri,
         headers: {
           'Content-Type':'application/json',
           'Authorization':'Bearer $accessToken'
         },
-        body: json.encode(patient)
+        body: json.encode(updatedPatient)
       );
 
       if (response.statusCode == 200){
@@ -63,6 +72,51 @@ class PatientService extends PatientServiceAbstract{
 
     }catch(error){
       rethrow;
+    }
+  }
+  
+  @override
+  Future<bool> getByUsername(String username) async {
+    final uri = Uri.parse('$mobileUrl/patient/$username');
+    final accessToken = container.read(basicUserProvider)!.accessToken;
+    try{
+      final response = await _client.get(
+        uri,
+        headers: {
+          'Authorization':'Bearer $accessToken'
+        },
+      );
+
+      if(response.statusCode == 200){
+
+        final decodedResponse = json.decode(response.body);
+        Patient patient = Patient.fromJson(decodedResponse);
+        final List<String> disabilities = (decodedResponse['disabilities'] as List<dynamic>)
+        .map((item) => item.toString())
+        .toList();
+
+        final Set<Disability> disabilities1 = {};
+
+        for(String s in disabilities){
+          for(Disability d in container.read(disabilityProvider)){
+            if(s == d.id.toString()){
+              disabilities1.add(d);
+            }
+          }
+        }
+        
+        final updatedPatient = patient.copyWith(disabilites: disabilities1);
+        container.read(patientProvider.notifier).setPatient(updatedPatient);
+
+        return true;
+
+      }else{
+        return false;
+      }
+
+    } catch(error){
+      print(error.toString());
+      return false;
     }
   }
 

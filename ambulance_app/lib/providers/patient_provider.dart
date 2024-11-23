@@ -13,10 +13,14 @@ class PatientNotifier extends StateNotifier<Patient?>{
     state = patient;
   }
 
-  void updateUserInfo({String? firstname,String? lastname,String? password,String? contactNumber,String? emergencyContact,DateTime? dateOfBirth}){
-    if(state == null) return;
+  void reset(){
+    state = null;
+  }
 
-    User updatedUser = state!.user.copyWith(firstname: firstname,lastname: lastname,password: password,dateOfBirth: dateOfBirth);
+  void updateUserInfo({String? firstname,String? lastname,String? password,String? contactNumber,String? emergencyContact,DateTime? dateOfBirth}){
+    if(state == null || state!.user == null) return;
+
+    User updatedUser = state!.user!.copyWith(firstname: firstname,lastname: lastname,password: password,dateOfBirth: dateOfBirth);
     state = state!.copyWith(contactNumber: contactNumber,emergencyContact: emergencyContact,user: updatedUser);
   }
 

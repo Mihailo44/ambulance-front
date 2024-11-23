@@ -64,7 +64,7 @@ class _ScaffoldForMobileState extends ConsumerState<ScaffoldForMobile> {
   void _logout() async {
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => const LoginPage()),
-      (Route<dynamic> route) => false, // This removes all previous routes
+      (Route<dynamic> route) => false,
     );
 
     await ref.read(authServiceProvider).logout();

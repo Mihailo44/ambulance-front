@@ -3,7 +3,9 @@ import 'package:ambulance_app/generic_widgets/my_dialog.dart';
 import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/navigation/provider.dart';
+import 'package:ambulance_app/providers/basic_user_provider.dart';
 import 'package:ambulance_app/providers/patient_provider.dart';
+import 'package:ambulance_app/providers/service_provider.dart';
 import 'package:ambulance_app/screens/allergy/add_allergy_screen.dart';
 import 'package:ambulance_app/screens/allergy/allergy_details_screen.dart';
 import 'package:ambulance_app/screens/disability/add_disability_screen.dart';
@@ -24,10 +26,10 @@ class MedicalInfoScreen extends ConsumerStatefulWidget {
   ConsumerState<MedicalInfoScreen> createState() => _MedicalInfoScreenState();
 }
 
-class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
-    with SingleTickerProviderStateMixin {
+class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>{
   final ScrollController _scrollController = ScrollController();
   late Patient patient;
+  bool _isLoading = true;
   bool _showButtons = false;
   double _rotationAngle = 0;
   final List<String> _bloodTypes = [
@@ -45,6 +47,27 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
   @override
   void initState() {
     super.initState();
+    if(ref.read(patientProvider) == null){
+      print("provider je null");
+      _getPatient();
+    }else{
+      _isLoading = false;
+    }
+  }
+
+  void _getPatient() async {
+     final result = await ref
+        .read(patientServiceProvider)
+        .getByUsername(ref.read(basicUserProvider)!.username);
+
+    if(result){
+      setState(() {
+        _isLoading = !_isLoading;
+      });
+    }else{
+      if(!context.mounted) return;
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -177,27 +200,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
   Widget build(BuildContext context) {
     final patient = ref.watch(patientProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: const Color.fromARGB(255, 255, 249, 234),
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-            iconSize: 32,
-            color: Colors.amber,
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              if (Navigator.of(context).canPop()) {
-                ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
-                Navigator.of(context).pop();
-              }
-            }),
-        title: Text(
-          "Medical Information",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-      ),
-      body: Container(
+    Widget content = _isLoading ? const Center(child: CircularProgressIndicator()) : Container(
         constraints:
             BoxConstraints(minHeight: MediaQuery.of(context).size.height),
         child: Padding(
@@ -456,7 +459,29 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen>
             ],
           ),
         ),
+      );
+
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: const Color.fromARGB(255, 255, 249, 234),
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+            iconSize: 32,
+            color: Colors.amber,
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
+                Navigator.of(context).pop();
+              }
+            }),
+        title: Text(
+          "Medical Information",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
       ),
+      body: content,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.small(
         onPressed: _scrollToBottom,

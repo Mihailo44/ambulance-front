@@ -26,11 +26,11 @@ class _UpdateUserInfoScreenState extends ConsumerState<UpdateUserInfoScreen>{
    @override
   void initState() {
     super.initState();
-    _firstnameController.text = widget.patient.user.firstname;
-    _lastnameController.text = widget.patient.user.lastname;
+    _firstnameController.text = widget.patient.user!.firstname;
+    _lastnameController.text = widget.patient.user!.lastname;
     _dateOfBirthController.text =
-        widget.patient.user.dateOfBirth.toString();
-    _passwordController.text = widget.patient.user.password;
+        widget.patient.user!.dateOfBirth.toString();
+    _passwordController.text = widget.patient.user!.password;
     _contactController.text = widget.patient.contactNumber;
     _emergencyContactController.text = widget.patient.closePersonContact;
   }

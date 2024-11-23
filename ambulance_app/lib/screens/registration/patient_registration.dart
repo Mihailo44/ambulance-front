@@ -3,21 +3,22 @@ import 'package:ambulance_app/model/disease.dart';
 import 'package:ambulance_app/model/medication.dart';
 import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/model/users/user.dart';
+import 'package:ambulance_app/providers/service_provider.dart';
 import 'package:ambulance_app/screens/auth/account_activation_screen.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
-import 'package:ambulance_app/services/patient_service.dart';
 import 'package:ambulance_app/util/dateFormater.dart';
 import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PatientRegistration extends StatefulWidget {
+class PatientRegistration extends ConsumerStatefulWidget {
   const PatientRegistration({super.key});
 
   @override
-  State<PatientRegistration> createState() => PatientRegistrationState();
+  ConsumerState<PatientRegistration> createState() => PatientRegistrationState();
 }
 
-class PatientRegistrationState extends State<PatientRegistration> {
+class PatientRegistrationState extends ConsumerState<PatientRegistration> {
   final _formKey = GlobalKey<FormState>();
   final _firstnameController = TextEditingController();
   final _lastnameController = TextEditingController();
@@ -43,8 +44,6 @@ class PatientRegistrationState extends State<PatientRegistration> {
   String? _selectedBloodType = "";
 
   final List<String> _alergies = [""];
-
-  final _patientService = PatientService();
 
   @override
   void dispose() {
@@ -150,7 +149,7 @@ class PatientRegistrationState extends State<PatientRegistration> {
 
     final navigator = Navigator.of(context);
     final newPatient = _setupDummyPatient();
-    bool isSuccessfull = await _patientService.register(newPatient);
+    bool isSuccessfull = await ref.read(patientServiceProvider).register(newPatient);
 
     if (!mounted) return;
 

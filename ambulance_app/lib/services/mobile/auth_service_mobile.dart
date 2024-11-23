@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/providers/basic_user_provider.dart';
+import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/services/abstracts/auth_service_abstract.dart';
 import 'package:ambulance_app/config.dart';
 import 'package:ambulance_app/model/users/basic_user_info.dart';
@@ -58,7 +59,7 @@ class AuthService extends AuthServiceAbstract {
         
       }
     } catch (error) {
-      print("nece");
+      print(error.toString());
     }
   }
 
@@ -114,28 +115,31 @@ class AuthService extends AuthServiceAbstract {
 
       }
     } catch (error) {
-      throw error;
+      print(error.toString());
     }
   }
 
   @override
   Future<void> logout() async {
-    final url = Uri.parse('$mobileUrl/logout');
-    final accessToken = container.read(basicUserProvider.notifier).state?.accessToken;
+   
     try {
+      final url = Uri.parse('$mobileUrl/logout');
+      final accessToken = container.read(basicUserProvider.notifier).state?.accessToken;
+      final String? refreshToken = await storage.read(key: 'refresh-token');
       final response = await client.post(
         url,
         headers: {
           'Authorization': 'Bearer $accessToken',
+          'RefreshToken': refreshToken ?? '',
         },
       );
 
       if (response.statusCode == 200) {
-        final basicUser = container.read(basicUserProvider.notifier);
-        basicUser.dispose();
+        container.invalidate(basicUserProvider);
+        container.invalidate(patientProvider);
       }
     } catch (error) {
-      rethrow;
+      print(error.toString());
     }
   }
 }

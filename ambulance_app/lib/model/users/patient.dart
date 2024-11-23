@@ -3,9 +3,8 @@ import 'package:ambulance_app/model/disability.dart';
 import 'package:ambulance_app/model/disease.dart';
 import 'package:ambulance_app/model/users/user.dart';
 
-
 class Patient {
-  User user;
+  User? user;
   String contactNumber;
   String closePersonContact;
   String bloodType;
@@ -17,7 +16,7 @@ class Patient {
   Set<Disability> disabilites;
 
   Patient({
-    required this.user,
+    this.user,
     required this.contactNumber,
     required this.closePersonContact,
     required this.bloodType,
@@ -32,8 +31,7 @@ class Patient {
         disabilites = disabilites ?? {};
 
   Patient copyWith(
-      {
-      User? user,
+      {User? user,
       String? contactNumber,
       String? emergencyContact,
       String? bloodType,
@@ -41,8 +39,7 @@ class Patient {
       List<Allergy>? allergies,
       List<Disease>? diseases,
       String? pastOperations,
-      Set<Disability>? disabilites
-      }) {
+      Set<Disability>? disabilites}) {
     return Patient(
         user: user ?? this.user,
         contactNumber: contactNumber ?? this.contactNumber,
@@ -56,25 +53,25 @@ class Patient {
         yearOfBirth: yearOfBirth);
   }
 
-  //TODO Namestiti da se popune alergije i bolesti
   factory Patient.fromJson(Map<String, dynamic> json) {
     return Patient(
-        user: User.fromJson(json['user']),
-        contactNumber: json['contact_number'],
-        closePersonContact: json['close_person_contact'],
-        bloodType: json['blood_type'],
-        gender: json['gender'],
-        yearOfBirth: json['year_of_birth'],
-        pastOperations: json['past_operations'],
-        alergies: (json['alergies'] as List)
-        .map((alergyJson) => Allergy.fromJson(alergyJson))
-        .toList(),
-        );
+      contactNumber: json['contact_number'],
+      closePersonContact: json['close_person_contact'],
+      bloodType: json['blood_type'],
+      gender: json['gender'],
+      yearOfBirth: json['year_of_birth'].toString(),
+      pastOperations: json['past_operations'],
+      alergies: (json['alergies'] as List)
+      .map((allergyJson) => Allergy.fromJson(allergyJson))
+      .toList(),
+      diseases: (json['diseases'] as List)
+      .map((e) => Disease.fromJson(e)).toList(),
+    );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'user': user.toJson(),
+      'user': user?.toJson(),
       'contact_number': contactNumber,
       'close_person_contact': closePersonContact,
       'year_of_birth': int.parse(yearOfBirth),

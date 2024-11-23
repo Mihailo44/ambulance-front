@@ -39,13 +39,13 @@ class UserInfoScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             buildFormattedTextField(
-                context, "Firstname", patient!.user.firstname),
+                context, "Firstname", patient!.user!.firstname),
             buildFormattedTextField(
-                context, "Lastname", patient.user.lastname),
+                context, "Lastname", patient.user!.lastname),
             buildFormattedTextField(context, "Year of Birth",
                 patient.yearOfBirth.toString()),
             buildFormattedTextField(
-                context, "Password", patient.user.password),
+                context, "Password", patient.user!.password),
             buildFormattedTextField(
                 context, "Contact Number", patient.contactNumber),
             buildFormattedTextField(
