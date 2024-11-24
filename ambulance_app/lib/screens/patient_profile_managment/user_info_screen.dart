@@ -22,7 +22,11 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
   @override
   void initState(){
     super.initState();
-    _getPatient();
+    if (ref.read(patientProvider)?.user == null) {
+         _getPatient();
+    } else {
+      _isLoading = false;
+    }
   }
 
  void _getPatient() async {
@@ -30,11 +34,11 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
         .read(patientServiceProvider)
         .getByUsername(ref.read(basicUserProvider)!.username);
 
-    result = await ref
+     await ref
       .read(authServiceProvider)
       .getByUsername();
 
-    if (result) {
+    if (result != null) {
       setState(() {
         _isLoading = !_isLoading;
         _error = false;
