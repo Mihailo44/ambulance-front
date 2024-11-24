@@ -16,13 +16,9 @@ class TraumaTypeCard extends StatelessWidget {
         splashColor: const Color.fromARGB(255, 168, 246, 208),
         borderRadius: BorderRadius.circular(12),
         child: Card(
-<<<<<<< HEAD
           //surfaceTintColor: Colors.green,
           color: const Color.fromARGB(255, 255, 254, 248),
           elevation: 4,
-=======
-          surfaceTintColor: Colors.green,
->>>>>>> main
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Container(
@@ -32,11 +28,7 @@ class TraumaTypeCard extends StatelessWidget {
                     maxLines: label.toUpperCase() == "ELECTROCUTION" || label.toUpperCase() == "UNCONSCIOUSNESS" ? 1 : 2,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-<<<<<<< HEAD
                       overflow: TextOverflow.visible,
-=======
-                      overflow: TextOverflow.ellipsis,
->>>>>>> main
                       fontSize: 22,
                       fontWeight: FontWeight.w500,
                       color: Color.fromARGB(255, 2, 41, 108),

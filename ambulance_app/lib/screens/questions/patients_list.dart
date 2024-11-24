@@ -1,7 +1,6 @@
 import 'package:ambulance_app/generic_widgets/custom_list_tile.dart';
 import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/model/users/unregistered_user.dart';
-<<<<<<< HEAD
 import 'package:ambulance_app/providers/ambulance_request_provider.dart';
 import 'package:ambulance_app/screens/questions/add_patient_screen.dart';
 import 'package:ambulance_app/screens/questions/location_dialog_screen.dart';
@@ -29,37 +28,12 @@ class _VictimListState extends ConsumerState<VictimList> {
   @override
   void initState() {
     super.initState();
-=======
-import 'package:ambulance_app/screens/questions/add_patient_screen.dart';
-import 'package:ambulance_app/util/snackbar.dart';
-import 'package:flutter/material.dart';
-
-class VictimList extends StatefulWidget {
-  const VictimList({super.key});
-
-  @override
-  State<VictimList> createState() => _VictimListState();
-}
-
-class _VictimListState extends State<VictimList> {
-  final List<String> patients = [];
-  final List<UnregisteredUser> unregistered = [];
-
-  @override
-  void initState() {
-    super.initState();
-    patients.add("P1");
->>>>>>> main
   }
 
   void _addPatient(String patient) {
     if (patient.isNotEmpty) {
       setState(() {
-<<<<<<< HEAD
         _patients.add(patient);
-=======
-        patients.add(patient);
->>>>>>> main
       });
     }
   }
@@ -106,13 +80,8 @@ class _VictimListState extends State<VictimList> {
                         onPressed: () {
                           setState(() {
                             //TODO umesto me staviti username
-<<<<<<< HEAD
                             if (!_patients.contains("me")) {
                               _patients.add("me");
-=======
-                            if (!patients.contains("me")) {
-                              patients.add("me");
->>>>>>> main
                             }
                           });
                         },
@@ -152,18 +121,13 @@ class _VictimListState extends State<VictimList> {
                     ),
                     Expanded(
                       flex: 1,
-<<<<<<< HEAD
                       child: _patients.isEmpty
-=======
-                      child: patients.isEmpty
->>>>>>> main
                           ? const Padding(
                               padding: EdgeInsets.fromLTRB(2, 50, 2, 0),
                               child: Text("No patients"))
                           : Scrollbar(
                               thickness: 7,
                               child: ListView.builder(
-<<<<<<< HEAD
                                 itemCount: _patients.length,
                                 itemBuilder: (ctx, idx) {
                                   return Dismissible(
@@ -173,28 +137,13 @@ class _VictimListState extends State<VictimList> {
                                       onPressed: () {
                                         setState(() {
                                           _patients.remove(_patients[idx]);
-=======
-                                itemCount: patients.length,
-                                itemBuilder: (ctx, idx) {
-                                  return Dismissible(
-                                    key: Key(patients[idx]),
-                                    child: CustomListTile(
-                                      title: patients[idx],
-                                      onPressed: () {
-                                        setState(() {
-                                          patients.remove(patients[idx]);
->>>>>>> main
                                         });
                                       },
                                       mode: Mode.delete,
                                     ),
                                     onDismissed: (direction) {
                                       setState(() {
-<<<<<<< HEAD
                                         _patients.remove(_patients[idx]);
-=======
-                                        patients.remove(patients[idx]);
->>>>>>> main
                                       });
                                     },
                                   );
@@ -202,7 +151,6 @@ class _VictimListState extends State<VictimList> {
                               ),
                             ),
                     ),
-<<<<<<< HEAD
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(20),
@@ -225,29 +173,6 @@ class _VictimListState extends State<VictimList> {
                       ),
                     ),
                     const SizedBox(height: 40,),
-=======
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(12, 35, 12, 18),
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.all(20),
-                          minimumSize: const Size(180, 70),
-                          backgroundColor:
-                              const Color.fromARGB(255, 7, 154, 180),
-                          foregroundColor: Colors.white,
-                        ),
-                        onPressed: () {
-                          if (patients.isEmpty) {
-                            showSnackBar(context, "Add patients first");
-                          }
-                        },
-                        icon: const Icon(Icons.send),
-                        label: const Text(
-                          "Send Request",
-                        ),
-                      ),
-                    ),
->>>>>>> main
                   ]),
             )
           : Row(
@@ -272,11 +197,7 @@ class _VictimListState extends State<VictimList> {
                           ),
                           onPressed: () {
                             setState(() {
-<<<<<<< HEAD
                               _patients.add("me");
-=======
-                              patients.add("me");
->>>>>>> main
                               //TODO umesto me staviti username
                             });
                             showModalBottomSheet(
@@ -330,11 +251,7 @@ class _VictimListState extends State<VictimList> {
                             foregroundColor: Colors.white,
                           ),
                           onPressed: () {
-<<<<<<< HEAD
                             if (_patients.isEmpty) {
-=======
-                            if (patients.isEmpty) {
->>>>>>> main
                               showSnackBar(context, "Add patients first");
                             }
                           },
@@ -363,7 +280,6 @@ class _VictimListState extends State<VictimList> {
                         child: Scrollbar(
                           thickness: 7,
                           child: ListView.builder(
-<<<<<<< HEAD
                             itemCount: _patients.length,
                             itemBuilder: (ctx, idx) {
                               return Dismissible(
@@ -373,28 +289,13 @@ class _VictimListState extends State<VictimList> {
                                   onPressed: () {
                                     setState(() {
                                       _patients.remove(_patients[idx]);
-=======
-                            itemCount: patients.length,
-                            itemBuilder: (ctx, idx) {
-                              return Dismissible(
-                                key: Key(patients[idx]),
-                                child: CustomListTile(
-                                  title: patients[idx],
-                                  onPressed: () {
-                                    setState(() {
-                                      patients.remove(patients[idx]);
->>>>>>> main
                                     });
                                   },
                                   mode: Mode.delete,
                                 ),
                                 onDismissed: (direction) {
                                   setState(() {
-<<<<<<< HEAD
                                     _patients.remove(_patients[idx]);
-=======
-                                    patients.remove(patients[idx]);
->>>>>>> main
                                   });
                                 },
                               );

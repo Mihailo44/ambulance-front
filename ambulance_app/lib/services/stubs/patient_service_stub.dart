@@ -14,13 +14,10 @@ class PatientService extends PatientServiceAbstract{
     throw UnimplementedError();
   }
   
-<<<<<<< HEAD
   @override
   Future<bool> getByUsername(String username) {
     // TODO: implement getByUsername
     throw UnimplementedError();
   }
   
-=======
->>>>>>> main
 }

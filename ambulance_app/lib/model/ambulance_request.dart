@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import 'package:ambulance_app/model/address.dart';
 import 'package:ambulance_app/model/response.dart';
 import 'package:ambulance_app/model/users/unregistered_user.dart';
@@ -63,19 +62,3 @@ class AmbulanceRequest {
     return formatter.format(createdAt!);
   }
 }
-=======
-
-import 'package:ambulance_app/util/dateFormater.dart';
-
-class AmbulanceRequest {
-  final DateTime createdAt;
-
-  AmbulanceRequest({
-    required this.createdAt
-  });
-
-  String get formatedCreationTimestamp {
-    return formatter.format(createdAt);
-  }
-}
->>>>>>> main

@@ -8,7 +8,6 @@ class Disease {
     required this.name,
     required this.medications,
   });
-<<<<<<< HEAD
 
   factory Disease.fromJson(Map<String, dynamic> json) {
     return Disease(
@@ -29,6 +28,3 @@ class Disease {
     };
   }
 }
-=======
-}
->>>>>>> main

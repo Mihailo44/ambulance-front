@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import 'package:ambulance_app/model/allergy.dart';
 import 'package:ambulance_app/model/disease.dart';
 import 'package:ambulance_app/model/medication.dart';
@@ -20,25 +19,6 @@ class PatientRegistration extends ConsumerStatefulWidget {
 }
 
 class PatientRegistrationState extends ConsumerState<PatientRegistration> {
-=======
-import 'package:ambulance_app/model/users/patient.dart';
-import 'package:ambulance_app/model/users/user.dart';
-import 'package:ambulance_app/screens/auth/account_activation_screen.dart';
-import 'package:ambulance_app/util/buildTextFormFields.dart';
-import 'package:ambulance_app/services/patient_service.dart';
-import 'package:ambulance_app/util/dateFormater.dart';
-import 'package:ambulance_app/util/snackbar.dart';
-import 'package:flutter/material.dart';
-
-class PatientRegistration extends StatefulWidget {
-  const PatientRegistration({super.key});
-
-  @override
-  State<PatientRegistration> createState() => PatientRegistrationState();
-}
-
-class PatientRegistrationState extends State<PatientRegistration> {
->>>>>>> main
   final _formKey = GlobalKey<FormState>();
   final _firstnameController = TextEditingController();
   final _lastnameController = TextEditingController();
@@ -47,13 +27,6 @@ class PatientRegistrationState extends State<PatientRegistration> {
   final _contactController = TextEditingController();
   final _emergencyContactController = TextEditingController();
   DateTime? _pickedDate;
-<<<<<<< HEAD
-=======
-  // final _allergenController = TextEditingController();
-  // final _allergyDescriptionController = TextEditingController();
-  // final _medicationNameController = TextEditingController();
-  // final _medicationDosageController = TextEditingController();
->>>>>>> main
 
   final List<String> _genders = ["Male", "Female"];
   String? _selectedGender = "";
@@ -72,11 +45,6 @@ class PatientRegistrationState extends State<PatientRegistration> {
 
   final List<String> _alergies = [""];
 
-<<<<<<< HEAD
-=======
-  final _patientService = PatientService();
-
->>>>>>> main
   @override
   void dispose() {
     super.dispose();
@@ -85,13 +53,6 @@ class PatientRegistrationState extends State<PatientRegistration> {
     _passwordController.dispose();
     _contactController.dispose();
     _emergencyContactController.dispose();
-<<<<<<< HEAD
-=======
-    // _allergenController.dispose();
-    // _allergyDescriptionController.dispose();
-    // _medicationNameController.dispose();
-    // _medicationDosageController.dispose();
->>>>>>> main
   }
 
   void _openDatePicker() {
@@ -134,7 +95,6 @@ class PatientRegistrationState extends State<PatientRegistration> {
     return newPatient;
   }
 
-<<<<<<< HEAD
   Patient _setupDummyPatient() {
     User user = User(
         firstname: "p",
@@ -177,8 +137,6 @@ class PatientRegistrationState extends State<PatientRegistration> {
     return patient;
   }
 
-=======
->>>>>>> main
   void _register() async {
     // if (!_formKey.currentState!.validate()) {
     //   return;
@@ -190,35 +148,22 @@ class PatientRegistrationState extends State<PatientRegistration> {
     // }
 
     final navigator = Navigator.of(context);
-<<<<<<< HEAD
     final newPatient = _setupDummyPatient();
     bool isSuccessfull = await ref.read(patientServiceProvider).register(newPatient);
 
     if (!mounted) return;
-=======
-    final newPatient = createPatient();
-    //bool isSuccessfull = await _patientService.register(newPatient);
-    bool isSuccessfull = true;
-
-    if(!mounted) return;
->>>>>>> main
 
     if (isSuccessfull) {
       showSnackBar(
         context,
         "You have registered successfully",
       );
-<<<<<<< HEAD
       navigator.pop();
       navigator.push(MaterialPageRoute(
         builder: (ctx) => AccountActivationScreen(
           phoneNumber: newPatient.contactNumber,
         ),
       ));
-=======
-      navigator.push(
-          MaterialPageRoute(builder: (ctx) => const AccountActivationScreen()));
->>>>>>> main
     } else {
       showSnackBar(
         context,
@@ -229,7 +174,6 @@ class PatientRegistrationState extends State<PatientRegistration> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     return Scaffold(
       body: GestureDetector(
         onTap: FocusScope.of(context).unfocus,
@@ -243,19 +187,6 @@ class PatientRegistrationState extends State<PatientRegistration> {
                 SizedBox(
                   height: 55.0,
                   width: MediaQuery.of(context).size.width,
-=======
-    return Material(
-      child: GestureDetector(
-        onTap: FocusScope.of(context).unfocus,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: FractionallySizedBox(
-            widthFactor: 0.85,
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 55.0,
->>>>>>> main
                 ),
                 Row(
                   children: [
@@ -320,24 +251,12 @@ class PatientRegistrationState extends State<PatientRegistration> {
                           buildTextFormField(
                               controller: _contactController,
                               labelText: "Contact"),
-<<<<<<< HEAD
                           buildTextFormField(
                               controller: _emergencyContactController,
                               labelText: "Emergency Contact"),
                           buildTextFormField(
                               controller: _passwordController,
                               labelText: "Password"),
-=======
-                  
-                          buildTextFormField(
-                              controller: _emergencyContactController,
-                              labelText: "Emergency Contact"),
-                  
-                          buildTextFormField(
-                              controller: _passwordController,
-                              labelText: "Password"),
-                  
->>>>>>> main
                           buildTextFormField(
                               controller: _repeatPasswordController,
                               labelText: "Repeat Password"),
@@ -370,11 +289,7 @@ class PatientRegistrationState extends State<PatientRegistration> {
                                 setState(() {
                                   _selectedBloodType = value;
                                 });
-<<<<<<< HEAD
                               }),
-=======
-                          }),
->>>>>>> main
                           const SizedBox(
                             height: 18.0,
                           ),
@@ -430,80 +345,6 @@ class PatientRegistrationState extends State<PatientRegistration> {
                           const SizedBox(
                             height: 15.0,
                           ),
-<<<<<<< HEAD
-=======
-                          // Container(
-                          //   child: Column(
-                          //     children: [
-                          //       OutlinedButton.icon(
-                          //         label: const Text("Add Allergies"),
-                          //         icon: const Icon(Icons.add),
-                          //         onPressed: () {
-                          //           showDialog(
-                          //               context: context,
-                          //               builder: (BuildContext context) {
-                          //                 return AlertDialog(
-                          //                     title: const Text("New Allergy"),
-                          //                     content: Container(
-                          //                       height: MediaQuery.of(context)
-                          //                               .size
-                          //                               .height *
-                          //                           0.5,
-                          //                       width: MediaQuery.of(context)
-                          //                               .size
-                          //                               .width *
-                          //                           0.85,
-                          //                       child: Form(
-                          //                           child: Column(
-                          //                         children: [
-                          //                           const SizedBox(
-                          //                             height: 15.0,
-                          //                           ),
-                          //                           buildTextFormField(
-                          //                               controller:
-                          //                                   _allergenController,
-                          //                               labelText: "Allergen"),
-                          //                           const SizedBox(
-                          //                             height: 15.0,
-                          //                           ),
-                          //                           buildTextFormField(
-                          //                               controller:
-                          //                                   _allergyDescriptionController,
-                          //                               labelText:
-                          //                                   "Description (optional)"),
-                          //                           const SizedBox(
-                          //                             height: 15.0,
-                          //                           ),
-                          //                           buildTextFormField(
-                          //                               controller:
-                          //                                   _medicationNameController,
-                          //                               labelText:
-                          //                                   "Medication Name"),
-                          //                           const SizedBox(
-                          //                             height: 15.0,
-                          //                           ),
-                          //                           buildTextFormField(
-                          //                               controller:
-                          //                                   _medicationDosageController,
-                          //                               labelText: "Weekly Dosage"),
-                          //                           const SizedBox(
-                          //                             height: 15.0,
-                          //                           ),
-                          //                           ElevatedButton(
-                          //                               onPressed: () {
-                          //                                 Navigator.pop(context);
-                          //                               },
-                          //                               child: const Text("Add"))
-                          //                         ],
-                          //                       )),
-                          //                     ));
-                          //               });
-                          //         },
-                          //       ),
-                          //    ],
-                          //  ),
-                          // )
->>>>>>> main
                         ],
                       )),
                 ),

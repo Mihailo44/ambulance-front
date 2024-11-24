@@ -16,10 +16,7 @@ class AnswerButton extends StatelessWidget {
           minimumSize: Size(MediaQuery.of(context).size.width * 0.7, 20),
           padding: const EdgeInsets.all(20.0),
           backgroundColor: const Color.fromARGB(250, 210, 227, 252),
-<<<<<<< HEAD
           elevation: 4,
-=======
->>>>>>> main
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),

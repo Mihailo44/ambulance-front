@@ -6,7 +6,6 @@ import 'package:ambulance_app/mock_data/questions_mock.dart';
 import 'package:ambulance_app/model/question.dart';
 import 'package:ambulance_app/model/quiz.dart';
 import 'package:ambulance_app/model/response.dart' as my;
-<<<<<<< HEAD
 import 'package:ambulance_app/providers/ambulance_request_provider.dart';
 import 'package:ambulance_app/screens/questions/patients_list.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
@@ -17,30 +16,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class QuestionsScreen extends ConsumerStatefulWidget {
-=======
-import 'package:ambulance_app/screens/questions/patients_list.dart';
-import 'package:ambulance_app/util/snackbar.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
-
-class QuestionsScreen extends StatefulWidget {
->>>>>>> main
   const QuestionsScreen({required this.traumaCause, super.key});
 
   final TraumaType traumaCause;
 
   @override
-<<<<<<< HEAD
   ConsumerState<QuestionsScreen> createState() => _QuestionsScreenState();
 }
 
 class _QuestionsScreenState extends ConsumerState<QuestionsScreen> {
-=======
-  State<QuestionsScreen> createState() => _QuestionsScreenState();
-}
-
-class _QuestionsScreenState extends State<QuestionsScreen> {
->>>>>>> main
   final List<Question> _questions = [];
   final List<my.Response> _responses = [];
   final _customAnswerController = TextEditingController();
@@ -62,15 +46,10 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
   @override
   void dispose() {
-<<<<<<< HEAD
-=======
-    //TODO obrisi listu odgovora
->>>>>>> main
     super.dispose();
     _customAnswerController.dispose();
   }
 
-<<<<<<< HEAD
   void _addAllResponses(){
       ref.read(ambulanceRequestProvider.notifier).setResponses(_responses);
   }
@@ -79,8 +58,6 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     ref.read(ambulanceRequestProvider.notifier).addResponse(response);
   }
 
-=======
->>>>>>> main
   void _previousQuestion() {
     if (questionIndex > 0) {
       setState(() {
@@ -95,25 +72,15 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     if (questionIndex < _questions.length - 1) {
       setState(() {
         questionIndex++;
-<<<<<<< HEAD
       });
     } else {
       _addAllResponses();
-=======
-        _customAnswerController.clear();
-      });
-    } else {
->>>>>>> main
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (ctx) => const VictimList()));
     }
   }
 
   void _answerQuestion(String answer) {
-<<<<<<< HEAD
-=======
-  
->>>>>>> main
     var response = my.Response(
         id: questionIndex,
         question: _questions[questionIndex].body,
@@ -124,7 +91,6 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         _responses[questionIndex].response = answer;
       }
     } else {
-<<<<<<< HEAD
       _responses.add(response);
       _addResponse(response);
     }
@@ -135,16 +101,6 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       });
     } else {
       _addAllResponses();
-=======
-        _responses.add(response);
-    }
-
-    if (questionIndex != _questions.length - 1) {
-      setState(() {
-        questionIndex++;
-      });
-    }else{
->>>>>>> main
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (ctx) => const VictimList()));
     }
@@ -152,7 +108,6 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
     return;
   }
 
-<<<<<<< HEAD
   void _openCustomAnswerModal() {
     showModalBottomSheet(
         context: context,
@@ -195,8 +150,6 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
         });
   }
 
-=======
->>>>>>> main
   @override
   Widget build(BuildContext context) {
     final Question currentQuestion = _questions[questionIndex];
@@ -223,11 +176,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(
-<<<<<<< HEAD
                 height: 30,
-=======
-                height: 35,
->>>>>>> main
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -236,10 +185,6 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                   currentQuestion.body,
                   textAlign: TextAlign.center,
                   softWrap: true,
-<<<<<<< HEAD
-=======
-                  //overflow: TextOverflow.ellipsis,
->>>>>>> main
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
@@ -252,27 +197,12 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                   },
                 );
               }),
-<<<<<<< HEAD
               AnswerButton(
                 answerText: "Custom Answer",
                 onTap: _openCustomAnswerModal,
               ),
               const SizedBox(
                 height: 15,
-=======
-              Padding(
-                padding: const EdgeInsets.fromLTRB(60, 15, 60, 20),
-                child: TextField(
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  autocorrect: true,
-                  controller: _customAnswerController,
-                  decoration: InputDecoration(
-                    hintText: "Custom answer",
-                    contentPadding: const EdgeInsets.all(2),
-                    hintStyle: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
->>>>>>> main
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
