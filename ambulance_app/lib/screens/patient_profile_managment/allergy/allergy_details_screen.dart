@@ -1,14 +1,19 @@
+import 'package:ambulance_app/generic_widgets/my_dialog.dart';
 import 'package:ambulance_app/model/allergy.dart';
+import 'package:ambulance_app/providers/patient_provider.dart';
+import 'package:ambulance_app/screens/patient_profile_managment/allergy/edit_allergy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AllergyDetailsScreen extends StatelessWidget {
+class AllergyDetailsScreen extends ConsumerWidget {
   const AllergyDetailsScreen({required this.allergy, super.key});
 
   final Allergy allergy;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    
     return Padding(
       padding: const EdgeInsets.all(14),
       child: Column(
@@ -43,7 +48,15 @@ class AllergyDetailsScreen extends StatelessWidget {
           const Spacer(),
           Center(
             child: ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (ctx) => EditAllergyScreen(
+                      allergy: allergy,
+                    ),
+                  ),
+                );
+              },
               label: const Text("Edit"),
               icon: const Icon(Icons.edit),
             ),
@@ -53,9 +66,17 @@ class AllergyDetailsScreen extends StatelessWidget {
           ),
           Center(
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 26),
+              padding: const EdgeInsets.only(bottom: 25),
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () async {
+                  var nav = Navigator.of(context);
+                  bool? result = await showDialog<bool>(
+                      context: context, builder: (ctx) => const MyDialog());
+                  if (result != null && result == true) {
+                    ref.read(patientProvider.notifier).removeAllergy(allergy);
+                    nav.pop();
+                  }
+                },
                 label: const Text("Delete"),
                 icon: const Icon(Icons.delete),
               ),

@@ -10,13 +10,21 @@ class Allergy {
 
   factory Allergy.fromJson(Map<String, dynamic> json) {
     return Allergy(
-      allergen: json['alergen'],
-      description: json['description'],
+      allergen: json['allergen'] ??= '',
+      description: json['description'] ??= '',
       medications: json['medications'] != null
           ? (json['medications'] as List)
               .map((med) => Medication.fromJson(med))
               .toList()
-          : null,
+          : [],
     );
+  }
+
+  Map<String,dynamic> toJson(){
+    return {
+      "allergen": allergen,
+      "description":description,
+      "medication":medications?.map((medication) => medication.toJson()).toList()
+    };
   }
 }

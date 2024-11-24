@@ -8,4 +8,23 @@ class Disease {
     required this.name,
     required this.medications,
   });
+
+  factory Disease.fromJson(Map<String, dynamic> json) {
+    return Disease(
+      name: json['name'],
+      medications: json['medications'] == null
+          ? []
+          : (json['medications'] as List)
+              .map((e) => Medication.fromJson(e))
+              .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "name": name,
+      "medications":
+          medications.map((medication) => medication.toJson()).toList()
+    };
+  }
 }

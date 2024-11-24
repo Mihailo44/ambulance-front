@@ -1,35 +1,33 @@
 import 'package:ambulance_app/generic_widgets/custom_list_tile.dart';
 import 'package:ambulance_app/main.dart';
+import 'package:ambulance_app/model/allergy.dart';
 import 'package:ambulance_app/model/medication.dart';
+import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
+import 'package:ambulance_app/util/close.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddAllergyScreen extends StatefulWidget {
-  const AddAllergyScreen({super.key});
+class EditAllergyScreen extends ConsumerStatefulWidget {
+  const EditAllergyScreen({required this.allergy,super.key});
+
+  final Allergy allergy;
 
   @override
-  State<AddAllergyScreen> createState() => _AddAllergyScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _EditAllergyScreenState();
 }
 
-class _AddAllergyScreenState extends State<AddAllergyScreen> {
+class _EditAllergyScreenState extends ConsumerState<EditAllergyScreen>{
+
   final List<Medication> _medications = [];
   final _allergenController = TextEditingController();
   final _additionalInformationController = TextEditingController();
   final _medicationNameController = TextEditingController();
   final _medicationUsageController = TextEditingController();
+  double  _medicationsBoxHeight = 0;
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    _allergenController.dispose();
-    _additionalInformationController.dispose();
-    _medicationNameController.dispose();
-    _medicationUsageController.dispose();
-  }
-
-  void _showAddMedication() {
+   void _showAddMedication() {
     FocusScope.of(context).unfocus();
     showModalBottomSheet(
         isDismissible: false,
@@ -96,6 +94,7 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
         });
   }
 
+
   void _addMedication() {
     if (_medicationNameController.text.isEmpty) return;
 
@@ -111,12 +110,45 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
     _medicationUsageController.clear();
     FocusScope.of(context).requestFocus(FocusNode());
     Navigator.of(context).pop();
+
+    setState(() {
+      _medicationsBoxHeight += 78;
+    });
   }
 
   void _removeMedication(String name) {
     setState(() {
       _medications.removeWhere((e) => e.name == name);
+      _medicationsBoxHeight-=78;
     });
+  }
+
+  void _saveAllergy(){
+    ref.read(patientProvider.notifier).removeAllergy(widget.allergy);
+    Allergy allergy = Allergy(allergen: _allergenController.text, description: _additionalInformationController.text,medications: _medications);
+    ref.read(patientProvider.notifier).addAllergy(allergy);
+    close(context);
+    close(context);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _allergenController.dispose();
+    _additionalInformationController.dispose();
+    _medicationNameController.dispose();
+    _medicationUsageController.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _allergenController.text = widget.allergy.allergen;
+    if(widget.allergy.medications != null){
+      _medications.addAll(widget.allergy.medications as List<Medication>);
+      _medicationsBoxHeight = _medications.length * 70;
+    }
+    _additionalInformationController.text = widget.allergy.description;
   }
 
   @override
@@ -151,7 +183,7 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
                 height: 10,
               ),
               Text(
-                "Add Allergy",
+                "Edit Allergy",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(
@@ -174,7 +206,7 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
                       ),
                     )
                   : SizedBox(
-                    height: 250,
+                    height: _medicationsBoxHeight,
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: _medications.length,
@@ -194,19 +226,16 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
                           );
                         }),
                   ),
-              Transform.translate(
-                offset: _medications.isNotEmpty && _medications.length <= 3 ? Offset(0, -190 + _medications.length * 65) : const Offset(0, 5),
-                child: Center(
-                  child: ElevatedButton.icon(
-                    onPressed: _showAddMedication,
-                    icon: const Icon(Icons.add),
-                    label: const Text("Add"),
-                  ),
+              const SizedBox(height: 20,),
+              Center(
+                child: ElevatedButton.icon(
+                  onPressed: _showAddMedication,
+                  icon: const Icon(Icons.add),
+                  label: const Text("Add"),
                 ),
               ),
-              const SizedBox(
-                height: 30,
-              ),
+              
+              const SizedBox(height: 30,),
               buildFormattedTextField(context, "Note (Optional)", ""),
               TextFormField(
                 controller: _additionalInformationController,
@@ -221,15 +250,18 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
                 maxLines: 5,
                 minLines: 2,
                 keyboardType: TextInputType.multiline,
+                style: const TextStyle(
+                  fontSize: 21,
+                ),
               ),
               const SizedBox(
                 height: 50,
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 18),
+                padding: const EdgeInsets.only(bottom: 28),
                 child: Center(
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: _saveAllergy,
                     label: const Text("Save"),
                   ),
                 ),
@@ -239,5 +271,7 @@ class _AddAllergyScreenState extends State<AddAllergyScreen> {
         ),
       ),
     );
+
   }
+  
 }

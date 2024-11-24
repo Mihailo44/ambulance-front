@@ -1,18 +1,22 @@
 import 'package:ambulance_app/generic_widgets/custom_list_tile.dart';
 import 'package:ambulance_app/main.dart';
+import 'package:ambulance_app/model/disease.dart';
 import 'package:ambulance_app/model/medication.dart';
+import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
+import 'package:ambulance_app/util/close.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddDiseaseScreen extends StatefulWidget {
+class AddDiseaseScreen extends ConsumerStatefulWidget {
   const AddDiseaseScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() => _AddDiseaseScreen();
+  ConsumerState<AddDiseaseScreen> createState() => _AddDiseaseScreenState();
 }
 
-class _AddDiseaseScreen extends State<AddDiseaseScreen>{
+class _AddDiseaseScreenState extends ConsumerState<AddDiseaseScreen>{
 
   final List<Medication> _medications = [];
   final _nameController = TextEditingController();
@@ -100,13 +104,19 @@ class _AddDiseaseScreen extends State<AddDiseaseScreen>{
     _medicationNameController.clear();
     _medicationUsageController.clear();
     FocusScope.of(context).requestFocus(FocusNode());
-    Navigator.of(context).pop();
+    close(context);
   }
 
   void _removeMedication(String name) {
     setState(() {
       _medications.removeWhere((e) => e.name == name);
     });
+  }
+
+  void _saveDisease(){
+    Disease disease = Disease(name: _nameController.text, medications: _medications);
+    ref.read(patientProvider.notifier).addDisease(disease);
+    close(context);
   }
 
   @override
@@ -207,7 +217,7 @@ class _AddDiseaseScreen extends State<AddDiseaseScreen>{
               ),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: _saveDisease,
                   label: const Text("Save"),
                 ),
               ),
@@ -216,7 +226,6 @@ class _AddDiseaseScreen extends State<AddDiseaseScreen>{
         ),
       ),
     );
-
   }
   
 }

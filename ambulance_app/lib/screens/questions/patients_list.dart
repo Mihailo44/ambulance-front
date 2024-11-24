@@ -1,31 +1,39 @@
 import 'package:ambulance_app/generic_widgets/custom_list_tile.dart';
 import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/model/users/unregistered_user.dart';
+import 'package:ambulance_app/providers/ambulance_request_provider.dart';
 import 'package:ambulance_app/screens/questions/add_patient_screen.dart';
+import 'package:ambulance_app/screens/questions/location_dialog_screen.dart';
 import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class VictimList extends StatefulWidget {
+class VictimList extends ConsumerStatefulWidget {
   const VictimList({super.key});
 
   @override
-  State<VictimList> createState() => _VictimListState();
+  ConsumerState<VictimList> createState() => _VictimListState();
 }
 
-class _VictimListState extends State<VictimList> {
-  final List<String> patients = [];
+class _VictimListState extends ConsumerState<VictimList> {
+  final List<String> _patients = [];
   final List<UnregisteredUser> unregistered = [];
+
+  void _chooseLocation(){
+    ref.read(ambulanceRequestProvider.notifier).setRegisteredPatientsIDs(_patients);
+    ref.read(ambulanceRequestProvider.notifier).setUnregisteredPatients(unregistered);
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const LocationDialogScreen()));
+  }
 
   @override
   void initState() {
     super.initState();
-    patients.add("P1");
   }
 
   void _addPatient(String patient) {
     if (patient.isNotEmpty) {
       setState(() {
-        patients.add(patient);
+        _patients.add(patient);
       });
     }
   }
@@ -72,8 +80,8 @@ class _VictimListState extends State<VictimList> {
                         onPressed: () {
                           setState(() {
                             //TODO umesto me staviti username
-                            if (!patients.contains("me")) {
-                              patients.add("me");
+                            if (!_patients.contains("me")) {
+                              _patients.add("me");
                             }
                           });
                         },
@@ -113,29 +121,29 @@ class _VictimListState extends State<VictimList> {
                     ),
                     Expanded(
                       flex: 1,
-                      child: patients.isEmpty
+                      child: _patients.isEmpty
                           ? const Padding(
                               padding: EdgeInsets.fromLTRB(2, 50, 2, 0),
                               child: Text("No patients"))
                           : Scrollbar(
                               thickness: 7,
                               child: ListView.builder(
-                                itemCount: patients.length,
+                                itemCount: _patients.length,
                                 itemBuilder: (ctx, idx) {
                                   return Dismissible(
-                                    key: Key(patients[idx]),
+                                    key: Key(_patients[idx]),
                                     child: CustomListTile(
-                                      title: patients[idx],
+                                      title: _patients[idx],
                                       onPressed: () {
                                         setState(() {
-                                          patients.remove(patients[idx]);
+                                          _patients.remove(_patients[idx]);
                                         });
                                       },
                                       mode: Mode.delete,
                                     ),
                                     onDismissed: (direction) {
                                       setState(() {
-                                        patients.remove(patients[idx]);
+                                        _patients.remove(_patients[idx]);
                                       });
                                     },
                                   );
@@ -143,27 +151,28 @@ class _VictimListState extends State<VictimList> {
                               ),
                             ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(12, 35, 12, 18),
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.all(20),
-                          minimumSize: const Size(180, 70),
-                          backgroundColor:
-                              const Color.fromARGB(255, 7, 154, 180),
-                          foregroundColor: Colors.white,
-                        ),
-                        onPressed: () {
-                          if (patients.isEmpty) {
-                            showSnackBar(context, "Add patients first");
-                          }
-                        },
-                        icon: const Icon(Icons.send),
-                        label: const Text(
-                          "Send Request",
-                        ),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(20),
+                        minimumSize: const Size(180, 70),
+                        backgroundColor:
+                            const Color.fromARGB(255, 7, 154, 180),
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () {
+                        if (_patients.isEmpty) {
+                          showSnackBar(context, "Add patients first");
+                        }else{
+                          _chooseLocation();
+                        }
+                        
+                      },
+                      icon: const Icon(Icons.location_on_sharp),
+                      label: const Text(
+                        "Add Location",
                       ),
                     ),
+                    const SizedBox(height: 40,),
                   ]),
             )
           : Row(
@@ -188,7 +197,7 @@ class _VictimListState extends State<VictimList> {
                           ),
                           onPressed: () {
                             setState(() {
-                              patients.add("me");
+                              _patients.add("me");
                               //TODO umesto me staviti username
                             });
                             showModalBottomSheet(
@@ -242,7 +251,7 @@ class _VictimListState extends State<VictimList> {
                             foregroundColor: Colors.white,
                           ),
                           onPressed: () {
-                            if (patients.isEmpty) {
+                            if (_patients.isEmpty) {
                               showSnackBar(context, "Add patients first");
                             }
                           },
@@ -271,22 +280,22 @@ class _VictimListState extends State<VictimList> {
                         child: Scrollbar(
                           thickness: 7,
                           child: ListView.builder(
-                            itemCount: patients.length,
+                            itemCount: _patients.length,
                             itemBuilder: (ctx, idx) {
                               return Dismissible(
-                                key: Key(patients[idx]),
+                                key: Key(_patients[idx]),
                                 child: CustomListTile(
-                                  title: patients[idx],
+                                  title: _patients[idx],
                                   onPressed: () {
                                     setState(() {
-                                      patients.remove(patients[idx]);
+                                      _patients.remove(_patients[idx]);
                                     });
                                   },
                                   mode: Mode.delete,
                                 ),
                                 onDismissed: (direction) {
                                   setState(() {
-                                    patients.remove(patients[idx]);
+                                    _patients.remove(_patients[idx]);
                                   });
                                 },
                               );

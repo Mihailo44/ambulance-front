@@ -1,6 +1,8 @@
 import 'package:ambulance_app/generic_widgets/trauma_type_card.dart';
 import 'package:ambulance_app/model/question.dart';
 import 'package:ambulance_app/navigation/provider.dart';
+import 'package:ambulance_app/providers/ambulance_request_provider.dart';
+import 'package:ambulance_app/providers/input_monitor_provider.dart';
 import 'package:ambulance_app/screens/questions/questions_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,8 +14,13 @@ class TraumaTypeScreen extends ConsumerWidget {
     return e.name.replaceAll(RegExp("_"), " ").toUpperCase();
   }).toList();
 
+  void _addToRequest(WidgetRef ref,String traumaCause){
+    ref.read(ambulanceRequestProvider.notifier).setTraumaType(traumaCause);
+  }
+
   @override
   Widget build(BuildContext context,WidgetRef ref) {
+    final shouldMonitor = ref.read(userInputMonitoringProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -24,13 +31,14 @@ class TraumaTypeScreen extends ConsumerWidget {
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
+              shouldMonitor.state = false;
               Navigator.pop(context);
             }),
         backgroundColor: const Color.fromARGB(255, 253, 253, 247),
       ),
       body: Column(children: [
         const SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         Text(
           "Please select the trauma cause",
@@ -53,6 +61,7 @@ class TraumaTypeScreen extends ConsumerWidget {
               return TraumaTypeCard(
                   label: traumaTypes[index],
                   onTap: () {
+                    _addToRequest(ref, traumaTypes[index]);
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (ctx) {

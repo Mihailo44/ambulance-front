@@ -1,18 +1,30 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:ambulance_app/main.dart';
+import 'package:ambulance_app/model/users/user.dart';
+import 'package:ambulance_app/providers/basic_user_provider.dart';
+import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/services/abstracts/auth_service_abstract.dart';
 import 'package:ambulance_app/config.dart';
-import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/model/users/basic_user_info.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AuthService extends AuthServiceAbstract {
 
   final client = http.Client();
-  final storage = const FlutterSecureStorage();
+
+  final ProviderContainer container;
+  AuthService._privateConstructor(this.container);
+  static AuthService? _instance;
+
+  factory AuthService({required ProviderContainer container}) {
+    return _instance ??= AuthService._privateConstructor(container);
+  }
 
   @override
-  Future<void> login(String username, String password) async {
+  Future<bool> login(String username, String password) async {
     final url = Uri.parse('$mobileUrl/auth');
     try {
       final response = await client.post(
@@ -30,66 +42,139 @@ class AuthService extends AuthServiceAbstract {
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
 
-        accessToken = responseBody['access_token'] ?? '';
+        String accessToken = responseBody['access_token'] ?? '';
         String? refreshToken = responseBody['refresh_token'] ?? '';
         
         await storage.write(key: "refresh-token", value: refreshToken);
-        accessTokenExpiry = response.headers['Expiration-Time'] ?? '';
+        //var accessTokenExpiry = response.headers['Expiration-Time'] ?? '';
 
-        basicUser = BasicUserInfo.fromJson(responseBody["user"]);
-        basicUser?.accessToken = accessToken;
+        Map<String,dynamic> decodedToken = JwtDecoder.decode(accessToken);
+
+        final userInfo = BasicUserInfo(username: decodedToken["username"], role: getUserRole(decodedToken["role"]), accessToken: accessToken);
+        final basicUser = container.read(basicUserProvider.notifier);
+        basicUser.state = userInfo;
+
+        _scheduleNextRefresh(accessToken);
+
+        return true;
+
+      }else{
+        return false;
       }
     } catch (error) {
-      throw error;
+      print(error.toString());
+      return false;
     }
+  }
+
+  void _scheduleNextRefresh(String accessToken){
+   if(accessToken.isEmpty) return;
+
+    DateTime expiryDate = JwtDecoder.getExpirationDate(accessToken);
+    final adjustedExpiryDate = expiryDate.subtract(const Duration(seconds: 10));
+    DateTime now = DateTime.now();
+
+    Timer(Duration(seconds: adjustedExpiryDate.difference(now).inSeconds), (){
+      refreshTokens();
+    });
   }
 
   @override
   Future<void> refreshTokens() async {
+  
     final url = Uri.parse('$mobileUrl/refresh-tokens');
+    final accessToken = container.read(basicUserProvider.notifier).state?.accessToken;
     try {
 
-      String? refreshToken = await storage.read(key: 'refresh-token');
+     final String? refreshToken = await storage.read(key: 'refresh-token');
 
       if (refreshToken == null){
         throw Exception("Refresh token not found");
       }
 
+      if(accessToken == null){
+        throw Exception("Access token not found");
+      }
+
       final response = await client.post(
         url,
         headers: {
           'Authorization': 'Bearer $accessToken',
-          'Cookie': 'Refresh-token=$refreshToken'
+          'RefreshToken': refreshToken,
+          'User-Agent': 'Mobile'
           },
       );
 
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        accessToken = responseBody['access_token'] ?? '';
-        basicUser?.accessToken = accessToken;
+        String accessToken = responseBody['access_token'] ?? "";
+        String refreshToken = responseBody["refresh_token"] ?? "";
+
+        await storage.write(key: "refresh-token", value: refreshToken);
+
+        final basicUser = container.read(basicUserProvider.notifier);
+        basicUser.state = basicUser.state!.copyWith(accessToken: accessToken);
+
+        _scheduleNextRefresh(accessToken);
+
       }
     } catch (error) {
-      throw error;
+      print(error.toString());
     }
   }
 
   @override
-  void logout() async {
-    final url = Uri.parse('$mobileUrl/logout');
+  Future<void> logout() async {
+   
     try {
+      final url = Uri.parse('$mobileUrl/logout');
+      final accessToken = container.read(basicUserProvider.notifier).state?.accessToken;
+      final String? refreshToken = await storage.read(key: 'refresh-token');
       final response = await client.post(
         url,
         headers: {
           'Authorization': 'Bearer $accessToken',
+          'RefreshToken': refreshToken ?? '',
+          'User-Agent':'Mobile',
         },
       );
 
       if (response.statusCode == 200) {
-        accessToken = '';
-        basicUser = null;
+        container.invalidate(basicUserProvider);
+        container.invalidate(patientProvider);
+        return;
       }
     } catch (error) {
-      rethrow;
+      print(error.toString());
     }
   }
+
+  Future<bool> getByUsername() async{
+    try{
+      final url = Uri.parse('$mobileUrl/user');
+      final accessToken = container.read(basicUserProvider.notifier).state?.accessToken;
+      final response = await client.get(
+        url,
+        headers: {
+          'Authorization':'Bearer $accessToken',
+          'User-Agent':'Mobile',
+        }
+      );
+
+      if(response.statusCode == 200){
+        final userJson = json.decode(response.body);
+        final User user = User.fromJson(userJson);
+        container.read(patientProvider.notifier).updateUserInfo(user: user);
+        return true;
+      }else{
+        return false;
+      }
+
+    }catch(error){
+      print(error.toString());
+      return false;
+    }
+  }
+
 }
+

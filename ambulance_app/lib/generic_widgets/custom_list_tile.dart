@@ -1,3 +1,4 @@
+import 'package:ambulance_app/generic_widgets/buttons/list_tile_button.dart';
 import 'package:ambulance_app/main.dart';
 import 'package:flutter/material.dart';
 
@@ -22,28 +23,28 @@ class CustomListTile<T> extends StatelessWidget {
     switch (mode) {
       case Mode.delete:
         {
-          return ElevatedButton.icon(
+          return ListTileButton(
             onPressed: onPressed,
-            icon: const Icon(Icons.remove, size: 18),
-            label: const Text('Remove'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 255, 50, 31),
-              foregroundColor: Colors.white,
-              overlayColor: const Color.fromARGB(255, 251, 106, 106),
+            labelText: "Remove",
+            icon: const Icon(
+              Icons.remove,
+              size: 18,
             ),
+            backgroundColor: const Color.fromARGB(255, 255, 50, 31),
+            overlayColor: const Color.fromARGB(255, 251, 106, 106),
           );
         }
       case Mode.create:
         {
-          return ElevatedButton.icon(
+          return ListTileButton(
             onPressed: onPressed,
-            icon: const Icon(Icons.add, size: 18),
-            label: const Text('Add'),
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
+            labelText: "Add",
+            icon: const Icon(
+              Icons.add,
+              size: 18,
             ),
+            backgroundColor: const Color.fromARGB(255, 41, 141, 240),
+            overlayColor: const Color.fromARGB(255, 112, 181, 250),
           );
         }
       default:
@@ -90,8 +91,9 @@ class CustomListTile<T> extends StatelessWidget {
             ),
           ),
           trailing: mode == Mode.none ? null : _buildTrailing(mode),
-          splashColor: const Color.fromARGB(255, 198, 242, 255),
-          onTap: mode == Mode.display
+          splashColor: mode == Mode.delete ? const Color.fromARGB(255, 255, 198, 198) : const Color.fromARGB(255, 198, 242, 255),
+          onTap: mode ==
+                  Mode.display //* samo display jer mozes da kliknes na samu karticu i treba da otvori informacije
               ? () {
                   onPressed();
                 }

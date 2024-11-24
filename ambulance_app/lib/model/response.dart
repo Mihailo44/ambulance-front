@@ -1,7 +1,7 @@
 class Response {
   final int id;
   final String question;
-  String? response; //TODO pitanje moze imati vise odgovora, npr sta je neko slomio
+  String? response;
 
   Response({
     required this.id,
