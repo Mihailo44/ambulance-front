@@ -29,8 +29,7 @@ class MedicalInfoScreen extends ConsumerStatefulWidget {
 
 class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
   final ScrollController _scrollController = ScrollController();
-  late Patient patient;
-  bool _isLoading = true;
+  late Future<Patient?> _patient;
   bool _showButtons = false;
   bool _didPatientChange = false;
   double _rotationAngle = 0;
@@ -50,26 +49,17 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
   void initState() {
     super.initState();
     if (ref.read(patientProvider) == null) {
-      print("provider je null");
-      _getPatient();
-    } else {
-      _isLoading = false;
-    }
+      _patient = _getPatient();
+    } 
   }
 
-  void _getPatient() async {
+  Future<Patient?> _getPatient() async {
+    
     final result = await ref
         .read(patientServiceProvider)
         .getByUsername(ref.read(basicUserProvider)!.username);
 
-    if (result) {
-      setState(() {
-        _isLoading = !_isLoading;
-      });
-    } else {
-      if (!context.mounted) return;
-      Navigator.of(context).pop();
-    }
+    return result;
   }
 
   Future<bool> _updatePatient() async {
@@ -211,13 +201,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
       _didPatientChange = true;
     });
 
-    var x = patient!.alergies.length +
-        patient.alergies.length +
-        patient.diseases.length;
-
-    Widget content = _isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : Container(
+    Widget content = Container(
             constraints:
                 BoxConstraints(minHeight: MediaQuery.of(context).size.height),
             child: Padding(
@@ -229,10 +213,10 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
                     child: SingleChildScrollView(
                       controller: _scrollController,
                       child: Padding(
-                        padding: x < 5
+                        padding: patient!.alergies.length + patient.pastOperations!.split(",").length + patient.diseases.length < 6
                             ? EdgeInsets.only(
                                 bottom:
-                                    MediaQuery.of(context).size.height * 0.45,
+                                    MediaQuery.of(context).size.height * 0.34,
                               )
                             : const EdgeInsets.all(0),
                         child: Column(
@@ -517,30 +501,35 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
             color: Colors.amber,
             icon: const Icon(Icons.arrow_back),
             onPressed: () async {
+              ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
               final nav = Navigator.of(context);
-              //if(_didPatientChange){
-              //final result = await _updatePatient();
-              //print(result);
-              //if(!result){
-
-              // if(!context.mounted) {
-              //   print("usao");
-              //   return;
-              // }
-              // showModalBottomSheet(context: context, builder: (ctx) => const ErrorPage(error: "Error"));
-              //}
-              //}
-              if (nav.canPop()) {
+              if(_didPatientChange){
+                final result = await _updatePatient();
+                if(!result){
+                if(!context.mounted) {
+                  print("context sjeban");
+                  return;
+                }
+                showModalBottomSheet(context: context, builder: (ctx) => const ErrorPage(error: "Error"));
+                }
+              }else{
                 nav.pop();
               }
-              ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
             }),
         title: Text(
           "Medical Information",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
-      body: content,
+      body: patient != null ? content : FutureBuilder(future: _patient, builder: (context,snapshot){
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return const Center(child: CircularProgressIndicator(),);
+        }
+        if(snapshot.hasError){
+          return const ErrorPage(error: "Error");
+        }
+        return content;
+      }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.small(
         onPressed: _scrollToBottom,

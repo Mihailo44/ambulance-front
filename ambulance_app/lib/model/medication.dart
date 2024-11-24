@@ -6,7 +6,7 @@ class Medication {
 
   factory Medication.fromJson(Map<String, dynamic> json) {
     return Medication(
-      name: json['name'] ?? '',
+      name: json['name'] ?? 'Not specified',
       weeklyDosage: json['weekly_dosage'] ?? 0,
     );
   }
