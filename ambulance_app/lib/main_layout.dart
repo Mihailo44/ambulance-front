@@ -2,7 +2,7 @@ import 'package:ambulance_app/navigation/provider.dart';
 import 'package:ambulance_app/providers/service_provider.dart';
 import 'package:ambulance_app/screens/auth/login_screen.dart';
 import 'package:ambulance_app/screens/home/patient_home_screen.dart';
-import 'package:ambulance_app/screens/profile/patient_profile.dart';
+import 'package:ambulance_app/screens/patient_profile_managment/patient_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

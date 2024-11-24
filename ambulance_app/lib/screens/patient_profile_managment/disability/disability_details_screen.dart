@@ -1,5 +1,5 @@
 import 'package:ambulance_app/model/disability.dart';
-import 'package:ambulance_app/screens/disability/edit_disabilties_screen.dart';
+import 'package:ambulance_app/screens/patient_profile_managment/disability/edit_disabilties_screen.dart';
 import 'package:flutter/material.dart';
 
 class DisabilityDetailsScreen extends StatelessWidget {

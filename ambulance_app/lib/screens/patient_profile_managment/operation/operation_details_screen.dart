@@ -1,6 +1,6 @@
 import 'package:ambulance_app/generic_widgets/my_dialog.dart';
 import 'package:ambulance_app/providers/patient_provider.dart';
-import 'package:ambulance_app/screens/operation/edit_operation_screen.dart';
+import 'package:ambulance_app/screens/patient_profile_managment/operation/edit_operation_screen.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:ambulance_app/util/close.dart';
 import 'package:flutter/material.dart';

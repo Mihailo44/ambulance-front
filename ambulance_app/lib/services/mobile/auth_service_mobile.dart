@@ -24,7 +24,7 @@ class AuthService extends AuthServiceAbstract {
   }
 
   @override
-  Future<void> login(String username, String password) async {
+  Future<bool> login(String username, String password) async {
     final url = Uri.parse('$mobileUrl/auth');
     try {
       final response = await client.post(
@@ -55,11 +55,15 @@ class AuthService extends AuthServiceAbstract {
         basicUser.state = userInfo;
 
         _scheduleNextRefresh(accessToken);
+
+        return true;
+
       }else{
-        
+        return false;
       }
     } catch (error) {
       print(error.toString());
+      return false;
     }
   }
 
@@ -131,15 +135,46 @@ class AuthService extends AuthServiceAbstract {
         headers: {
           'Authorization': 'Bearer $accessToken',
           'RefreshToken': refreshToken ?? '',
+          'User-Agent':'Mobile',
         },
       );
 
       if (response.statusCode == 200) {
         container.invalidate(basicUserProvider);
         container.invalidate(patientProvider);
+        return;
       }
     } catch (error) {
       print(error.toString());
     }
   }
+
+  Future<bool> getByUsername() async{
+    try{
+      final url = Uri.parse('$mobileUrl/user');
+      final accessToken = container.read(basicUserProvider.notifier).state?.accessToken;
+      final response = await client.get(
+        url,
+        headers: {
+          'Authorization':'Bearer $accessToken',
+          'User-Agent':'Mobile',
+        }
+      );
+
+      if(response.statusCode == 200){
+        final userJson = json.decode(response.body);
+        final User user = User.fromJson(userJson);
+        container.read(patientProvider.notifier).updateUserInfo(user: user);
+        return true;
+      }else{
+        return false;
+      }
+
+    }catch(error){
+      print(error.toString());
+      return false;
+    }
+  }
+
 }
+

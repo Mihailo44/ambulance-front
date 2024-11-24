@@ -51,12 +51,11 @@ class PatientService extends PatientServiceAbstract{
   }
 
   
-
   @override
-  Future<void> update(Patient updatedPatient) async {
+  Future<bool> update(Patient updatedPatient) async {
+    try{
     final uri = Uri.parse('$mobileUrl/patient');
     final accessToken = container.read(basicUserProvider)!.accessToken;
-    try{
       final response = await _client.patch(
         uri,
         headers: {
@@ -66,12 +65,11 @@ class PatientService extends PatientServiceAbstract{
         body: json.encode(updatedPatient)
       );
 
-      if (response.statusCode == 200){
-        log("proslo");
-      }
+      return true;
 
     }catch(error){
-      rethrow;
+      print(error.toString());
+      return false;
     }
   }
   

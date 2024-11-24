@@ -1,7 +1,7 @@
 import 'package:ambulance_app/generic_widgets/my_dialog.dart';
 import 'package:ambulance_app/model/allergy.dart';
 import 'package:ambulance_app/providers/patient_provider.dart';
-import 'package:ambulance_app/screens/allergy/edit_allergy_screen.dart';
+import 'package:ambulance_app/screens/patient_profile_managment/allergy/edit_allergy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -66,7 +66,7 @@ class AllergyDetailsScreen extends ConsumerWidget {
           ),
           Center(
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 26),
+              padding: const EdgeInsets.only(bottom: 25),
               child: ElevatedButton.icon(
                 onPressed: () async {
                   var nav = Navigator.of(context);

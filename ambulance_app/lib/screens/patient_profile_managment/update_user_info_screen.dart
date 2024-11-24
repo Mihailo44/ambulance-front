@@ -1,4 +1,5 @@
 import 'package:ambulance_app/model/users/patient.dart';
+import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:ambulance_app/util/close.dart';
@@ -63,7 +64,8 @@ class _UpdateUserInfoScreenState extends ConsumerState<UpdateUserInfoScreen>{
   }
 
   void _saveUser(){
-    ref.read(patientProvider.notifier).updateUserInfo(firstname: _firstnameController.text,lastname: _lastnameController.text,contactNumber: _contactController.text,emergencyContact: _emergencyContactController.text,password: _passwordController.text,dateOfBirth: _pickedDate);
+    User user = User(firstname: _firstnameController.text, lastname:  _lastnameController.text, password:  _passwordController.text, dateOfBirth: _pickedDate!, role: UserRole.PATIENT);
+    ref.read(patientProvider.notifier).updateUserInfo(user: user,emergencyContact: _emergencyContactController.text,contactNumber: _contactController.text);
     close(context);
   }
 

@@ -4,6 +4,7 @@ import 'package:ambulance_app/providers/basic_user_provider.dart';
 import 'package:ambulance_app/services/abstracts/auth_service_abstract.dart';
 import 'package:ambulance_app/config.dart';
 import 'package:ambulance_app/model/users/basic_user_info.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/browser_client.dart';
 import 'dart:convert';
@@ -11,14 +12,14 @@ import 'dart:convert';
 class AuthService extends AuthServiceAbstract {
 
   @override
-  Future<void> login(String username, String password) async {
+  Future<bool> login(String username, String password) async {
     final url = Uri.parse('$apiUrl/auth');
     var client = BrowserClient()..withCredentials = true;
-    final accessToken = "";
+    final accessToken = '';
     try {
 
       if (accessToken!=''){
-        return;
+        return false;
       }
 
       final response = await client.post(
@@ -44,9 +45,13 @@ class AuthService extends AuthServiceAbstract {
         // final basicUser = container.read(basicUserProvider.notifier);
         // basicUser.state = basicUserInfo;
 
+        return true;
+      }else{
+        return false;
       }
     } catch (error) {
-      throw error;
+      print(error.toString());
+      return false;
     }
   }
 
