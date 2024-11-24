@@ -55,12 +55,12 @@ class Patient {
 
   factory Patient.fromJson(Map<String, dynamic> json) {
     return Patient(
-      contactNumber: json['contact_number'],
-      closePersonContact: json['close_person_contact'],
-      bloodType: json['blood_type'],
-      gender: json['gender'],
+      contactNumber: json['contact_number'] ?? 'Not specified',
+      closePersonContact: json['close_person_contact'] ?? 'Not specified',
+      bloodType: json['blood_type'] ?? 'Not specified',
+      gender: json['gender'] ?? 'Not specified',
       yearOfBirth: json['year_of_birth'].toString(),
-      pastOperations: json['past_operations'],
+      pastOperations: json['past_operations'] ?? 'Not specified',
       alergies: (json['alergies'] as List)
       .map((allergyJson) => Allergy.fromJson(allergyJson))
       .toList(),

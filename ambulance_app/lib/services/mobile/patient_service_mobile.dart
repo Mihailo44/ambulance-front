@@ -74,10 +74,10 @@ class PatientService extends PatientServiceAbstract{
   }
   
   @override
-  Future<bool> getByUsername(String username) async {
+  Future<Patient?> getByUsername(String username) async {
+    try{
     final uri = Uri.parse('$mobileUrl/patient/$username');
     final accessToken = container.read(basicUserProvider)!.accessToken;
-    try{
       final response = await _client.get(
         uri,
         headers: {
@@ -106,15 +106,15 @@ class PatientService extends PatientServiceAbstract{
         final updatedPatient = patient.copyWith(disabilites: disabilities1);
         container.read(patientProvider.notifier).setPatient(updatedPatient);
 
-        return true;
+        return updatedPatient;
 
       }else{
-        return false;
+        return null;
       }
 
     } catch(error){
       print(error.toString());
-      return false;
+      return null;
     }
   }
 

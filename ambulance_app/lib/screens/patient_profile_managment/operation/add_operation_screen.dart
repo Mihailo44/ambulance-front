@@ -1,6 +1,7 @@
 import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:ambulance_app/util/close.dart';
+import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,6 +17,12 @@ class _AddOperationScreenState extends ConsumerState<AddOperationScreen>{
   final _nameController = TextEditingController();
 
   void _saveOperation(){
+
+    if(_nameController.text.isEmpty){
+      showSnackBar(context, "Please enter the procedure name");
+      return;
+    }
+
     ref.read(patientProvider.notifier).addOperation(_nameController.text);
     close(context);
   }
