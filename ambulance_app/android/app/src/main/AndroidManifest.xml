@@ -10,8 +10,11 @@
         android:usesNonSdkApi="true">
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyDHBmVqi1u1jy_hNULvpQO0RZy1wVNlFS0"/>
+<<<<<<< HEAD
         <meta-data android:name="com.google.android.gms.version"
                 android:value="@integer/google_play_services_version"/>
+=======
+>>>>>>> main
         <meta-data
             android:name="com.google.android.gms.maps.logging.level"
             android:value="WARN"/>

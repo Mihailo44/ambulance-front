@@ -4,6 +4,7 @@ class Address {
   String city;
   String street;
   String number;
+<<<<<<< HEAD
   String? floor;
   String? apartmentNumber;
   // lamela zgrade
@@ -37,6 +38,18 @@ class Address {
   }
 
   factory Address.fromJson(Map<String, dynamic> json) {
+=======
+
+  Address({
+    this.id,
+    required this.country,
+    required this.city,
+    required this.street,
+    required this.number,
+  });
+
+  factory Address.fromJson(Map<String,dynamic> json){
+>>>>>>> main
     return Address(
       id: json['id'],
       country: json['country'],
@@ -46,6 +59,7 @@ class Address {
     );
   }
 
+<<<<<<< HEAD
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -56,3 +70,16 @@ class Address {
     };
   }
 }
+=======
+  Map<String,dynamic> toJson(){
+    return{
+      'id':id,
+      'country':country,
+      'city':city,
+      'street':street,
+      'number':number,
+    };
+  }
+
+}
+>>>>>>> main

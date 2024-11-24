@@ -1,8 +1,14 @@
 import 'package:ambulance_app/navigation/provider.dart';
+<<<<<<< HEAD
 import 'package:ambulance_app/providers/service_provider.dart';
 import 'package:ambulance_app/screens/auth/login_screen.dart';
 import 'package:ambulance_app/screens/home/patient_home_screen.dart';
 import 'package:ambulance_app/screens/patient_profile_managment/patient_profile.dart';
+=======
+import 'package:ambulance_app/screens/auth/login_screen.dart';
+import 'package:ambulance_app/screens/home/patient_home_screen.dart';
+import 'package:ambulance_app/screens/profile/patient_profile.dart';
+>>>>>>> main
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -60,6 +66,7 @@ class _ScaffoldForMobileState extends ConsumerState<ScaffoldForMobile> {
     }
   }
 
+<<<<<<< HEAD
   //? da li logout treba da bude async
   void _logout() async {
     Navigator.of(context).pushAndRemoveUntil(
@@ -74,6 +81,11 @@ class _ScaffoldForMobileState extends ConsumerState<ScaffoldForMobile> {
   Widget build(BuildContext context) {
     final isVisible = ref.watch(appBarVisibilityProvider);
 
+=======
+  @override
+  Widget build(BuildContext context) {
+    final isVisible = ref.watch(appBarVisibilityProvider);
+>>>>>>> main
     return Scaffold(
       appBar: !isVisible
           ? null
@@ -111,7 +123,18 @@ class _ScaffoldForMobileState extends ConsumerState<ScaffoldForMobile> {
                               .copyWith(fontSize: 19),
                         ),
                         value: "Logout",
+<<<<<<< HEAD
                         onTap: _logout,
+=======
+                        onTap: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()),
+                            (Route<dynamic> route) =>
+                                false, // This removes all previous routes
+                          );
+                        },
+>>>>>>> main
                         child: const Text("Logout"),
                       )
                     ];

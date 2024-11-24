@@ -8,7 +8,10 @@
             "name": "ambulance_app",
             "request": "launch",
             "type": "dart",
+<<<<<<< HEAD
             "program":"lib/main.dart"
+=======
+>>>>>>> main
         },
         {
             "name": "ambulance_app (profile mode)",

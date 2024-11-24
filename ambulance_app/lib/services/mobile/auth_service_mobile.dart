@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import 'dart:async';
 import 'dart:convert';
 import 'package:ambulance_app/main.dart';
@@ -10,10 +11,20 @@ import 'package:ambulance_app/model/users/basic_user_info.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
+=======
+import 'dart:convert';
+import 'package:ambulance_app/services/abstracts/auth_service_abstract.dart';
+import 'package:ambulance_app/config.dart';
+import 'package:ambulance_app/main.dart';
+import 'package:ambulance_app/model/users/basic_user_info.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+>>>>>>> main
 
 class AuthService extends AuthServiceAbstract {
 
   final client = http.Client();
+<<<<<<< HEAD
 
   final ProviderContainer container;
   AuthService._privateConstructor(this.container);
@@ -25,6 +36,12 @@ class AuthService extends AuthServiceAbstract {
 
   @override
   Future<bool> login(String username, String password) async {
+=======
+  final storage = const FlutterSecureStorage();
+
+  @override
+  Future<void> login(String username, String password) async {
+>>>>>>> main
     final url = Uri.parse('$mobileUrl/auth');
     try {
       final response = await client.post(
@@ -42,6 +59,7 @@ class AuthService extends AuthServiceAbstract {
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
 
+<<<<<<< HEAD
         String accessToken = responseBody['access_token'] ?? '';
         String? refreshToken = responseBody['refresh_token'] ?? '';
         
@@ -87,26 +105,56 @@ class AuthService extends AuthServiceAbstract {
     try {
 
      final String? refreshToken = await storage.read(key: 'refresh-token');
+=======
+        accessToken = responseBody['access_token'] ?? '';
+        String? refreshToken = responseBody['refresh_token'] ?? '';
+        
+        await storage.write(key: "refresh-token", value: refreshToken);
+        accessTokenExpiry = response.headers['Expiration-Time'] ?? '';
+
+        basicUser = BasicUserInfo.fromJson(responseBody["user"]);
+        basicUser?.accessToken = accessToken;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @override
+  Future<void> refreshTokens() async {
+    final url = Uri.parse('$mobileUrl/refresh-tokens');
+    try {
+
+      String? refreshToken = await storage.read(key: 'refresh-token');
+>>>>>>> main
 
       if (refreshToken == null){
         throw Exception("Refresh token not found");
       }
 
+<<<<<<< HEAD
       if(accessToken == null){
         throw Exception("Access token not found");
       }
 
+=======
+>>>>>>> main
       final response = await client.post(
         url,
         headers: {
           'Authorization': 'Bearer $accessToken',
+<<<<<<< HEAD
           'RefreshToken': refreshToken,
           'User-Agent': 'Mobile'
+=======
+          'Cookie': 'Refresh-token=$refreshToken'
+>>>>>>> main
           },
       );
 
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
+<<<<<<< HEAD
         String accessToken = responseBody['access_token'] ?? "";
         String refreshToken = responseBody["refresh_token"] ?? "";
 
@@ -120,26 +168,43 @@ class AuthService extends AuthServiceAbstract {
       }
     } catch (error) {
       print(error.toString());
+=======
+        accessToken = responseBody['access_token'] ?? '';
+        basicUser?.accessToken = accessToken;
+      }
+    } catch (error) {
+      throw error;
+>>>>>>> main
     }
   }
 
   @override
+<<<<<<< HEAD
   Future<void> logout() async {
    
     try {
       final url = Uri.parse('$mobileUrl/logout');
       final accessToken = container.read(basicUserProvider.notifier).state?.accessToken;
       final String? refreshToken = await storage.read(key: 'refresh-token');
+=======
+  void logout() async {
+    final url = Uri.parse('$mobileUrl/logout');
+    try {
+>>>>>>> main
       final response = await client.post(
         url,
         headers: {
           'Authorization': 'Bearer $accessToken',
+<<<<<<< HEAD
           'RefreshToken': refreshToken ?? '',
           'User-Agent':'Mobile',
+=======
+>>>>>>> main
         },
       );
 
       if (response.statusCode == 200) {
+<<<<<<< HEAD
         container.invalidate(basicUserProvider);
         container.invalidate(patientProvider);
         return;
@@ -178,3 +243,13 @@ class AuthService extends AuthServiceAbstract {
 
 }
 
+=======
+        accessToken = '';
+        basicUser = null;
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
+}
+>>>>>>> main

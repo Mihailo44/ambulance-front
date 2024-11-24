@@ -29,5 +29,12 @@ final router = GoRouter(
         path: "/patient-registration",
         builder: (context, state) => const PatientRegistration(),
       ),
+<<<<<<< HEAD
+=======
+      GoRoute(
+        path: "/account-activation",
+        builder: (ctx, state) => const AccountActivationScreen(),
+      ),
+>>>>>>> main
   ],
 );

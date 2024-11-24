@@ -1,14 +1,22 @@
+<<<<<<< HEAD
 import 'dart:convert';
 
 import 'package:ambulance_app/model/account_activation_credentials.dart';
 import 'package:ambulance_app/services/mobile/verification_service_mobile.dart';
+=======
+import 'package:ambulance_app/util/snackbar.dart';
+>>>>>>> main
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 class AccountActivationScreen extends StatefulWidget {
+<<<<<<< HEAD
   const AccountActivationScreen({required this.phoneNumber,super.key});
 
   final String phoneNumber;
+=======
+  const AccountActivationScreen({super.key});
+>>>>>>> main
 
   @override
   State<AccountActivationScreen> createState() =>
@@ -16,6 +24,7 @@ class AccountActivationScreen extends StatefulWidget {
 }
 
 class _AccountActivationScreenState extends State<AccountActivationScreen> {
+<<<<<<< HEAD
 
   final _activationService = VerificationService();
   final _codeController = TextEditingController();
@@ -27,6 +36,8 @@ class _AccountActivationScreenState extends State<AccountActivationScreen> {
     nav.pop();
   }
 
+=======
+>>>>>>> main
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -39,6 +50,10 @@ class _AccountActivationScreenState extends State<AccountActivationScreen> {
             child: Text(
               "Enter the verification code",
               style: Theme.of(context).textTheme.bodyLarge,
+<<<<<<< HEAD
+=======
+              
+>>>>>>> main
             ),
           ),
           Padding(
@@ -48,9 +63,12 @@ class _AccountActivationScreenState extends State<AccountActivationScreen> {
               keyboardType: TextInputType.visiblePassword,
               enabledBorderColor: Colors.black26,
               focusedBorderColor: Colors.blueAccent,
+<<<<<<< HEAD
               onSubmit: (String code){
                 _codeController.text = code;
               },
+=======
+>>>>>>> main
             ),
           ),
           Padding(
@@ -59,7 +77,14 @@ class _AccountActivationScreenState extends State<AccountActivationScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
+<<<<<<< HEAD
                   onPressed: _activate,
+=======
+                  onPressed: () {
+                    showSnackBar(context, "Account was successfully verified!");
+                    //* authService.login()
+                  },
+>>>>>>> main
                   child: const Text("Activate"),
                 ),
                 ElevatedButton(

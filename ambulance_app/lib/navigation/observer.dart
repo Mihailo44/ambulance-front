@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import 'package:ambulance_app/services/inactivity_service.dart';
 import 'package:flutter/material.dart';
 
@@ -14,3 +15,8 @@ class MyNavigationObserver extends NavigatorObserver{
     InactivityService().resetTimer();
   }
 }
+=======
+import 'package:flutter/material.dart';
+
+final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
+>>>>>>> main

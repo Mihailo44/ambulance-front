@@ -6,6 +6,7 @@ enum UserRole {
   VEHICLE_OPERATOR,
 }
 
+<<<<<<< HEAD
 UserRole getUserRole(String role) {
   return UserRole.values.firstWhere(
     (e) => e.toString() == role,
@@ -13,6 +14,8 @@ UserRole getUserRole(String role) {
   );
 }
 
+=======
+>>>>>>> main
 class User {
   int? id;
   String firstname;
@@ -33,6 +36,7 @@ class User {
     required this.role,
   });
 
+<<<<<<< HEAD
   User copyWith(
       {String? firstname,
       String? lastname,
@@ -46,6 +50,8 @@ class User {
         role: role);
   }
 
+=======
+>>>>>>> main
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],

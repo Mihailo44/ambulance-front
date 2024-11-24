@@ -1,8 +1,11 @@
 import 'package:ambulance_app/generic_widgets/trauma_type_card.dart';
 import 'package:ambulance_app/model/question.dart';
 import 'package:ambulance_app/navigation/provider.dart';
+<<<<<<< HEAD
 import 'package:ambulance_app/providers/ambulance_request_provider.dart';
 import 'package:ambulance_app/providers/input_monitor_provider.dart';
+=======
+>>>>>>> main
 import 'package:ambulance_app/screens/questions/questions_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,6 +17,7 @@ class TraumaTypeScreen extends ConsumerWidget {
     return e.name.replaceAll(RegExp("_"), " ").toUpperCase();
   }).toList();
 
+<<<<<<< HEAD
   void _addToRequest(WidgetRef ref,String traumaCause){
     ref.read(ambulanceRequestProvider.notifier).setTraumaType(traumaCause);
   }
@@ -21,6 +25,10 @@ class TraumaTypeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context,WidgetRef ref) {
     final shouldMonitor = ref.read(userInputMonitoringProvider.notifier);
+=======
+  @override
+  Widget build(BuildContext context,WidgetRef ref) {
+>>>>>>> main
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -31,14 +39,21 @@ class TraumaTypeScreen extends ConsumerWidget {
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
+<<<<<<< HEAD
               shouldMonitor.state = false;
+=======
+>>>>>>> main
               Navigator.pop(context);
             }),
         backgroundColor: const Color.fromARGB(255, 253, 253, 247),
       ),
       body: Column(children: [
         const SizedBox(
+<<<<<<< HEAD
           height: 10.0,
+=======
+          height: 20.0,
+>>>>>>> main
         ),
         Text(
           "Please select the trauma cause",
@@ -61,7 +76,10 @@ class TraumaTypeScreen extends ConsumerWidget {
               return TraumaTypeCard(
                   label: traumaTypes[index],
                   onTap: () {
+<<<<<<< HEAD
                     _addToRequest(ref, traumaTypes[index]);
+=======
+>>>>>>> main
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (ctx) {
