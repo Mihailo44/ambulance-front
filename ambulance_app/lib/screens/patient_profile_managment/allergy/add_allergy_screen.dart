@@ -6,6 +6,7 @@ import 'package:ambulance_app/providers/patient_provider.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:ambulance_app/util/close.dart';
+import 'package:ambulance_app/util/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -129,6 +130,12 @@ class _AddAllergyScreenState extends ConsumerState<AddAllergyScreen> {
   }
 
   void _saveAllergy(){
+
+    if(_allergenController.text.isEmpty){
+      showSnackBar(context, "Please enter allergen");
+      return;
+    }
+
     Allergy allergy = Allergy(allergen: _allergenController.text, description: _additionalInformationController.text,medications: _medications);
     ref.read(patientProvider.notifier).addAllergy(allergy);
     close(context);

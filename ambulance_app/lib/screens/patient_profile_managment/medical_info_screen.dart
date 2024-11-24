@@ -30,7 +30,6 @@ class MedicalInfoScreen extends ConsumerStatefulWidget {
 class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
   final ScrollController _scrollController = ScrollController();
   late Future<Patient?> _patient;
-  bool _isLoading = true;
   bool _showButtons = false;
   bool _didPatientChange = false;
   double _rotationAngle = 0;
@@ -51,9 +50,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
     super.initState();
     if (ref.read(patientProvider) == null) {
       _patient = _getPatient();
-    } else {
-      _isLoading = false;
-    }
+    } 
   }
 
   Future<Patient?> _getPatient() async {
@@ -61,12 +58,6 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
     final result = await ref
         .read(patientServiceProvider)
         .getByUsername(ref.read(basicUserProvider)!.username);
-
-    if (result != null) {
-      setState(() {
-        _isLoading = !_isLoading;
-      });
-    } 
 
     return result;
   }
@@ -210,9 +201,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
       _didPatientChange = true;
     });
 
-    Widget content = _isLoading
-        ? const Center(child: CircularProgressIndicator()) 
-        : Container(
+    Widget content = Container(
             constraints:
                 BoxConstraints(minHeight: MediaQuery.of(context).size.height),
             child: Padding(
