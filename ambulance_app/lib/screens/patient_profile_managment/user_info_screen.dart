@@ -22,11 +22,7 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
   @override
   void initState(){
     super.initState();
-    if (ref.read(patientProvider) == null) {
-         _getPatient();
-    } else {
-      _isLoading = false;
-    }
+    _getPatient();
   }
 
  void _getPatient() async {
