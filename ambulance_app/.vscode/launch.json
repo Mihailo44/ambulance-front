@@ -9,9 +9,13 @@
             "request": "launch",
             "type": "dart",
 <<<<<<< HEAD
+<<<<<<< HEAD
             "program":"lib/main.dart"
 =======
 >>>>>>> main
+=======
+            "program":"lib/main.dart"
+>>>>>>> feat/patient-profile
         },
         {
             "name": "ambulance_app (profile mode)",
