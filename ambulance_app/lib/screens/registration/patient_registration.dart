@@ -5,6 +5,7 @@ import 'package:ambulance_app/model/users/patient.dart';
 import 'package:ambulance_app/model/users/user.dart';
 import 'package:ambulance_app/providers/service_provider.dart';
 import 'package:ambulance_app/screens/auth/account_activation_screen.dart';
+import 'package:ambulance_app/screens/patient_profile_managment/medical_info_screen.dart';
 import 'package:ambulance_app/util/buildTextFormFields.dart';
 import 'package:ambulance_app/util/dateFormater.dart';
 import 'package:ambulance_app/util/snackbar.dart';
@@ -43,7 +44,7 @@ class PatientRegistrationState extends ConsumerState<PatientRegistration> {
   ];
   String? _selectedBloodType = "";
 
-  final List<String> _alergies = [""];
+  final List<String> _alergies = [];
 
   @override
   void dispose() {
@@ -81,7 +82,7 @@ class PatientRegistrationState extends ConsumerState<PatientRegistration> {
         firstname: _firstnameController.text,
         lastname: _lastnameController.text,
         password: _passwordController.text,
-        dateOfBirth: _pickedDate!,
+        dateOfBirth: _pickedDate!.toUtc(),
         role: UserRole.PATIENT);
 
     var newPatient = Patient(
@@ -97,7 +98,7 @@ class PatientRegistrationState extends ConsumerState<PatientRegistration> {
 
   Patient _setupDummyPatient() {
     User user = User(
-        firstname: "p",
+        firstname: "l8",
         lastname: "p",
         password: "sifra",
         dateOfBirth: DateTime.now().toUtc(),
@@ -130,9 +131,9 @@ class PatientRegistrationState extends ConsumerState<PatientRegistration> {
         bloodType: "A-",
         gender: "M",
         yearOfBirth: "2001",
-        pastOperations: "Knee operation,Back surgery,Leg surgery",
-        alergies: alergies,
-        diseases: diseases);
+        pastOperations: "Knee operation,Back surgery",
+        alergies: [],
+        diseases: []);
 
     return patient;
   }
@@ -149,11 +150,12 @@ class PatientRegistrationState extends ConsumerState<PatientRegistration> {
 
     final navigator = Navigator.of(context);
     final newPatient = _setupDummyPatient();
-    bool isSuccessfull = await ref.read(patientServiceProvider).register(newPatient);
+    //final newPatient = createPatient();
+    String username = await ref.read(patientServiceProvider).register(newPatient);
 
     if (!mounted) return;
 
-    if (isSuccessfull) {
+    if (username.isNotEmpty) {
       showSnackBar(
         context,
         "You have registered successfully",
@@ -162,6 +164,8 @@ class PatientRegistrationState extends ConsumerState<PatientRegistration> {
       navigator.push(MaterialPageRoute(
         builder: (ctx) => AccountActivationScreen(
           phoneNumber: newPatient.contactNumber,
+          password: _passwordController.text,
+          username: username,
         ),
       ));
     } else {

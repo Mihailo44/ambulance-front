@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ambulance_app/generic_widgets/custom_list_tile.dart';
 import 'package:ambulance_app/generic_widgets/error_page.dart';
 import 'package:ambulance_app/generic_widgets/my_dialog.dart';
@@ -29,7 +31,8 @@ class MedicalInfoScreen extends ConsumerStatefulWidget {
 
 class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
   final ScrollController _scrollController = ScrollController();
-  late Future<Patient?> _patient;
+  bool _isLoading = true;
+  bool _error = false;
   bool _showButtons = false;
   bool _didPatientChange = false;
   double _rotationAngle = 0;
@@ -49,24 +52,27 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
   void initState() {
     super.initState();
     if (ref.read(patientProvider) == null) {
-      _patient = _getPatient();
+      _getPatient();
+    } else {
+      _isLoading = false;
     }
   }
 
-  @override
-void didChangeDependencies() {
-  super.didChangeDependencies();
-  // Optionally reinitialize when returning to the screen
-  _patient = _getPatient();
-}
-
-  Future<Patient?> _getPatient() async {
-    
+  void _getPatient() async {
     final result = await ref
         .read(patientServiceProvider)
-        .getByUsername(ref.read(basicUserProvider)!.username);
+        .getByUsername();
 
-    return result;
+    if (result) {
+      setState(() {
+        _isLoading = !_isLoading;
+      });
+    } else {
+      setState(() {
+        _isLoading = !_isLoading;
+        _error = true;
+      });
+    }
   }
 
   Future<bool> _updatePatient() async {
@@ -203,10 +209,306 @@ void didChangeDependencies() {
 
   @override
   Widget build(BuildContext context) {
+    final patient = ref.watch(patientProvider);
     ref.listen(patientProvider, (previous, next) {
       _didPatientChange = true;
     });
+    Widget content = const Center(
+      child: CircularProgressIndicator(),
+    );
+    //patient.alergies.length + patient.pastOperations!.split(",").length + patient.diseases.length < 6
 
+    if (_error) {
+      content = const Center(
+        child: ErrorPage(error: ""),
+      );
+    } else {
+      if (_isLoading) {
+        content = const Center(
+          child: CircularProgressIndicator(),
+        );
+      } else {
+        content = Container(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                Scrollbar(
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height * 0.32,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              InkWell(
+                                onTap: _changeBloodType,
+                                child: buildFormattedTextField(
+                                    context, "Blood Type", patient!.bloodType),
+                              ),
+                              buildFormattedTextField(
+                                  context, "Gender", patient.gender),
+                              InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (ctx) => DisabilityDetailsScreen(
+                                          disabilites:
+                                              patient.disabilites.toList()));
+                                },
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 4, 10, 15),
+                                  child: SizedBox(
+                                    height: 62,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Disabilities",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineMedium,
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: patient.disabilites.isEmpty
+                                              ? [const SizedBox.shrink()]
+                                              : [
+                                                  ...patient.disabilites
+                                                      .map((e) {
+                                                    final isFirst = patient
+                                                            .disabilites
+                                                            .toList()
+                                                            .indexOf(e) ==
+                                                        0;
+                                                    return Padding(
+                                                      padding: isFirst
+                                                          ? const EdgeInsets
+                                                              .all(0)
+                                                          : const EdgeInsets
+                                                              .only(left: 5),
+                                                      child: Image.asset(
+                                                        e.iconUrl,
+                                                        width: 28,
+                                                        height: 28,
+                                                        color: const Color
+                                                            .fromARGB(
+                                                            255, 21, 21, 21),
+                                                      ),
+                                                    );
+                                                  }),
+                                                ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          buildFormattedTextField(
+                              context, "Past Operations", ""),
+                          patient.pastOperations == null ||
+                                  patient.pastOperations!.isEmpty
+                              ? const Padding(
+                                  padding: EdgeInsets.only(left: 8.0),
+                                  child: Text("No operations"),
+                                )
+                              : ListView.builder(
+                                  reverse: true,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount:
+                                      patient.pastOperations?.split(',').length,
+                                  itemBuilder: (ctx, idx) {
+                                    final operation = patient.pastOperations
+                                        ?.split(',')[idx]
+                                        .trim();
+                                    if (operation!.isEmpty) return null;
+                                    return CustomListTile(
+                                      title: operation,
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (ctx) =>
+                                                OperationDetailsScreen(
+                                                  name: operation,
+                                                ));
+                                      },
+                                      mode: Mode.display,
+                                    );
+                                  }),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          buildFormattedTextField(context, "Allergies", ""),
+                          patient.alergies.isEmpty
+                              ? const Padding(
+                                  padding: EdgeInsets.only(left: 8),
+                                  child: Text("No alergies"),
+                                )
+                              : ListView.builder(
+                                  reverse: true,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: patient.alergies.length,
+                                  itemBuilder: (ctx, idx) {
+                                    return CustomListTile(
+                                      title: patient.alergies[idx].allergen,
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          context: context,
+                                          builder: (ctx) =>
+                                              AllergyDetailsScreen(
+                                            allergy: patient.alergies[idx],
+                                          ),
+                                        );
+                                      },
+                                      mode: Mode.display,
+                                    );
+                                  }),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          buildFormattedTextField(context, "Diseases", ""),
+                          patient.diseases.isEmpty
+                              ? const Padding(
+                                  padding: EdgeInsets.only(left: 8),
+                                  child: Text("No diseases"),
+                                )
+                              : ListView.builder(
+                                  reverse: true,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: patient.diseases.length,
+                                  itemBuilder: (ctx, idx) {
+                                    return CustomListTile(
+                                      title: patient.diseases[idx].name,
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          context: context,
+                                          builder: (ctx) =>
+                                              DiseaseDetailsScreen(
+                                            disease: patient.diseases[idx],
+                                          ),
+                                        );
+                                      },
+                                      mode: Mode.display,
+                                    );
+                                  }),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 46),
+                  child: ElevatedButton.icon(
+                    style:
+                        Theme.of(context).elevatedButtonTheme.style!.copyWith(
+                              backgroundColor:
+                                  const WidgetStatePropertyAll(Colors.amber),
+                              minimumSize:
+                                  const WidgetStatePropertyAll(ui.Size(75, 75)),
+                              foregroundColor:
+                                  const WidgetStatePropertyAll(Colors.white),
+                            ),
+                    onPressed: () {
+                      _rotateIcon();
+                      _toggleButtons();
+                    },
+                    label: TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 250),
+                      tween: Tween<double>(begin: 0, end: _rotationAngle),
+                      builder: (context, angle, child) {
+                        return Transform.rotate(
+                          angle: angle * 3.1416 * 2,
+                          child: child,
+                        );
+                      },
+                      child: const Icon(
+                        Icons.add,
+                        size: 34,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: _showButtons,
+                  child: AnimatedPositioned(
+                    duration: const Duration(milliseconds: 300),
+                    bottom: 140,
+                    child: AnimatedOpacity(
+                      opacity: _showButtons ? 1 : 0,
+                      duration: const Duration(milliseconds: 300),
+                      child: Column(
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              _toggleButtons();
+                              _addAllergy();
+                            },
+                            label: const Text("Add Allergy"),
+                            icon: const Icon(Icons.add),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              _toggleButtons();
+                              _addDisease();
+                            },
+                            label: const Text("Add Disease"),
+                            icon: const Icon(Icons.add),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              _toggleButtons();
+                              _addDisability();
+                            },
+                            label: const Text("Add Disability"),
+                            icon: const Icon(Icons.add),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              _toggleButtons();
+                              _addOperation();
+                            },
+                            label: const Text("Add Operation"),
+                            icon: const Icon(Icons.add),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -217,319 +519,26 @@ void didChangeDependencies() {
             color: Colors.amber,
             icon: const Icon(Icons.arrow_back),
             onPressed: () async {
-              //ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
+              ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
               final nav = Navigator.of(context);
-              if(_didPatientChange){
+              if (_didPatientChange) {
                 final result = await _updatePatient();
-                if(!context.mounted) return;
-                print("prosao dovde");
-                nav.pop();
+                if (!result) {
+                  print("Error");
+                }
+                if (!context.mounted) {
+                  print("context jebe");
+                  return;
+                }
               }
-              }
-            ),
+              nav.pop();
+            }),
         title: Text(
           "Medical Information",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
-      body: FutureBuilder(future: _patient, builder: (context,snapshot){
-        if(snapshot.connectionState == ConnectionState.waiting){
-          return const Center(child: CircularProgressIndicator(),);
-        }
-        if(snapshot.hasError){
-          return const ErrorPage(error: "Error");
-        }
-//snapshot.data!.alergies.length + snapshot.data!.pastOperations!.split(",").length + snapshot.data!.diseases.length < 6
-                            
-        return Container(
-            constraints:
-                BoxConstraints(minHeight: MediaQuery.of(context).size.height),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  Scrollbar(
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).size.height * 0.34,
-                              ),
-                                                    child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                InkWell(
-                                  onTap: _changeBloodType,
-                                  child: buildFormattedTextField(context,
-                                      "Blood Type", snapshot.data!.bloodType),
-                                ),
-                                buildFormattedTextField(
-                                    context, "Gender", snapshot.data!.gender),
-                                InkWell(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                        context: context,
-                                        builder: (ctx) =>
-                                            DisabilityDetailsScreen(
-                                                disabilites: snapshot.data!.disabilites
-                                                    .toList()));
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        10, 4, 10, 15),
-                                    child: SizedBox(
-                                      height: 62,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Disabilities",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineMedium,
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            children: snapshot.data!
-                                                    .disabilites.isEmpty
-                                                ? [const SizedBox.shrink()]
-                                                : [
-                                                    ...snapshot.data!.disabilites
-                                                        .map((e) {
-                                                      final isFirst = snapshot.data!
-                                                              .disabilites
-                                                              .toList()
-                                                              .indexOf(e) ==
-                                                          0;
-                                                      return Padding(
-                                                        padding: isFirst
-                                                            ? const EdgeInsets
-                                                                .all(0)
-                                                            : const EdgeInsets
-                                                                .only(left: 5),
-                                                        child: Image.asset(
-                                                          e.iconUrl,
-                                                          width: 28,
-                                                          height: 28,
-                                                          color: const Color
-                                                              .fromARGB(
-                                                              255, 21, 21, 21),
-                                                        ),
-                                                      );
-                                                    }),
-                                                  ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            buildFormattedTextField(
-                                context, "Past Operations", ""),
-                            snapshot.data!.pastOperations == null ||
-                                    snapshot.data!.pastOperations!.isEmpty
-                                ? const Padding(
-                                    padding: EdgeInsets.only(left: 8.0),
-                                    child: Text("No operations"),
-                                  )
-                                : ListView.builder(
-                                    reverse: true,
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: snapshot.data!.pastOperations
-                                        ?.split(',')
-                                        .length,
-                                    itemBuilder: (ctx, idx) {
-                                      final operation = snapshot.data!.pastOperations
-                                          ?.split(',')[idx]
-                                          .trim();
-                                      if (operation!.isEmpty) return null;
-                                      return CustomListTile(
-                                        title: operation,
-                                        onPressed: () {
-                                          showModalBottomSheet(
-                                              context: context,
-                                              builder: (ctx) =>
-                                                  OperationDetailsScreen(
-                                                    name: operation,
-                                                  ));
-                                        },
-                                        mode: Mode.display,
-                                      );
-                                    }),
-                            const SizedBox(
-                              height: 12,
-                            ),
-                            buildFormattedTextField(context, "Allergies", ""),
-                            snapshot.data!.alergies.isEmpty
-                                ? const Padding(
-                                    padding: EdgeInsets.only(left: 8),
-                                    child: Text("No alergies"),
-                                  )
-                                : ListView.builder(
-                                    reverse: true,
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: snapshot.data!.alergies.length,
-                                    itemBuilder: (ctx, idx) {
-                                      return CustomListTile(
-                                        title: snapshot.data!.alergies[idx].allergen,
-                                        onPressed: () {
-                                          showModalBottomSheet(
-                                            isScrollControlled: true,
-                                            context: context,
-                                            builder: (ctx) =>
-                                                AllergyDetailsScreen(
-                                              allergy: snapshot.data!.alergies[idx],
-                                            ),
-                                          );
-                                        },
-                                        mode: Mode.display,
-                                      );
-                                    }),
-                            const SizedBox(
-                              height: 12,
-                            ),
-                            buildFormattedTextField(context, "Diseases", ""),
-                            snapshot.data!.diseases.isEmpty
-                                ? const Padding(
-                                    padding: EdgeInsets.only(left: 8),
-                                    child: Text("No diseases"),
-                                  )
-                                : ListView.builder(
-                                    reverse: true,
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: snapshot.data!.diseases.length,
-                                    itemBuilder: (ctx, idx) {
-                                      return CustomListTile(
-                                        title: snapshot.data!.diseases[idx].name,
-                                        onPressed: () {
-                                          showModalBottomSheet(
-                                            isScrollControlled: true,
-                                            context: context,
-                                            builder: (ctx) =>
-                                                DiseaseDetailsScreen(
-                                              disease: snapshot.data!.diseases[idx],
-                                            ),
-                                          );
-                                        },
-                                        mode: Mode.display,
-                                      );
-                                    }),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 46),
-                    child: ElevatedButton.icon(
-                      style: Theme.of(context)
-                          .elevatedButtonTheme
-                          .style!
-                          .copyWith(
-                            backgroundColor:
-                                const WidgetStatePropertyAll(Colors.amber),
-                            minimumSize:
-                                const WidgetStatePropertyAll(ui.Size(75, 75)),
-                            foregroundColor:
-                                const WidgetStatePropertyAll(Colors.white),
-                          ),
-                      onPressed: () {
-                        _rotateIcon();
-                        _toggleButtons();
-                      },
-                      label: TweenAnimationBuilder<double>(
-                        duration: const Duration(milliseconds: 250),
-                        tween: Tween<double>(begin: 0, end: _rotationAngle),
-                        builder: (context, angle, child) {
-                          return Transform.rotate(
-                            angle: angle * 3.1416 * 2,
-                            child: child,
-                          );
-                        },
-                        child: const Icon(
-                          Icons.add,
-                          size: 34,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: _showButtons,
-                    child: AnimatedPositioned(
-                      duration: const Duration(milliseconds: 300),
-                      bottom: 140,
-                      child: AnimatedOpacity(
-                        opacity: _showButtons ? 1 : 0,
-                        duration: const Duration(milliseconds: 300),
-                        child: Column(
-                          children: [
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                _toggleButtons();
-                                _addAllergy();
-                              },
-                              label: const Text("Add Allergy"),
-                              icon: const Icon(Icons.add),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                _toggleButtons();
-                                _addDisease();
-                              },
-                              label: const Text("Add Disease"),
-                              icon: const Icon(Icons.add),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                _toggleButtons();
-                                _addDisability();
-                              },
-                              label: const Text("Add Disability"),
-                              icon: const Icon(Icons.add),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                _toggleButtons();
-                                _addOperation();
-                              },
-                              label: const Text("Add Operation"),
-                              icon: const Icon(Icons.add),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        
-      }),
+      body: content,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.small(
         onPressed: _scrollToBottom,

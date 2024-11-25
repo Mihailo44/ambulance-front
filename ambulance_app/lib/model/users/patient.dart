@@ -55,18 +55,27 @@ class Patient {
 
   factory Patient.fromJson(Map<String, dynamic> json) {
     return Patient(
-      contactNumber: json['contact_number'] ?? 'Not specified',
-      closePersonContact: json['close_person_contact'] ?? 'Not specified',
-      bloodType: json['blood_type'] ?? 'Not specified',
-      gender: json['gender'] ?? 'Not specified',
+      contactNumber: json['contact_number'] ?? '',
+      closePersonContact: json['close_person_contact'] ?? '',
+      bloodType: json['blood_type'] ?? '',
+      gender: json['gender'] ?? '',
       yearOfBirth: json['year_of_birth'].toString(),
-      pastOperations: json['past_operations'] ?? 'Not specified',
+      pastOperations: json['past_operations'] ?? '',
       alergies: (json['alergies'] as List)
       .map((allergyJson) => Allergy.fromJson(allergyJson))
       .toList(),
       diseases: (json['diseases'] as List)
       .map((e) => Disease.fromJson(e)).toList() ,
     );
+  }
+
+  List<int> serializeDisabilities(){
+    List<int> x = [];
+    for(var d in disabilites){
+      x.add(d.id);
+    }
+
+    return x;
   }
 
   Map<String, dynamic> toJson() {
@@ -79,7 +88,8 @@ class Patient {
       'blood_type': bloodType,
       'alergies': alergies.map((allergy) => allergy.toJson()).toList(),
       'diseases': diseases.map((disease) => disease.toJson()).toList(),
-      'past_operations': pastOperations
+      'past_operations': pastOperations,
+      'disabilities': serializeDisabilities()
     };
   }
 }

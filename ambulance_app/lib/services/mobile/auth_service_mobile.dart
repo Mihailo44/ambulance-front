@@ -27,6 +27,7 @@ class AuthService extends AuthServiceAbstract {
   Future<bool> login(String username, String password) async {
     final url = Uri.parse('$mobileUrl/auth');
     try {
+      //* ako je zahtev poslat sa telefona a role nije pacijent blokiraj
       final response = await client.post(
         url,
         headers: {

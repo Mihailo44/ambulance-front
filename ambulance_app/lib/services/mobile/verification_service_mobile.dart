@@ -10,7 +10,7 @@ class VerificationService extends VerificationServiceAbstract {
    final _client = http.Client();
 
   @override
-  Future<void> activateAccount(AccountActivationCredentials credentials) async{
+  Future<bool> activateAccount(AccountActivationCredentials credentials) async{
     final uri = Uri.parse('$mobileUrl/activate');
     try{
       final response = await _client.post(
@@ -22,11 +22,14 @@ class VerificationService extends VerificationServiceAbstract {
       );
 
       if(response.statusCode == 200){
-        print("top");
+        return true;
       }
+
+      return false;
 
     }catch(error){
       print(error.toString());
+      return false;
     }
   }
 

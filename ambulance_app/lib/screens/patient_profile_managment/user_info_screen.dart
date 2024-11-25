@@ -30,15 +30,16 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
   }
 
  void _getPatient() async {
-    var result = await ref
+
+    final result = await ref
         .read(patientServiceProvider)
-        .getByUsername(ref.read(basicUserProvider)!.username);
+        .getByUsername();
 
      await ref
       .read(authServiceProvider)
       .getByUsername();
 
-    if (result != null) {
+    if (result) {
       setState(() {
         _isLoading = !_isLoading;
         _error = false;

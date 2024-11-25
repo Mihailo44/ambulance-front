@@ -3,7 +3,7 @@ import 'package:ambulance_app/services/abstracts/patient_service_abstract.dart';
 
 class PatientService extends PatientServiceAbstract{
   @override
-  Future<bool> register(Patient patient) {
+  Future<String> register(Patient patient) {
     // TODO: implement register
     throw UnimplementedError();
   }
@@ -15,7 +15,7 @@ class PatientService extends PatientServiceAbstract{
   }
   
   @override
-  Future<Patient?> getByUsername(String username) {
+  Future<bool> getByUsername() {
     // TODO: implement getByUsername
     throw UnimplementedError();
   }

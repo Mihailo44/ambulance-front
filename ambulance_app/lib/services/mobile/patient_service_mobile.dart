@@ -24,7 +24,7 @@ class PatientService extends PatientServiceAbstract {
   final _client = http.Client();
 
   @override
-  Future<bool> register(Patient patient) async {
+  Future<String> register(Patient patient) async {
     final uri = Uri.parse('$mobileUrl/patient');
 
     try {
@@ -32,15 +32,15 @@ class PatientService extends PatientServiceAbstract {
           headers: {'Content-Type': 'application/json'},
           body: json.encode(patient));
 
-      if (response.statusCode == 201) {
-        //? da li da pozove auth ovde
-        return true;
+      if (response.statusCode == 200) {
+        var username = json.decode(response.body);
+        return username as String;
       }
 
-      return false;
+      return "";
     } catch (error) {
       print(error.toString());
-      return false;
+      return "";
     }
   }
 
@@ -64,9 +64,9 @@ class PatientService extends PatientServiceAbstract {
   }
 
   @override
-  Future<Patient?> getByUsername(String username) async {
+  Future<bool> getByUsername() async {
     try {
-      final uri = Uri.parse('$mobileUrl/patient/$username');
+      final uri = Uri.parse('$mobileUrl/patient');
       final accessToken = container.read(basicUserProvider)!.accessToken;
       final response = await _client.get(
         uri,
@@ -78,12 +78,12 @@ class PatientService extends PatientServiceAbstract {
         Patient patient = Patient.fromJson(decodedResponse);
         final Set<Disability> disabilities1 = {};
 
-        if (decodedResponse['disabilities'] != null) {
-          final List<String> disabilities =
-              (decodedResponse['disabilities'] as List<dynamic>)
-                  .map((item) => item.toString())
-                  .toList();
+        final List<String>? disabilities =
+            (decodedResponse['disabilities'] as List<dynamic>?)
+                ?.map((item) => item.toString())
+                .toList();
 
+        if (disabilities != null) {
           for (String s in disabilities) {
             for (Disability d in container.read(disabilityProvider)) {
               if (s == d.id.toString()) {
@@ -95,14 +95,14 @@ class PatientService extends PatientServiceAbstract {
 
         final updatedPatient = patient.copyWith(disabilites: disabilities1);
         container.read(patientProvider.notifier).setPatient(updatedPatient);
-
-        return updatedPatient;
-      } else {
-        return null;
+        debugger();
+        return true;
       }
+
+      return false;
     } catch (error) {
       print(error.toString());
-      return null;
+      return false;
     }
   }
 }

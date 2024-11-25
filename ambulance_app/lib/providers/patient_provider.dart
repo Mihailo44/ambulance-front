@@ -70,6 +70,11 @@ class PatientNotifier extends StateNotifier<Patient?>{
   void addOperation(String name){
     if(state == null) return;
 
+    if(state!.pastOperations!.isEmpty){
+      state = state!.copyWith(pastOperations: name); 
+      return;
+    }
+
     final updatedOperations = "${state!.pastOperations},$name";
     state = state!.copyWith(pastOperations: updatedOperations);
   }
