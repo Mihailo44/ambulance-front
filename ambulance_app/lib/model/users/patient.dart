@@ -65,7 +65,7 @@ class Patient {
       .map((allergyJson) => Allergy.fromJson(allergyJson))
       .toList(),
       diseases: (json['diseases'] as List)
-      .map((e) => Disease.fromJson(e)).toList(),
+      .map((e) => Disease.fromJson(e)).toList() ,
     );
   }
 

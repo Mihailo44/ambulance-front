@@ -50,8 +50,15 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
     super.initState();
     if (ref.read(patientProvider) == null) {
       _patient = _getPatient();
-    } 
+    }
   }
+
+  @override
+void didChangeDependencies() {
+  super.didChangeDependencies();
+  // Optionally reinitialize when returning to the screen
+  _patient = _getPatient();
+}
 
   Future<Patient?> _getPatient() async {
     
@@ -196,12 +203,45 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final patient = ref.watch(patientProvider);
     ref.listen(patientProvider, (previous, next) {
       _didPatientChange = true;
     });
 
-    Widget content = Container(
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: const Color.fromARGB(255, 255, 249, 234),
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+            iconSize: 32,
+            color: Colors.amber,
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () async {
+              //ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
+              final nav = Navigator.of(context);
+              if(_didPatientChange){
+                final result = await _updatePatient();
+                if(!context.mounted) return;
+                print("prosao dovde");
+                nav.pop();
+              }
+              }
+            ),
+        title: Text(
+          "Medical Information",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+      ),
+      body: FutureBuilder(future: _patient, builder: (context,snapshot){
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return const Center(child: CircularProgressIndicator(),);
+        }
+        if(snapshot.hasError){
+          return const ErrorPage(error: "Error");
+        }
+//snapshot.data!.alergies.length + snapshot.data!.pastOperations!.split(",").length + snapshot.data!.diseases.length < 6
+                            
+        return Container(
             constraints:
                 BoxConstraints(minHeight: MediaQuery.of(context).size.height),
             child: Padding(
@@ -213,13 +253,11 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
                     child: SingleChildScrollView(
                       controller: _scrollController,
                       child: Padding(
-                        padding: patient!.alergies.length + patient.pastOperations!.split(",").length + patient.diseases.length < 6
-                            ? EdgeInsets.only(
+                        padding: EdgeInsets.only(
                                 bottom:
                                     MediaQuery.of(context).size.height * 0.34,
-                              )
-                            : const EdgeInsets.all(0),
-                        child: Column(
+                              ),
+                                                    child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
@@ -227,17 +265,17 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
                                 InkWell(
                                   onTap: _changeBloodType,
                                   child: buildFormattedTextField(context,
-                                      "Blood Type", patient!.bloodType),
+                                      "Blood Type", snapshot.data!.bloodType),
                                 ),
                                 buildFormattedTextField(
-                                    context, "Gender", patient.gender),
+                                    context, "Gender", snapshot.data!.gender),
                                 InkWell(
                                   onTap: () {
                                     showModalBottomSheet(
                                         context: context,
                                         builder: (ctx) =>
                                             DisabilityDetailsScreen(
-                                                disabilites: patient.disabilites
+                                                disabilites: snapshot.data!.disabilites
                                                     .toList()));
                                   },
                                   child: Padding(
@@ -259,13 +297,13 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
                                             height: 5,
                                           ),
                                           Row(
-                                            children: patient
+                                            children: snapshot.data!
                                                     .disabilites.isEmpty
                                                 ? [const SizedBox.shrink()]
                                                 : [
-                                                    ...patient.disabilites
+                                                    ...snapshot.data!.disabilites
                                                         .map((e) {
-                                                      final isFirst = patient
+                                                      final isFirst = snapshot.data!
                                                               .disabilites
                                                               .toList()
                                                               .indexOf(e) ==
@@ -297,8 +335,8 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
                             ),
                             buildFormattedTextField(
                                 context, "Past Operations", ""),
-                            patient.pastOperations == null ||
-                                    patient.pastOperations!.isEmpty
+                            snapshot.data!.pastOperations == null ||
+                                    snapshot.data!.pastOperations!.isEmpty
                                 ? const Padding(
                                     padding: EdgeInsets.only(left: 8.0),
                                     child: Text("No operations"),
@@ -308,11 +346,11 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
                                     shrinkWrap: true,
                                     physics:
                                         const NeverScrollableScrollPhysics(),
-                                    itemCount: patient.pastOperations
+                                    itemCount: snapshot.data!.pastOperations
                                         ?.split(',')
                                         .length,
                                     itemBuilder: (ctx, idx) {
-                                      final operation = patient.pastOperations
+                                      final operation = snapshot.data!.pastOperations
                                           ?.split(',')[idx]
                                           .trim();
                                       if (operation!.isEmpty) return null;
@@ -333,7 +371,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
                               height: 12,
                             ),
                             buildFormattedTextField(context, "Allergies", ""),
-                            patient.alergies.isEmpty
+                            snapshot.data!.alergies.isEmpty
                                 ? const Padding(
                                     padding: EdgeInsets.only(left: 8),
                                     child: Text("No alergies"),
@@ -343,17 +381,17 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
                                     shrinkWrap: true,
                                     physics:
                                         const NeverScrollableScrollPhysics(),
-                                    itemCount: patient.alergies.length,
+                                    itemCount: snapshot.data!.alergies.length,
                                     itemBuilder: (ctx, idx) {
                                       return CustomListTile(
-                                        title: patient.alergies[idx].allergen,
+                                        title: snapshot.data!.alergies[idx].allergen,
                                         onPressed: () {
                                           showModalBottomSheet(
                                             isScrollControlled: true,
                                             context: context,
                                             builder: (ctx) =>
                                                 AllergyDetailsScreen(
-                                              allergy: patient.alergies[idx],
+                                              allergy: snapshot.data!.alergies[idx],
                                             ),
                                           );
                                         },
@@ -364,7 +402,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
                               height: 12,
                             ),
                             buildFormattedTextField(context, "Diseases", ""),
-                            patient.diseases.isEmpty
+                            snapshot.data!.diseases.isEmpty
                                 ? const Padding(
                                     padding: EdgeInsets.only(left: 8),
                                     child: Text("No diseases"),
@@ -374,17 +412,17 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
                                     shrinkWrap: true,
                                     physics:
                                         const NeverScrollableScrollPhysics(),
-                                    itemCount: patient.diseases.length,
+                                    itemCount: snapshot.data!.diseases.length,
                                     itemBuilder: (ctx, idx) {
                                       return CustomListTile(
-                                        title: patient.diseases[idx].name,
+                                        title: snapshot.data!.diseases[idx].name,
                                         onPressed: () {
                                           showModalBottomSheet(
                                             isScrollControlled: true,
                                             context: context,
                                             builder: (ctx) =>
                                                 DiseaseDetailsScreen(
-                                              disease: patient.diseases[idx],
+                                              disease: snapshot.data!.diseases[idx],
                                             ),
                                           );
                                         },
@@ -490,45 +528,7 @@ class _MedicalInfoScreenState extends ConsumerState<MedicalInfoScreen> {
               ),
             ),
           );
-
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: const Color.fromARGB(255, 255, 249, 234),
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-            iconSize: 32,
-            color: Colors.amber,
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () async {
-              ref.read(appBarVisibilityProvider.notifier).toggleVisibility();
-              final nav = Navigator.of(context);
-              if(_didPatientChange){
-                final result = await _updatePatient();
-                if(!result){
-                if(!context.mounted) {
-                  print("context sjeban");
-                  return;
-                }
-                showModalBottomSheet(context: context, builder: (ctx) => const ErrorPage(error: "Error"));
-                }
-              }else{
-                nav.pop();
-              }
-            }),
-        title: Text(
-          "Medical Information",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-      ),
-      body: patient != null ? content : FutureBuilder(future: _patient, builder: (context,snapshot){
-        if(snapshot.connectionState == ConnectionState.waiting){
-          return const Center(child: CircularProgressIndicator(),);
-        }
-        if(snapshot.hasError){
-          return const ErrorPage(error: "Error");
-        }
-        return content;
+        
       }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.small(
