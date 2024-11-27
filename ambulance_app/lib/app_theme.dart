@@ -17,6 +17,11 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: const Color.fromARGB(255, 253, 253, 247),
       textTheme: ThemeData().textTheme.copyWith(
+            headlineLarge: const TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
             headlineMedium: const TextStyle(
               fontSize: 19,
               fontWeight: FontWeight.w500,

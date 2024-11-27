@@ -8,13 +8,13 @@ class InactivityService {
   InactivityService._internal();
 
   Timer? _inactivityTimer;
-  final int _inactivityThreshold = 6000005; //* In seconds
-  int _remainingTime = 20; 
+  final int _inactivityThreshold = 9000; //* In seconds
+  int _remainingTime = 9000; 
   DateTime? _startTime;
   VoidCallback? onInactivity;
 
   Timer? _emergencyTimer;
-  final int _emergencyTimerDuration = 20;
+  final int _emergencyTimerDuration = 30;
   VoidCallback? onEmergency;
 
   void startTracking(VoidCallback onInactivityCallback) {

@@ -44,7 +44,6 @@ class MyApp extends StatelessWidget {
       );
     } else {
       return MaterialApp(
-        //home: const InactivityWrapper(child: ScaffoldForMobile()),
         home: const LoginPage(),
         navigatorObservers: [MyNavigationObserver()],
         title: "Zovi Hitnu",

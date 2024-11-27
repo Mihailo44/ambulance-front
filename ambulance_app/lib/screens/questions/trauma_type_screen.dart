@@ -21,6 +21,7 @@ class TraumaTypeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context,WidgetRef ref) {
     final shouldMonitor = ref.read(userInputMonitoringProvider.notifier);
+    
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

@@ -2,6 +2,7 @@ import 'package:ambulance_app/generic_widgets/custom_list_tile.dart';
 import 'package:ambulance_app/main.dart';
 import 'package:ambulance_app/model/users/unregistered_user.dart';
 import 'package:ambulance_app/providers/ambulance_request_provider.dart';
+import 'package:ambulance_app/providers/basic_user_provider.dart';
 import 'package:ambulance_app/screens/questions/add_patient_screen.dart';
 import 'package:ambulance_app/screens/questions/location_dialog_screen.dart';
 import 'package:ambulance_app/util/snackbar.dart';
@@ -79,9 +80,8 @@ class _VictimListState extends ConsumerState<VictimList> {
                         ),
                         onPressed: () {
                           setState(() {
-                            //TODO umesto me staviti username
                             if (!_patients.contains("me")) {
-                              _patients.add("me");
+                              _patients.add(ref.read(basicUserProvider)!.username);
                             }
                           });
                         },

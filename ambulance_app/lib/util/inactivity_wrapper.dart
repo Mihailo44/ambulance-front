@@ -33,7 +33,7 @@ class _InactivityWrapperState extends ConsumerState<InactivityWrapper> {
   @override
   Widget build(BuildContext context) {
     final shouldMonitor = ref.watch(userInputMonitoringProvider);
-   
+    
     if(shouldMonitor){
       InactivityService().startTracking(() {
       _showInactivityDialog();

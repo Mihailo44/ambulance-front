@@ -7,7 +7,7 @@ import 'package:ambulance_app/model/question.dart';
 import 'package:ambulance_app/model/quiz.dart';
 import 'package:ambulance_app/model/response.dart' as my;
 import 'package:ambulance_app/providers/ambulance_request_provider.dart';
-import 'package:ambulance_app/screens/questions/patients_list.dart';
+import 'package:ambulance_app/screens/questions/patients_list_screen.dart';
 import 'package:ambulance_app/util/buildFormatedTextField.dart';
 import 'package:ambulance_app/util/close.dart';
 import 'package:ambulance_app/util/snackbar.dart';

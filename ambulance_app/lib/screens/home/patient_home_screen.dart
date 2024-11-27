@@ -1,8 +1,8 @@
 import 'package:ambulance_app/navigation/provider.dart';
-import 'package:ambulance_app/providers/basic_user_provider.dart';
 import 'package:ambulance_app/providers/input_monitor_provider.dart';
 import 'package:ambulance_app/screens/map_screen.dart';
 import 'package:ambulance_app/screens/questions/trauma_type_screen.dart';
+import 'package:ambulance_app/util/inactivity_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:ui' as ui;
@@ -61,7 +61,7 @@ class _PatientHomeScreenState extends ConsumerState<PatientHomeScreen>{
                     shouldMonitor.state = true;
                     Navigator.of(context).push(MaterialPageRoute(
                       settings: const RouteSettings(name: "/patient-list"),
-                      builder: (ctx) => TraumaTypeScreen(),));
+                      builder: (ctx) => InactivityWrapper(child: TraumaTypeScreen()),));
                   },
                   child: const Icon(
                     Icons.add_to_home_screen_rounded,

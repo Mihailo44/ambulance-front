@@ -16,7 +16,8 @@ class PatientRegistration extends ConsumerStatefulWidget {
   const PatientRegistration({super.key});
 
   @override
-  ConsumerState<PatientRegistration> createState() => PatientRegistrationState();
+  ConsumerState<PatientRegistration> createState() =>
+      PatientRegistrationState();
 }
 
 class PatientRegistrationState extends ConsumerState<PatientRegistration> {
@@ -151,7 +152,8 @@ class PatientRegistrationState extends ConsumerState<PatientRegistration> {
     final navigator = Navigator.of(context);
     final newPatient = _setupDummyPatient();
     //final newPatient = createPatient();
-    String username = await ref.read(patientServiceProvider).register(newPatient);
+    String username =
+        await ref.read(patientServiceProvider).register(newPatient);
 
     if (!mounted) return;
 
@@ -179,6 +181,20 @@ class PatientRegistrationState extends ConsumerState<PatientRegistration> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: const Color.fromARGB(255, 253, 253, 247),
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+            iconSize: 32,
+            color: Colors.amber,
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+            }),
+      ),
       body: GestureDetector(
         onTap: FocusScope.of(context).unfocus,
         child: SingleChildScrollView(
@@ -227,9 +243,9 @@ class PatientRegistrationState extends ConsumerState<PatientRegistration> {
                           Padding(
                             padding: const EdgeInsets.only(left: 8),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Expanded(
+                                SizedBox(
+                                  width: 180,
                                   child: Text(
                                     _pickedDate == null
                                         ? "Date of Birth"
@@ -267,62 +283,68 @@ class PatientRegistrationState extends ConsumerState<PatientRegistration> {
                           const SizedBox(
                             height: 10.0,
                           ),
-                          DropdownButtonFormField<String>(
-                              hint: const Text(
-                                "Blood Type",
-                                style: TextStyle(
-                                  fontSize: 18,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: DropdownButtonFormField<String>(
+                                    hint: const Text(
+                                      "Blood Type",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    items: [
+                                      for (final b in _bloodTypes)
+                                        DropdownMenuItem(
+                                            value: b,
+                                            child: Text(
+                                              b,
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                fontSize: 20,
+                                              ),
+                                            ))
+                                    ],
+                                    onChanged: (value) {
+                                      if (value == null) {
+                                        return;
+                                      }
+                                      setState(() {
+                                        _selectedBloodType = value;
+                                      });
+                                    }),
+                              ),
+                              const SizedBox(width: 20,),
+                              Expanded(
+                                child: DropdownButtonFormField<String>(
+                                  hint: const Text(
+                                    "Gender",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedGender = value;
+                                    });
+                                  },
+                                  items: [
+                                    for (final g in _genders)
+                                      DropdownMenuItem(
+                                          value: g,
+                                          child: Text(
+                                            g,
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          ))
+                                  ],
                                 ),
                               ),
-                              items: [
-                                for (final b in _bloodTypes)
-                                  DropdownMenuItem(
-                                      value: b,
-                                      child: Text(
-                                        b,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                        ),
-                                      ))
-                              ],
-                              onChanged: (value) {
-                                if (value == null) {
-                                  return;
-                                }
-                                setState(() {
-                                  _selectedBloodType = value;
-                                });
-                              }),
-                          const SizedBox(
-                            height: 18.0,
-                          ),
-                          DropdownButtonFormField<String>(
-                            hint: const Text(
-                              "Gender",
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedGender = value;
-                              });
-                            },
-                            items: [
-                              for (final g in _genders)
-                                DropdownMenuItem(
-                                    value: g,
-                                    child: Text(
-                                      g,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ))
                             ],
                           ),
                           const SizedBox(
-                            height: 20.0,
+                            height: 40.0,
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),

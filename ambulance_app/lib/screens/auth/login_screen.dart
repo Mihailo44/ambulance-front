@@ -49,8 +49,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if (response) {
         //router.go("/");
         nav.pushReplacement(MaterialPageRoute(
-            builder: (ctx) =>
-                const InactivityWrapper(child: ScaffoldForMobile())));
+            builder: (ctx) => const InactivityWrapper(
+                child: SafeArea(child: ScaffoldForMobile()))));
       } else {
         showSnackBar(context, "Login failed please try again");
       }
@@ -63,64 +63,79 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child:  _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : FractionallySizedBox(
-            widthFactor: 0.65,
-            child: Form(
-              key: _formKey,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        body: SingleChildScrollView(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: FractionallySizedBox(
+              widthFactor: 0.65,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  buildTextFormField(
-                    controller: _usernameController,
-                    labelText: "Username",
+                  const SizedBox(height: 70,),
+                  Text(
+                    "Zovi Hitnu",
+                    style: Theme.of(context).textTheme.headlineLarge,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  buildTextFormField(
-                    controller: _passwordController,
-                    labelText: "Password",
-                  ),
-                  const SizedBox(height: 30),
-                  ElevatedButton(
-                    onPressed: _login,
-                    child: const Text('Login'),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const PatientRegistration()),
-                      );
-                    },
-                    child: const Text("Register"),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      _setupDummyPatient();
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                              builder: (ctx) => const ScaffoldForMobile()));
-                    },
-                    child: const Text("Home"),
+                  const SizedBox(height: 80,),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        buildCenteredTextFormField(
+                          controller: _usernameController,
+                          labelText: "Username",
+                        ),
+                        buildCenteredTextFormField(
+                          controller: _passwordController,
+                          labelText: "Password",
+                        ),
+                        const SizedBox(height: 30),
+                        _isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : ElevatedButton(
+                                onPressed: _login,
+                                child: const Text('Login'),
+                              ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const PatientRegistration()),
+                            );
+                          },
+                          child: const Text("Register"),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            _setupDummyPatient();
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (ctx) =>
+                                        const ScaffoldForMobile()));
+                          },
+                          child: const Text("Home"),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
           ),
+        ),
       ),
     );
   }
