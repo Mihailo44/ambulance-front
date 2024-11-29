@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:ambulance_app/model/ambulance_request.dart';
 import 'package:ambulance_app/providers/ambulance_request_provider.dart';
+import 'package:ambulance_app/providers/input_monitor_provider.dart';
 import 'package:ambulance_app/services/inactivity_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,6 +34,7 @@ class _InactivityDialogState extends ConsumerState<InactivityDialog> {
 
   void _sendEmergencyRequest(){
     final AmbulanceRequest request = ref.read(ambulanceRequestProvider);
+    ref.read(userInputMonitoringProvider.notifier).state = false;
     //TODO poslati zahtev
   }
 
